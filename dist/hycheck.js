@@ -19,6 +19,12 @@ var _randomJs = require('random-js');
 
 var _randomJs2 = _interopRequireDefault(_randomJs);
 
+var _assert = require('assert');
+
+var _assert2 = _interopRequireDefault(_assert);
+
+var _random = require('./random');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -30,7 +36,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @callback GeneratorMaker
  * @param {Engine} engine - engines provided in random-js.
  *                          The default is mt19937 with auto seeds.
- * @return {Any}
+ * @return {*}
  */
 
 /**
@@ -50,7 +56,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
  * @callback Generator
  * @param {Engine} engine
  * @param {GeneratorMakerOptions} genOpts
- * @return {Any}
+ * @return {*}
  */
 
 /**
@@ -60,17 +66,19 @@ var Arbitrary = function () {
   /**
    * Create a arbitrary.
    *
-   * @param {ArbitraryOptions} opts the options of arbitrary creation.
+   * @param {!ArbitraryOptions} opts the options of arbitrary creation.
    * @return {Arbitrary}
    */
   function Arbitrary(opts) {
     _classCallCheck(this, Arbitrary);
 
+    (0, _assert2.default)(_lodash2.default.isObject(opts), 'opts must be an object.');
     this._engine = null;
     this._gen = null;
     this._genOpts = null;
+    this._transform = _lodash2.default.identity;
 
-    this.engine(opts.seed || _randomJs2.default.engines.mt19937().autoSeed());
+    this.engine(opts.engine || _random.mt19937);
     this.generator(opts.gen, opts.genOpts);
   }
   /**
@@ -88,20 +96,32 @@ var Arbitrary = function () {
     /**
      * Set a random engine.
      *
-     * @param {Engine} engine
+     * @param {!Engine} engine
      * @return {Arbitrary}
      */
 
   }, {
     key: 'engine',
     value: function engine(_engine) {
+      (0, _assert2.default)(_engine, 'engine is required.');
       this._engine = _engine;
       return this;
     }
     /**
+     * Set a seed number.
+     *
+     * @param {!number} 32-bit integer.
+     */
+
+  }, {
+    key: 'seed',
+    value: function seed(_seed) {
+      this._engine.seed(_seed);
+    }
+    /**
      * Set a random value generator.
      *
-     * @param {GeneratorMaker} gen
+     * @param {!GeneratorMaker} gen
      * @param {?GeneratorMakerOptions} opts
      * @return {Arbitrary}
      */
@@ -109,24 +129,47 @@ var Arbitrary = function () {
   }, {
     key: 'generator',
     value: function generator(gen, opts) {
+      (0, _assert2.default)(_lodash2.default.isFunction(gen), 'gen must be a function.');
       this._gen = gen.bind(this);
       if (opts) {
+        (0, _assert2.default)(_lodash2.default.isArray(opts), 'opts must be an object.');
         this._genOpts = opts;
       }
       return this;
     }
     /**
-     * Set inclusive range of a generator maker.
+     * Create a new arbitrary with new
+     * inclusive range of its generator maker.
      *
-     * @param {...Any}
+     * @param {...*}
      * @return {Arbitrary}
      */
 
   }, {
     key: 'choose',
     value: function choose() {
-      this._genOpts = Array.prototype.slice.call(arguments);
-      return this;
+      var clone = this.clone();
+
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      clone._genOpts = args;
+      return clone;
+    }
+    /**
+     * Transform arbitrary A to arbitrary B.
+     *
+     * @param {function} transform function.
+     * @return {Arbitrary}
+     */
+
+  }, {
+    key: 'transform',
+    value: function transform(f) {
+      var clone = this.clone();
+      clone._transform = f;
+      return clone;
     }
     /**
      * Make a generator.
@@ -140,13 +183,13 @@ var Arbitrary = function () {
       var _this = this;
 
       return function (engine, genOpts) {
-        return _this._gen.apply(_this, genOpts || _this._genOpts || [])(engine);
+        return _this._transform(_this._gen.apply(_this, genOpts || _this._genOpts || [])(engine));
       };
     }
     /**
      * Run a generator.
      *
-     * @return {Any}
+     * @return {*}
      */
 
   }, {
@@ -157,15 +200,20 @@ var Arbitrary = function () {
     /**
      * Generate some example values.
      *
-     * @param {Number} size 
-     * @return {Array<Any>}
+     * @param {number} size
+     * @return {Array<*>}
      */
 
   }, {
     key: 'sample',
-    value: function sample(size) {
+    value: function sample() {
       var _this2 = this;
 
+      var size = arguments.length <= 0 || arguments[0] === undefined ? 30 : arguments[0];
+
+      if (size !== undefined) {
+        (0, _assert2.default)(_lodash2.default.isInteger(size) && size >= 0, 'size must be a postive integer.');
+      }
       return _lodash2.default.range(0, size).map(function () {
         return _this2.generate();
       });
@@ -178,7 +226,7 @@ var Arbitrary = function () {
 /**
  * Transform a generator maker to an arbitrary.
  *
- * @param {GeneratorMaker}
+ * @param {!GeneratorMaker}
  * @param {?GeneratorMakerOptions}
  */
 
@@ -192,7 +240,7 @@ function fromGenMaker(gen, genOpts) {
 
 exports.Arbitrary = Arbitrary;
 exports.fromGenMaker = fromGenMaker;
-},{"lodash":9,"random-js":10}],2:[function(require,module,exports){
+},{"./random":4,"assert":14,"lodash":16,"random-js":18}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -202,6 +250,7 @@ exports.constant = constant;
 exports.suchThat = suchThat;
 exports.oneOf = oneOf;
 exports.array = array;
+exports.nearray = nearray;
 exports.elements = elements;
 
 var _randomJs = require('random-js');
@@ -215,8 +264,12 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Generates a contant value.
  *
- * @param {Any} value
+ * @param {*} value
  * @returns {Arbitrary}
+ *
+ * @example
+ * // returns 1.
+ * hc.constant(1).generate();
  */
 /**
  * @module
@@ -234,15 +287,22 @@ function constant(value) {
 /**
  * Generates a value that satisfies a predicate.
  *
- * @param {Arbitrary} arb - an arbitrary.
- * @param {Function} predicate - a predicate function.
+ * @param {!Arbitrary} arb - an arbitrary.
+ * @param {!function} predicate - a predicate function.
  * @returns {Arbitrary}
+ *
+ * @example
+ * // returns even number.
+ * hc.suchThat(hc.int, (n) => n / 2 === 0).generate();
  */
 function suchThat(arb, predicate) {
   var oriGen = arb.makeGen();
   var clone = arb.clone();
   var newGenerator = function newGenerator() {
-    var genOpts = Array.prototype.slice.call(arguments);
+    for (var _len = arguments.length, genOpts = Array(_len), _key = 0; _key < _len; _key++) {
+      genOpts[_key] = arguments[_key];
+    }
+
     return function (engine) {
       var x = void 0;
       var j = 0;
@@ -269,8 +329,12 @@ function suchThat(arb, predicate) {
 /**
  * Randomly uses one of the given generators. The input list must be non-empty.
  *
- * @param {Arbitrary[]} arbs
+ * @param {!Arbitrary[]} arbs
  * @returns {Arbitrary}
+ *
+ * @example
+ * // Produces a boolean or an integer.
+ * hc.oneOf(hc.bool, hc.int).generate();
  */
 function oneOf(arbs) {
   return new _arbitrary.Arbitrary({
@@ -289,6 +353,10 @@ function oneOf(arbs) {
  *
  * @param {Arbitrary} arb
  * @return {Arbitrary}
+ *
+ * @example
+ * // Produces an array of integer that the length between 1 and 3.
+ * hc.array(hc.int).choose(1, 3).generate();
  */
 function array(arb) {
   return new _arbitrary.Arbitrary({
@@ -304,10 +372,25 @@ function array(arb) {
 }
 
 /**
+ *
+ * Generates an non-empty array.
+ *
+ * @param {Arbitrary}
+ * @return {Arbitrary}
+ */
+function nearray(arb) {
+  return array(arb).choose(1, 30);
+};
+
+/**
  * Generates one of the given values. The input list must be non-empty.
  *
  * @param {Array} pool
  * @return {Arbitrary}
+ *
+ * @example
+ * // returns 1 or 'a';
+ * hc.elements([1, 'a']).generates();
  */
 function elements(pool) {
   return new _arbitrary.Arbitrary({
@@ -319,15 +402,7 @@ function elements(pool) {
     }
   });
 }
-
-exports.default = {
-  constant: constant,
-  elements: elements,
-  suchThat: suchThat,
-  oneOf: oneOf,
-  array: array
-};
-},{"./arbitrary":1,"random-js":10}],3:[function(require,module,exports){
+},{"./arbitrary":1,"random-js":18}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -338,24 +413,71 @@ var _utils = require('./utils');
 
 var _types = require('./types');
 
-var _types2 = _interopRequireDefault(_types);
+var types = _interopRequireWildcard(_types);
 
 var _combinators = require('./combinators');
 
-var _combinators2 = _interopRequireDefault(_combinators);
+var combinators = _interopRequireWildcard(_combinators);
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var __all__ = {
-  types: _types2.default,
-  combinators: _combinators2.default
+  types: types,
+  combinators: combinators
 };
 
 (0, _utils.liftExport)(__all__, 'types');
 (0, _utils.liftExport)(__all__, 'combinators');
 
 exports.default = __all__;
-},{"./combinators":2,"./types":6,"./utils":8}],4:[function(require,module,exports){
+},{"./combinators":2,"./types":10,"./utils":13}],4:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.mt19937 = undefined;
+
+var _randomJs = require('random-js');
+
+var _randomJs2 = _interopRequireDefault(_randomJs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Random Engine.
+ *
+ * @type {random-js.engines.mt19937}
+ */
+var mt19937 = exports.mt19937 = _randomJs2.default.engines.mt19937().autoSeed(); /**
+                                                                                  * @module
+                                                                                  */
+},{"random-js":18}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.any = undefined;
+
+var _boolean = require('./boolean');
+
+var _falsy = require('./falsy');
+
+var _number = require('./number');
+
+var _combinators = require('../combinators');
+
+/**
+ * Any Primitive Type Arbitrary.
+ *
+ * @type {Arbitrary}
+ */
+/**
+ * @module
+ */
+var any = exports.any = (0, _combinators.oneOf)([_boolean.bool, _falsy.falsy, _number.int, _number.number]);
+},{"../combinators":2,"./boolean":6,"./falsy":8,"./number":11}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -369,8 +491,6 @@ var _randomJs2 = _interopRequireDefault(_randomJs);
 
 var _arbitrary = require('../arbitrary');
 
-var _combinators = require('../combinators');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /**
@@ -382,22 +502,67 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  *
  * @example
  * // returns true
- * bool.generate()
+ * hc.bool.generate()
+ *
+ * @example
+ * // Produce a boolean with the specified chance causing it to be true.
+ * let chance = 10;
+ * hc.bool.choose(chance).generate();
  */
-var bool = exports.bool = (0, _arbitrary.fromGenMaker)(_randomJs2.default.bool); /**
-                                                                                  * @module
-                                                                                  */
-},{"../arbitrary":1,"../combinators":2,"random-js":10}],5:[function(require,module,exports){
+/**
+ * @module
+ */
+var bool = exports.bool = (0, _arbitrary.fromGenMaker)(_randomJs2.default.bool);
+},{"../arbitrary":1,"random-js":18}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.falsy = undefined;
+exports.date = undefined;
+
+var _randomJs = require('random-js');
+
+var _randomJs2 = _interopRequireDefault(_randomJs);
 
 var _arbitrary = require('../arbitrary');
 
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/**
+ * Date Arbitrary
+ *
+ * @type {Arbitrary}
+ *
+ * @example
+ * // generate a random date.
+ * hc.date.generate();
+ *
+ * @example
+ * // generate a random date between 2000/01/01 and 2016/01/01.
+ * let newDate = hc.date.choose(new Date(2000, 01, 01), new Date(2016, 01,01));
+ * newDate.generate();
+ */
+/**
+ * @module
+ */
+var date = exports.date = (0, _arbitrary.fromGenMaker)(_randomJs2.default.date, [new Date(1984, 3, 25), new Date()]);
+},{"../arbitrary":1,"random-js":18}],8:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.falsy = exports.FALSY_VALUES = undefined;
+
 var _combinators = require('../combinators');
+
+/**
+ * falsy values.
+ *
+ * @type {Array}
+ */
+var FALSY_VALUES = exports.FALSY_VALUES = [undefined, void 0, null, false, 0, ''];
 
 /**
  * Falsy Arbitrary
@@ -406,52 +571,142 @@ var _combinators = require('../combinators');
  * 0, void(0) and NaN.
  *
  * @type {Arbitrary}
+ *
+ * @example
+ * hc.falsy.generate();
  */
 /**
  * @module
  */
-var falsy = exports.falsy = new _arbitrary.Arbitrary({
+var falsy = exports.falsy = (0, _combinators.elements)(FALSY_VALUES);
+},{"../combinators":2}],9:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.func = undefined;
+
+var _arbitrary = require('../arbitrary');
+
+var _combinators = require('../combinators');
+
+var _any = require('./any');
+
+/**
+ * Function Arbitrary
+ *
+ * @type {Arbitrar}
+ *
+ * @example
+ *
+ * let f = hc.func(hc.int).generate();
+ * f() // return an integer.
+ */
+var func = exports.func = new _arbitrary.Arbitrary({
   gen: function gen() {
+    var outputArb = arguments.length <= 0 || arguments[0] === undefined ? (0, _combinators.oneOf)([_any.any, (0, _combinators.array)(_any.any)]) : arguments[0];
+
     return function (engine) {
-      return (0, _combinators.elements)([undefined, void 0, null, false, 0, void 0, '']).makeGen()(engine);
+      return function () {
+        return outputArb.engine(engine).generate();
+      };
     };
   }
-});
-},{"../arbitrary":1,"../combinators":2}],6:[function(require,module,exports){
+}); /**
+     * @module
+     */
+},{"../arbitrary":1,"../combinators":2,"./any":5}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _utils = require('../utils');
-
 var _boolean = require('./boolean');
 
-var boolean = _interopRequireWildcard(_boolean);
+Object.keys(_boolean).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _boolean[key];
+    }
+  });
+});
 
 var _falsy = require('./falsy');
 
-var falsy = _interopRequireWildcard(_falsy);
+Object.keys(_falsy).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _falsy[key];
+    }
+  });
+});
 
 var _number = require('./number');
 
-var number = _interopRequireWildcard(_number);
+Object.keys(_number).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _number[key];
+    }
+  });
+});
 
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+var _string = require('./string');
 
-var __all__ = {
-  boolean: boolean,
-  falsy: falsy,
-  number: number
-};
+Object.keys(_string).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _string[key];
+    }
+  });
+});
 
-(0, _utils.liftExport)(__all__, 'boolean');
-(0, _utils.liftExport)(__all__, 'falsy');
-(0, _utils.liftExport)(__all__, 'number');
+var _any = require('./any');
 
-exports.default = __all__;
-},{"../utils":8,"./boolean":4,"./falsy":5,"./number":7}],7:[function(require,module,exports){
+Object.keys(_any).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _any[key];
+    }
+  });
+});
+
+var _function = require('./function');
+
+Object.keys(_function).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _function[key];
+    }
+  });
+});
+
+var _datetime = require('./datetime');
+
+Object.keys(_datetime).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _datetime[key];
+    }
+  });
+});
+},{"./any":5,"./boolean":6,"./datetime":7,"./falsy":8,"./function":9,"./number":11,"./string":12}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -465,79 +720,209 @@ var _randomJs2 = _interopRequireDefault(_randomJs);
 
 var _arbitrary = require('../arbitrary');
 
-var _combinators = require('../combinators');
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * The default bound of numbers.
- *
- * @constant {number}
- */
-var SIZE = 9007199254740992;
 
 /**
  * Integer Arbitrary
  *
  * @type {Arbitrary}
+ *
+ * @example
+ * // Produce an integer within inclusive range [-5, 5].
+ * hc.int.choose(-5, 5).generate();
  */
 /**
  * @module
  */
-var int = exports.int = (0, _arbitrary.fromGenMaker)(_randomJs2.default.integer, [-SIZE, SIZE]);
+var int = exports.int = (0, _arbitrary.fromGenMaker)(_randomJs2.default.integer, [-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]);
 
 /**
  * Positive Integer Arbitary
  *
  * @type {Arbitary}
  */
-var pint = exports.pint = (0, _combinators.suchThat)(int, function (n) {
-  return n >= 0;
-}).choose(1, SIZE);
+var pint = exports.pint = int.choose(0, Number.MAX_SAFE_INTEGER);
 
 /**
  * Negative Arbitrary
  *
  * @type {Arbitrary}
  */
-var nint = exports.nint = (0, _combinators.suchThat)(int, function (n) {
-  return n < 0;
-}).choose(-SIZE, -1);
+var nint = exports.nint = int.choose(-Number.MAX_SAFE_INTEGER, -1);
 
 /**
  * Nature Number Arbitary
  *
  * @type {Arbitrary}
  */
-var nat = exports.nat = (0, _combinators.suchThat)(int, function (n) {
-  return n > 0;
-});
+var nat = exports.nat = int.choose(1, Number.MAX_SAFE_INTEGER);
 
 /**
  * Nature Number Arbitary
  *
  * @type {Arbitrary}
  */
-var number = exports.number = (0, _arbitrary.fromGenMaker)(_randomJs2.default.real, [-SIZE, SIZE]);
+var number = exports.number = (0, _arbitrary.fromGenMaker)(_randomJs2.default.real, [-Number.MAX_VALUE, Number.MAX_VALUE]);
 
 /**
  * Positive Number Arbitary
  *
  * @type {Arbitrary}
  */
-var pnumber = exports.pnumber = (0, _combinators.suchThat)(number, function (n) {
-  return n >= 0;
-}).choose(1, SIZE);
+var pnumber = exports.pnumber = number.choose(0, Number.MAX_VALUE);
 
 /**
  * Negative Number Arbitary
  *
  * @type {Arbitrary}
  */
-var nnumber = exports.nnumber = (0, _combinators.suchThat)(number, function (n) {
-  return n < 0;
-}).choose(-SIZE, -1);
-},{"../arbitrary":1,"../combinators":2,"random-js":10}],8:[function(require,module,exports){
+var nnumber = exports.nnumber = number.choose(-Number.MAX_VALUE, -0.0000000001);
+},{"../arbitrary":1,"random-js":18}],12:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.uuid4 = exports.neasciistring = exports.asciistring = exports.asciichar = exports.nestring = exports.string = exports.char = exports.UNICODE_RANGES_MAX = exports.UNICODE_RANGES_MIN = exports.ASCII_RANGE_MAX = exports.ASCII_RANGE_MIN = undefined;
+exports.stringOf = stringOf;
+exports.nestringOf = nestringOf;
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _randomJs = require('random-js');
+
+var _randomJs2 = _interopRequireDefault(_randomJs);
+
+var _number = require('./number');
+
+var _arbitrary = require('../arbitrary');
+
+var _combinators = require('../combinators');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var _char = _number.int.transform(String.fromCharCode); /**
+                                                         * @module
+                                                         */
+var ASCII_RANGE_MIN = exports.ASCII_RANGE_MIN = 0x0020;
+var ASCII_RANGE_MAX = exports.ASCII_RANGE_MAX = 0x007F;
+var UNICODE_RANGES_MIN = exports.UNICODE_RANGES_MIN = 0x0020;
+var UNICODE_RANGES_MAX = exports.UNICODE_RANGES_MAX = 0xE007F;
+
+/**
+ * Unicode Character Arbitrary.
+ *
+ * @type {Arbitrary}
+ *
+ * @example 
+ * // generate a unicode character.
+ * hc.char.generate();
+ *
+ * @example
+ * // change character ranges. here we use ASCII range.
+ * // and yes, this is how hc.asciichar be made.
+ * hc.char.choose(0x0020, 0x007F).generate();
+ */
+var char = exports.char = _char.choose(UNICODE_RANGES_MIN, UNICODE_RANGES_MAX);
+
+/**
+ * Unicode String Arbitrary.
+ *
+ * @type {Arbitrary}
+ *
+ *
+ * @example
+ * // generate a unicode string. the length between 0 and 30 by default.
+ * hc.string.generate();
+ *
+ * @example
+ * // you can set minimun and maximun length.
+ * hc.string.choose(1, 5).generate();
+ */
+var string = exports.string = stringOf(char);
+
+/**
+ * Nom-empty Unicode String Arbitrary.
+ *
+ * @type {Arbitrary}
+ */
+var nestring = exports.nestring = nestringOf(char);
+
+/**
+ * Ascii Character Arbitrary.
+ *
+ * @type {Arbitrary}
+ *
+ * @example
+ * // generate a ascii character.
+ * hc.asciichar.generate();
+ */
+var asciichar = exports.asciichar = char.choose(ASCII_RANGE_MIN, ASCII_RANGE_MAX);
+
+/**
+ * Ascii String Arbitrary.
+ *
+ * @type {Arbitrary}
+ *
+ * @example
+ * // generate a unicode string. the length between 0 and 30 by default.
+ * hc.asciistring.generate();
+ *
+ * @example
+ * // you can set minimun and maximun length.
+ * hc.asciistring.choose(1, 5).generate();
+ */
+var asciistring = exports.asciistring = stringOf(asciichar);
+
+/**
+ * Ascii String Arbitrary.
+ *
+ * @type {Arbitrary}
+ */
+var neasciistring = exports.neasciistring = nestringOf(asciichar);
+
+/**
+ * UUID version 4 Arbitrary.
+ *
+ * @type {Arbitrary}
+ */
+var uuid4 = exports.uuid4 = (0, _arbitrary.fromGenMaker)(_randomJs2.default.uuid4);
+
+/**
+ * Create a string arbitrary based on given character arbitrary.
+ *
+ * @param {Arbitrary} any arbitrary to generate a character.
+ * @return {Arbitrary} a string arbitrary.
+ *
+ * @example
+ * // this is how we make a hc.`string`.
+ * hc.stringOf(hc.char).generate();
+ *
+ * @example
+ * // generate a string that the character is 'a', 'b' or 'c'.
+ * hc.stringOf(hc.elements(['a','b', 'c'])).generate();
+ *
+ * @example
+ * // yes, minimun and maximun length still can be changed.
+ * hc.stringOf(hc.elements(['a','b', 'c'])).choose(0, 3).generate();
+ */
+function stringOf(charArb) {
+  return (0, _combinators.array)(charArb).transform(function (chars) {
+    return chars.join('');
+  });
+}
+
+/**
+ * same to stringOf but produce non-empty string.
+ */
+function nestringOf(charArb) {
+  return (0, _combinators.nearray)(charArb).transform(function (chars) {
+    return chars.join('');
+  });
+}
+},{"../arbitrary":1,"../combinators":2,"./number":11,"lodash":16,"random-js":18}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -554,8 +939,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * Merge namespace
  *
- * @param {Object} namespace
- * @param {String} name
+ * @param {!Object} namespace
+ * @param {!string} name
  * @returns {Object}
  */
 function liftExport(namespace, name) {
@@ -566,7 +951,393 @@ function liftExport(namespace, name) {
 } /**
    * @module
    */
-},{"lodash":9}],9:[function(require,module,exports){
+},{"lodash":16}],14:[function(require,module,exports){
+// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
+//
+// THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
+//
+// Originally from narwhal.js (http://narwhaljs.org)
+// Copyright (c) 2009 Thomas Robinson <280north.com>
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the 'Software'), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+// ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+// when used in node, this will actually load the util module we depend on
+// versus loading the builtin util module as happens otherwise
+// this is a bug in node module loading as far as I am concerned
+var util = require('util/');
+
+var pSlice = Array.prototype.slice;
+var hasOwn = Object.prototype.hasOwnProperty;
+
+// 1. The assert module provides functions that throw
+// AssertionError's when particular conditions are not met. The
+// assert module must conform to the following interface.
+
+var assert = module.exports = ok;
+
+// 2. The AssertionError is defined in assert.
+// new assert.AssertionError({ message: message,
+//                             actual: actual,
+//                             expected: expected })
+
+assert.AssertionError = function AssertionError(options) {
+  this.name = 'AssertionError';
+  this.actual = options.actual;
+  this.expected = options.expected;
+  this.operator = options.operator;
+  if (options.message) {
+    this.message = options.message;
+    this.generatedMessage = false;
+  } else {
+    this.message = getMessage(this);
+    this.generatedMessage = true;
+  }
+  var stackStartFunction = options.stackStartFunction || fail;
+
+  if (Error.captureStackTrace) {
+    Error.captureStackTrace(this, stackStartFunction);
+  }
+  else {
+    // non v8 browsers so we can have a stacktrace
+    var err = new Error();
+    if (err.stack) {
+      var out = err.stack;
+
+      // try to strip useless frames
+      var fn_name = stackStartFunction.name;
+      var idx = out.indexOf('\n' + fn_name);
+      if (idx >= 0) {
+        // once we have located the function frame
+        // we need to strip out everything before it (and its line)
+        var next_line = out.indexOf('\n', idx + 1);
+        out = out.substring(next_line + 1);
+      }
+
+      this.stack = out;
+    }
+  }
+};
+
+// assert.AssertionError instanceof Error
+util.inherits(assert.AssertionError, Error);
+
+function replacer(key, value) {
+  if (util.isUndefined(value)) {
+    return '' + value;
+  }
+  if (util.isNumber(value) && !isFinite(value)) {
+    return value.toString();
+  }
+  if (util.isFunction(value) || util.isRegExp(value)) {
+    return value.toString();
+  }
+  return value;
+}
+
+function truncate(s, n) {
+  if (util.isString(s)) {
+    return s.length < n ? s : s.slice(0, n);
+  } else {
+    return s;
+  }
+}
+
+function getMessage(self) {
+  return truncate(JSON.stringify(self.actual, replacer), 128) + ' ' +
+         self.operator + ' ' +
+         truncate(JSON.stringify(self.expected, replacer), 128);
+}
+
+// At present only the three keys mentioned above are used and
+// understood by the spec. Implementations or sub modules can pass
+// other keys to the AssertionError's constructor - they will be
+// ignored.
+
+// 3. All of the following functions must throw an AssertionError
+// when a corresponding condition is not met, with a message that
+// may be undefined if not provided.  All assertion methods provide
+// both the actual and expected values to the assertion error for
+// display purposes.
+
+function fail(actual, expected, message, operator, stackStartFunction) {
+  throw new assert.AssertionError({
+    message: message,
+    actual: actual,
+    expected: expected,
+    operator: operator,
+    stackStartFunction: stackStartFunction
+  });
+}
+
+// EXTENSION! allows for well behaved errors defined elsewhere.
+assert.fail = fail;
+
+// 4. Pure assertion tests whether a value is truthy, as determined
+// by !!guard.
+// assert.ok(guard, message_opt);
+// This statement is equivalent to assert.equal(true, !!guard,
+// message_opt);. To test strictly for the value true, use
+// assert.strictEqual(true, guard, message_opt);.
+
+function ok(value, message) {
+  if (!value) fail(value, true, message, '==', assert.ok);
+}
+assert.ok = ok;
+
+// 5. The equality assertion tests shallow, coercive equality with
+// ==.
+// assert.equal(actual, expected, message_opt);
+
+assert.equal = function equal(actual, expected, message) {
+  if (actual != expected) fail(actual, expected, message, '==', assert.equal);
+};
+
+// 6. The non-equality assertion tests for whether two objects are not equal
+// with != assert.notEqual(actual, expected, message_opt);
+
+assert.notEqual = function notEqual(actual, expected, message) {
+  if (actual == expected) {
+    fail(actual, expected, message, '!=', assert.notEqual);
+  }
+};
+
+// 7. The equivalence assertion tests a deep equality relation.
+// assert.deepEqual(actual, expected, message_opt);
+
+assert.deepEqual = function deepEqual(actual, expected, message) {
+  if (!_deepEqual(actual, expected)) {
+    fail(actual, expected, message, 'deepEqual', assert.deepEqual);
+  }
+};
+
+function _deepEqual(actual, expected) {
+  // 7.1. All identical values are equivalent, as determined by ===.
+  if (actual === expected) {
+    return true;
+
+  } else if (util.isBuffer(actual) && util.isBuffer(expected)) {
+    if (actual.length != expected.length) return false;
+
+    for (var i = 0; i < actual.length; i++) {
+      if (actual[i] !== expected[i]) return false;
+    }
+
+    return true;
+
+  // 7.2. If the expected value is a Date object, the actual value is
+  // equivalent if it is also a Date object that refers to the same time.
+  } else if (util.isDate(actual) && util.isDate(expected)) {
+    return actual.getTime() === expected.getTime();
+
+  // 7.3 If the expected value is a RegExp object, the actual value is
+  // equivalent if it is also a RegExp object with the same source and
+  // properties (`global`, `multiline`, `lastIndex`, `ignoreCase`).
+  } else if (util.isRegExp(actual) && util.isRegExp(expected)) {
+    return actual.source === expected.source &&
+           actual.global === expected.global &&
+           actual.multiline === expected.multiline &&
+           actual.lastIndex === expected.lastIndex &&
+           actual.ignoreCase === expected.ignoreCase;
+
+  // 7.4. Other pairs that do not both pass typeof value == 'object',
+  // equivalence is determined by ==.
+  } else if (!util.isObject(actual) && !util.isObject(expected)) {
+    return actual == expected;
+
+  // 7.5 For all other Object pairs, including Array objects, equivalence is
+  // determined by having the same number of owned properties (as verified
+  // with Object.prototype.hasOwnProperty.call), the same set of keys
+  // (although not necessarily the same order), equivalent values for every
+  // corresponding key, and an identical 'prototype' property. Note: this
+  // accounts for both named and indexed properties on Arrays.
+  } else {
+    return objEquiv(actual, expected);
+  }
+}
+
+function isArguments(object) {
+  return Object.prototype.toString.call(object) == '[object Arguments]';
+}
+
+function objEquiv(a, b) {
+  if (util.isNullOrUndefined(a) || util.isNullOrUndefined(b))
+    return false;
+  // an identical 'prototype' property.
+  if (a.prototype !== b.prototype) return false;
+  // if one is a primitive, the other must be same
+  if (util.isPrimitive(a) || util.isPrimitive(b)) {
+    return a === b;
+  }
+  var aIsArgs = isArguments(a),
+      bIsArgs = isArguments(b);
+  if ((aIsArgs && !bIsArgs) || (!aIsArgs && bIsArgs))
+    return false;
+  if (aIsArgs) {
+    a = pSlice.call(a);
+    b = pSlice.call(b);
+    return _deepEqual(a, b);
+  }
+  var ka = objectKeys(a),
+      kb = objectKeys(b),
+      key, i;
+  // having the same number of owned properties (keys incorporates
+  // hasOwnProperty)
+  if (ka.length != kb.length)
+    return false;
+  //the same set of keys (although not necessarily the same order),
+  ka.sort();
+  kb.sort();
+  //~~~cheap key test
+  for (i = ka.length - 1; i >= 0; i--) {
+    if (ka[i] != kb[i])
+      return false;
+  }
+  //equivalent values for every corresponding key, and
+  //~~~possibly expensive deep test
+  for (i = ka.length - 1; i >= 0; i--) {
+    key = ka[i];
+    if (!_deepEqual(a[key], b[key])) return false;
+  }
+  return true;
+}
+
+// 8. The non-equivalence assertion tests for any deep inequality.
+// assert.notDeepEqual(actual, expected, message_opt);
+
+assert.notDeepEqual = function notDeepEqual(actual, expected, message) {
+  if (_deepEqual(actual, expected)) {
+    fail(actual, expected, message, 'notDeepEqual', assert.notDeepEqual);
+  }
+};
+
+// 9. The strict equality assertion tests strict equality, as determined by ===.
+// assert.strictEqual(actual, expected, message_opt);
+
+assert.strictEqual = function strictEqual(actual, expected, message) {
+  if (actual !== expected) {
+    fail(actual, expected, message, '===', assert.strictEqual);
+  }
+};
+
+// 10. The strict non-equality assertion tests for strict inequality, as
+// determined by !==.  assert.notStrictEqual(actual, expected, message_opt);
+
+assert.notStrictEqual = function notStrictEqual(actual, expected, message) {
+  if (actual === expected) {
+    fail(actual, expected, message, '!==', assert.notStrictEqual);
+  }
+};
+
+function expectedException(actual, expected) {
+  if (!actual || !expected) {
+    return false;
+  }
+
+  if (Object.prototype.toString.call(expected) == '[object RegExp]') {
+    return expected.test(actual);
+  } else if (actual instanceof expected) {
+    return true;
+  } else if (expected.call({}, actual) === true) {
+    return true;
+  }
+
+  return false;
+}
+
+function _throws(shouldThrow, block, expected, message) {
+  var actual;
+
+  if (util.isString(expected)) {
+    message = expected;
+    expected = null;
+  }
+
+  try {
+    block();
+  } catch (e) {
+    actual = e;
+  }
+
+  message = (expected && expected.name ? ' (' + expected.name + ').' : '.') +
+            (message ? ' ' + message : '.');
+
+  if (shouldThrow && !actual) {
+    fail(actual, expected, 'Missing expected exception' + message);
+  }
+
+  if (!shouldThrow && expectedException(actual, expected)) {
+    fail(actual, expected, 'Got unwanted exception' + message);
+  }
+
+  if ((shouldThrow && actual && expected &&
+      !expectedException(actual, expected)) || (!shouldThrow && actual)) {
+    throw actual;
+  }
+}
+
+// 11. Expected to throw an error:
+// assert.throws(block, Error_opt, message_opt);
+
+assert.throws = function(block, /*optional*/error, /*optional*/message) {
+  _throws.apply(this, [true].concat(pSlice.call(arguments)));
+};
+
+// EXTENSION! This is annoying to write outside this module.
+assert.doesNotThrow = function(block, /*optional*/message) {
+  _throws.apply(this, [false].concat(pSlice.call(arguments)));
+};
+
+assert.ifError = function(err) { if (err) {throw err;}};
+
+var objectKeys = Object.keys || function (obj) {
+  var keys = [];
+  for (var key in obj) {
+    if (hasOwn.call(obj, key)) keys.push(key);
+  }
+  return keys;
+};
+
+},{"util/":20}],15:[function(require,module,exports){
+if (typeof Object.create === 'function') {
+  // implementation from standard node.js 'util' module
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    ctor.prototype = Object.create(superCtor.prototype, {
+      constructor: {
+        value: ctor,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+  };
+} else {
+  // old school shim for old browsers
+  module.exports = function inherits(ctor, superCtor) {
+    ctor.super_ = superCtor
+    var TempCtor = function () {}
+    TempCtor.prototype = superCtor.prototype
+    ctor.prototype = new TempCtor()
+    ctor.prototype.constructor = ctor
+  }
+}
+
+},{}],16:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -17303,7 +18074,189 @@ function liftExport(namespace, name) {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],10:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
+// shim for using process in browser
+var process = module.exports = {};
+
+// cached from whatever global is present so that test runners that stub it
+// don't break things.  But we need to wrap it in a try catch in case it is
+// wrapped in strict mode code which doesn't define any globals.  It's inside a
+// function because try/catches deoptimize in certain engines.
+
+var cachedSetTimeout;
+var cachedClearTimeout;
+
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
+(function () {
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
+    }
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
+    }
+} ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
+var queue = [];
+var draining = false;
+var currentQueue;
+var queueIndex = -1;
+
+function cleanUpNextTick() {
+    if (!draining || !currentQueue) {
+        return;
+    }
+    draining = false;
+    if (currentQueue.length) {
+        queue = currentQueue.concat(queue);
+    } else {
+        queueIndex = -1;
+    }
+    if (queue.length) {
+        drainQueue();
+    }
+}
+
+function drainQueue() {
+    if (draining) {
+        return;
+    }
+    var timeout = runTimeout(cleanUpNextTick);
+    draining = true;
+
+    var len = queue.length;
+    while(len) {
+        currentQueue = queue;
+        queue = [];
+        while (++queueIndex < len) {
+            if (currentQueue) {
+                currentQueue[queueIndex].run();
+            }
+        }
+        queueIndex = -1;
+        len = queue.length;
+    }
+    currentQueue = null;
+    draining = false;
+    runClearTimeout(timeout);
+}
+
+process.nextTick = function (fun) {
+    var args = new Array(arguments.length - 1);
+    if (arguments.length > 1) {
+        for (var i = 1; i < arguments.length; i++) {
+            args[i - 1] = arguments[i];
+        }
+    }
+    queue.push(new Item(fun, args));
+    if (queue.length === 1 && !draining) {
+        runTimeout(drainQueue);
+    }
+};
+
+// v8 likes predictible objects
+function Item(fun, array) {
+    this.fun = fun;
+    this.array = array;
+}
+Item.prototype.run = function () {
+    this.fun.apply(null, this.array);
+};
+process.title = 'browser';
+process.browser = true;
+process.env = {};
+process.argv = [];
+process.version = ''; // empty string to avoid regexp issues
+process.versions = {};
+
+function noop() {}
+
+process.on = noop;
+process.addListener = noop;
+process.once = noop;
+process.off = noop;
+process.removeListener = noop;
+process.removeAllListeners = noop;
+process.emit = noop;
+
+process.binding = function (name) {
+    throw new Error('process.binding is not supported');
+};
+
+process.cwd = function () { return '/' };
+process.chdir = function (dir) {
+    throw new Error('process.chdir is not supported');
+};
+process.umask = function() { return 0; };
+
+},{}],18:[function(require,module,exports){
 /*jshint eqnull:true*/
 (function (root) {
   "use strict";
@@ -18020,5 +18973,602 @@ function liftExport(namespace, name) {
     root[GLOBAL_KEY] = Random;
   }
 }(this));
-},{}]},{},[3])(3)
+},{}],19:[function(require,module,exports){
+module.exports = function isBuffer(arg) {
+  return arg && typeof arg === 'object'
+    && typeof arg.copy === 'function'
+    && typeof arg.fill === 'function'
+    && typeof arg.readUInt8 === 'function';
+}
+},{}],20:[function(require,module,exports){
+(function (process,global){
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+var formatRegExp = /%[sdj%]/g;
+exports.format = function(f) {
+  if (!isString(f)) {
+    var objects = [];
+    for (var i = 0; i < arguments.length; i++) {
+      objects.push(inspect(arguments[i]));
+    }
+    return objects.join(' ');
+  }
+
+  var i = 1;
+  var args = arguments;
+  var len = args.length;
+  var str = String(f).replace(formatRegExp, function(x) {
+    if (x === '%%') return '%';
+    if (i >= len) return x;
+    switch (x) {
+      case '%s': return String(args[i++]);
+      case '%d': return Number(args[i++]);
+      case '%j':
+        try {
+          return JSON.stringify(args[i++]);
+        } catch (_) {
+          return '[Circular]';
+        }
+      default:
+        return x;
+    }
+  });
+  for (var x = args[i]; i < len; x = args[++i]) {
+    if (isNull(x) || !isObject(x)) {
+      str += ' ' + x;
+    } else {
+      str += ' ' + inspect(x);
+    }
+  }
+  return str;
+};
+
+
+// Mark that a method should not be used.
+// Returns a modified function which warns once by default.
+// If --no-deprecation is set, then it is a no-op.
+exports.deprecate = function(fn, msg) {
+  // Allow for deprecating things in the process of starting up.
+  if (isUndefined(global.process)) {
+    return function() {
+      return exports.deprecate(fn, msg).apply(this, arguments);
+    };
+  }
+
+  if (process.noDeprecation === true) {
+    return fn;
+  }
+
+  var warned = false;
+  function deprecated() {
+    if (!warned) {
+      if (process.throwDeprecation) {
+        throw new Error(msg);
+      } else if (process.traceDeprecation) {
+        console.trace(msg);
+      } else {
+        console.error(msg);
+      }
+      warned = true;
+    }
+    return fn.apply(this, arguments);
+  }
+
+  return deprecated;
+};
+
+
+var debugs = {};
+var debugEnviron;
+exports.debuglog = function(set) {
+  if (isUndefined(debugEnviron))
+    debugEnviron = process.env.NODE_DEBUG || '';
+  set = set.toUpperCase();
+  if (!debugs[set]) {
+    if (new RegExp('\\b' + set + '\\b', 'i').test(debugEnviron)) {
+      var pid = process.pid;
+      debugs[set] = function() {
+        var msg = exports.format.apply(exports, arguments);
+        console.error('%s %d: %s', set, pid, msg);
+      };
+    } else {
+      debugs[set] = function() {};
+    }
+  }
+  return debugs[set];
+};
+
+
+/**
+ * Echos the value of a value. Trys to print the value out
+ * in the best way possible given the different types.
+ *
+ * @param {Object} obj The object to print out.
+ * @param {Object} opts Optional options object that alters the output.
+ */
+/* legacy: obj, showHidden, depth, colors*/
+function inspect(obj, opts) {
+  // default options
+  var ctx = {
+    seen: [],
+    stylize: stylizeNoColor
+  };
+  // legacy...
+  if (arguments.length >= 3) ctx.depth = arguments[2];
+  if (arguments.length >= 4) ctx.colors = arguments[3];
+  if (isBoolean(opts)) {
+    // legacy...
+    ctx.showHidden = opts;
+  } else if (opts) {
+    // got an "options" object
+    exports._extend(ctx, opts);
+  }
+  // set default options
+  if (isUndefined(ctx.showHidden)) ctx.showHidden = false;
+  if (isUndefined(ctx.depth)) ctx.depth = 2;
+  if (isUndefined(ctx.colors)) ctx.colors = false;
+  if (isUndefined(ctx.customInspect)) ctx.customInspect = true;
+  if (ctx.colors) ctx.stylize = stylizeWithColor;
+  return formatValue(ctx, obj, ctx.depth);
+}
+exports.inspect = inspect;
+
+
+// http://en.wikipedia.org/wiki/ANSI_escape_code#graphics
+inspect.colors = {
+  'bold' : [1, 22],
+  'italic' : [3, 23],
+  'underline' : [4, 24],
+  'inverse' : [7, 27],
+  'white' : [37, 39],
+  'grey' : [90, 39],
+  'black' : [30, 39],
+  'blue' : [34, 39],
+  'cyan' : [36, 39],
+  'green' : [32, 39],
+  'magenta' : [35, 39],
+  'red' : [31, 39],
+  'yellow' : [33, 39]
+};
+
+// Don't use 'blue' not visible on cmd.exe
+inspect.styles = {
+  'special': 'cyan',
+  'number': 'yellow',
+  'boolean': 'yellow',
+  'undefined': 'grey',
+  'null': 'bold',
+  'string': 'green',
+  'date': 'magenta',
+  // "name": intentionally not styling
+  'regexp': 'red'
+};
+
+
+function stylizeWithColor(str, styleType) {
+  var style = inspect.styles[styleType];
+
+  if (style) {
+    return '\u001b[' + inspect.colors[style][0] + 'm' + str +
+           '\u001b[' + inspect.colors[style][1] + 'm';
+  } else {
+    return str;
+  }
+}
+
+
+function stylizeNoColor(str, styleType) {
+  return str;
+}
+
+
+function arrayToHash(array) {
+  var hash = {};
+
+  array.forEach(function(val, idx) {
+    hash[val] = true;
+  });
+
+  return hash;
+}
+
+
+function formatValue(ctx, value, recurseTimes) {
+  // Provide a hook for user-specified inspect functions.
+  // Check that value is an object with an inspect function on it
+  if (ctx.customInspect &&
+      value &&
+      isFunction(value.inspect) &&
+      // Filter out the util module, it's inspect function is special
+      value.inspect !== exports.inspect &&
+      // Also filter out any prototype objects using the circular check.
+      !(value.constructor && value.constructor.prototype === value)) {
+    var ret = value.inspect(recurseTimes, ctx);
+    if (!isString(ret)) {
+      ret = formatValue(ctx, ret, recurseTimes);
+    }
+    return ret;
+  }
+
+  // Primitive types cannot have properties
+  var primitive = formatPrimitive(ctx, value);
+  if (primitive) {
+    return primitive;
+  }
+
+  // Look up the keys of the object.
+  var keys = Object.keys(value);
+  var visibleKeys = arrayToHash(keys);
+
+  if (ctx.showHidden) {
+    keys = Object.getOwnPropertyNames(value);
+  }
+
+  // IE doesn't make error fields non-enumerable
+  // http://msdn.microsoft.com/en-us/library/ie/dww52sbt(v=vs.94).aspx
+  if (isError(value)
+      && (keys.indexOf('message') >= 0 || keys.indexOf('description') >= 0)) {
+    return formatError(value);
+  }
+
+  // Some type of object without properties can be shortcutted.
+  if (keys.length === 0) {
+    if (isFunction(value)) {
+      var name = value.name ? ': ' + value.name : '';
+      return ctx.stylize('[Function' + name + ']', 'special');
+    }
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    }
+    if (isDate(value)) {
+      return ctx.stylize(Date.prototype.toString.call(value), 'date');
+    }
+    if (isError(value)) {
+      return formatError(value);
+    }
+  }
+
+  var base = '', array = false, braces = ['{', '}'];
+
+  // Make Array say that they are Array
+  if (isArray(value)) {
+    array = true;
+    braces = ['[', ']'];
+  }
+
+  // Make functions say that they are functions
+  if (isFunction(value)) {
+    var n = value.name ? ': ' + value.name : '';
+    base = ' [Function' + n + ']';
+  }
+
+  // Make RegExps say that they are RegExps
+  if (isRegExp(value)) {
+    base = ' ' + RegExp.prototype.toString.call(value);
+  }
+
+  // Make dates with properties first say the date
+  if (isDate(value)) {
+    base = ' ' + Date.prototype.toUTCString.call(value);
+  }
+
+  // Make error with message first say the error
+  if (isError(value)) {
+    base = ' ' + formatError(value);
+  }
+
+  if (keys.length === 0 && (!array || value.length == 0)) {
+    return braces[0] + base + braces[1];
+  }
+
+  if (recurseTimes < 0) {
+    if (isRegExp(value)) {
+      return ctx.stylize(RegExp.prototype.toString.call(value), 'regexp');
+    } else {
+      return ctx.stylize('[Object]', 'special');
+    }
+  }
+
+  ctx.seen.push(value);
+
+  var output;
+  if (array) {
+    output = formatArray(ctx, value, recurseTimes, visibleKeys, keys);
+  } else {
+    output = keys.map(function(key) {
+      return formatProperty(ctx, value, recurseTimes, visibleKeys, key, array);
+    });
+  }
+
+  ctx.seen.pop();
+
+  return reduceToSingleString(output, base, braces);
+}
+
+
+function formatPrimitive(ctx, value) {
+  if (isUndefined(value))
+    return ctx.stylize('undefined', 'undefined');
+  if (isString(value)) {
+    var simple = '\'' + JSON.stringify(value).replace(/^"|"$/g, '')
+                                             .replace(/'/g, "\\'")
+                                             .replace(/\\"/g, '"') + '\'';
+    return ctx.stylize(simple, 'string');
+  }
+  if (isNumber(value))
+    return ctx.stylize('' + value, 'number');
+  if (isBoolean(value))
+    return ctx.stylize('' + value, 'boolean');
+  // For some reason typeof null is "object", so special case here.
+  if (isNull(value))
+    return ctx.stylize('null', 'null');
+}
+
+
+function formatError(value) {
+  return '[' + Error.prototype.toString.call(value) + ']';
+}
+
+
+function formatArray(ctx, value, recurseTimes, visibleKeys, keys) {
+  var output = [];
+  for (var i = 0, l = value.length; i < l; ++i) {
+    if (hasOwnProperty(value, String(i))) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          String(i), true));
+    } else {
+      output.push('');
+    }
+  }
+  keys.forEach(function(key) {
+    if (!key.match(/^\d+$/)) {
+      output.push(formatProperty(ctx, value, recurseTimes, visibleKeys,
+          key, true));
+    }
+  });
+  return output;
+}
+
+
+function formatProperty(ctx, value, recurseTimes, visibleKeys, key, array) {
+  var name, str, desc;
+  desc = Object.getOwnPropertyDescriptor(value, key) || { value: value[key] };
+  if (desc.get) {
+    if (desc.set) {
+      str = ctx.stylize('[Getter/Setter]', 'special');
+    } else {
+      str = ctx.stylize('[Getter]', 'special');
+    }
+  } else {
+    if (desc.set) {
+      str = ctx.stylize('[Setter]', 'special');
+    }
+  }
+  if (!hasOwnProperty(visibleKeys, key)) {
+    name = '[' + key + ']';
+  }
+  if (!str) {
+    if (ctx.seen.indexOf(desc.value) < 0) {
+      if (isNull(recurseTimes)) {
+        str = formatValue(ctx, desc.value, null);
+      } else {
+        str = formatValue(ctx, desc.value, recurseTimes - 1);
+      }
+      if (str.indexOf('\n') > -1) {
+        if (array) {
+          str = str.split('\n').map(function(line) {
+            return '  ' + line;
+          }).join('\n').substr(2);
+        } else {
+          str = '\n' + str.split('\n').map(function(line) {
+            return '   ' + line;
+          }).join('\n');
+        }
+      }
+    } else {
+      str = ctx.stylize('[Circular]', 'special');
+    }
+  }
+  if (isUndefined(name)) {
+    if (array && key.match(/^\d+$/)) {
+      return str;
+    }
+    name = JSON.stringify('' + key);
+    if (name.match(/^"([a-zA-Z_][a-zA-Z_0-9]*)"$/)) {
+      name = name.substr(1, name.length - 2);
+      name = ctx.stylize(name, 'name');
+    } else {
+      name = name.replace(/'/g, "\\'")
+                 .replace(/\\"/g, '"')
+                 .replace(/(^"|"$)/g, "'");
+      name = ctx.stylize(name, 'string');
+    }
+  }
+
+  return name + ': ' + str;
+}
+
+
+function reduceToSingleString(output, base, braces) {
+  var numLinesEst = 0;
+  var length = output.reduce(function(prev, cur) {
+    numLinesEst++;
+    if (cur.indexOf('\n') >= 0) numLinesEst++;
+    return prev + cur.replace(/\u001b\[\d\d?m/g, '').length + 1;
+  }, 0);
+
+  if (length > 60) {
+    return braces[0] +
+           (base === '' ? '' : base + '\n ') +
+           ' ' +
+           output.join(',\n  ') +
+           ' ' +
+           braces[1];
+  }
+
+  return braces[0] + base + ' ' + output.join(', ') + ' ' + braces[1];
+}
+
+
+// NOTE: These type checking functions intentionally don't use `instanceof`
+// because it is fragile and can be easily faked with `Object.create()`.
+function isArray(ar) {
+  return Array.isArray(ar);
+}
+exports.isArray = isArray;
+
+function isBoolean(arg) {
+  return typeof arg === 'boolean';
+}
+exports.isBoolean = isBoolean;
+
+function isNull(arg) {
+  return arg === null;
+}
+exports.isNull = isNull;
+
+function isNullOrUndefined(arg) {
+  return arg == null;
+}
+exports.isNullOrUndefined = isNullOrUndefined;
+
+function isNumber(arg) {
+  return typeof arg === 'number';
+}
+exports.isNumber = isNumber;
+
+function isString(arg) {
+  return typeof arg === 'string';
+}
+exports.isString = isString;
+
+function isSymbol(arg) {
+  return typeof arg === 'symbol';
+}
+exports.isSymbol = isSymbol;
+
+function isUndefined(arg) {
+  return arg === void 0;
+}
+exports.isUndefined = isUndefined;
+
+function isRegExp(re) {
+  return isObject(re) && objectToString(re) === '[object RegExp]';
+}
+exports.isRegExp = isRegExp;
+
+function isObject(arg) {
+  return typeof arg === 'object' && arg !== null;
+}
+exports.isObject = isObject;
+
+function isDate(d) {
+  return isObject(d) && objectToString(d) === '[object Date]';
+}
+exports.isDate = isDate;
+
+function isError(e) {
+  return isObject(e) &&
+      (objectToString(e) === '[object Error]' || e instanceof Error);
+}
+exports.isError = isError;
+
+function isFunction(arg) {
+  return typeof arg === 'function';
+}
+exports.isFunction = isFunction;
+
+function isPrimitive(arg) {
+  return arg === null ||
+         typeof arg === 'boolean' ||
+         typeof arg === 'number' ||
+         typeof arg === 'string' ||
+         typeof arg === 'symbol' ||  // ES6 symbol
+         typeof arg === 'undefined';
+}
+exports.isPrimitive = isPrimitive;
+
+exports.isBuffer = require('./support/isBuffer');
+
+function objectToString(o) {
+  return Object.prototype.toString.call(o);
+}
+
+
+function pad(n) {
+  return n < 10 ? '0' + n.toString(10) : n.toString(10);
+}
+
+
+var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep',
+              'Oct', 'Nov', 'Dec'];
+
+// 26 Feb 16:19:34
+function timestamp() {
+  var d = new Date();
+  var time = [pad(d.getHours()),
+              pad(d.getMinutes()),
+              pad(d.getSeconds())].join(':');
+  return [d.getDate(), months[d.getMonth()], time].join(' ');
+}
+
+
+// log is just a thin wrapper to console.log that prepends a timestamp
+exports.log = function() {
+  console.log('%s - %s', timestamp(), exports.format.apply(exports, arguments));
+};
+
+
+/**
+ * Inherit the prototype methods from one constructor into another.
+ *
+ * The Function.prototype.inherits from lang.js rewritten as a standalone
+ * function (not on Function.prototype). NOTE: If this file is to be loaded
+ * during bootstrapping this function needs to be rewritten using some native
+ * functions as prototype setup using normal JavaScript does not work as
+ * expected during bootstrapping (see mirror.js in r114903).
+ *
+ * @param {function} ctor Constructor function which needs to inherit the
+ *     prototype.
+ * @param {function} superCtor Constructor function to inherit prototype from.
+ */
+exports.inherits = require('inherits');
+
+exports._extend = function(origin, add) {
+  // Don't do anything if add isn't an object
+  if (!add || !isObject(add)) return origin;
+
+  var keys = Object.keys(add);
+  var i = keys.length;
+  while (i--) {
+    origin[keys[i]] = add[keys[i]];
+  }
+  return origin;
+};
+
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+}).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"./support/isBuffer":19,"_process":17,"inherits":15}]},{},[3])(3)
 });
