@@ -1,0 +1,12 @@
+language: node_js
+
+before_script:
+  - npm run lint
+
+node_js:
+  - "5.1"
+  - "5"
+  - "0.12"
+
+after_success:
+  - ./node_modules/.bin/nyc npm test && ./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls
