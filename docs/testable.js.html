@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: types/falsy.js</title>
+    <title>JSDoc: Source: testable.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: types/falsy.js</h1>
+    <h1 class="page-title">Source: testable.js</h1>
 
     
 
@@ -29,34 +29,72 @@
             <pre class="prettyprint source linenums"><code>/**
  * @module
  */
-import {elements} from '../combinators';
+import _ from 'lodash';
+import assert from 'assert';
+
+class ForAll{
+  constructor(arbs) {
+    this.arbs = arbs;
+  }
+  hold(property) {
+    return () => {
+      let samples = this.arbs.map(arb => {
+        return arb.generate();
+      });
+      return property.apply(null, samples);
+    };
+  }
+  check(property) {
+    return this.hold(property)();
+  }
+}
 
 /**
- * falsy values.
+ * Create a ForAll.
  *
- * @type {Array}
+ * @param {...Arbitrary} arbitraries.
+ * @return {ForAll}
  */
-export const FALSY_VALUES = [
-  undefined,
-  void(0),
-  null,
-  false,
-  0,
-  ''
-];
+export function forall(...arbs) {
+  return new ForAll(arbs);
+}
 
 /**
- * Falsy Arbitrary
+ * Check a proposition test.
  *
- * generates falsy values: false, null, undefined, '',
- * 0, void(0) and NaN.
- *
- * @type {Arbitrary}
+ * @param {function} test
+ * @return {boolean}
+ */
+export function check(test) {
+  let tests = 100;
+  let pass = false;
+  for (let i = 0; i &lt;= tests; i++) {
+    let result = test();
+    if (!result) break;
+  }
+  return pass;
+}
+
+/**
+ * A helper function to run a proposition test in mocha.
  *
  * @example
- * hc.falsy.generate();
+ * hc.hold('x + y', hc.int, hc.int, (x,y) => x+y===y+x);
+ *
+ * /// it is the same as...
+ * let prop = hc.forall(hc.int, hc.int).hold((x,y) => x+y === y+x);
+ * it('x+y=y+x', prop);
  */
-export const falsy = elements(FALSY_VALUES);
+export function hold(...args) {
+  let name = args[0];
+  let arbs = args.slice(1, args.length - 1);
+  let prop = args[args.length - 1];
+  let test = forall.apply(null, arbs).hold(prop);
+  it(name, (done) => {
+    check(test)
+    done();
+  });
+}
 </code></pre>
         </article>
     </section>

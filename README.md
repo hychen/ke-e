@@ -16,11 +16,13 @@ install the module with: npm install hycheck
 ```javascript
 import hc from `hycheck`
 
-// generate a random integer.
-hc.int.generate()
-
-// generate a random integer betwen -10 and 10.
-hc.int.choose(-10, 10).generate()
+describe('Integer', () => {
+  hc.hold(
+    'x + y = y + x'
+    hc.int, hc.int,
+    (x, y) => x + y === y + x
+    );
+});
 ```
 
 ### Browser using script tag
@@ -30,8 +32,13 @@ Download hycheck.js and place it in your project, then add it as the follwoing.
 ```html
 <script src="dist/hycheck.js"></script>
 <script>
-// generate a random integer betwen -10 and 10.
-hc.default.int.choose(-10, 10).generate()
+describe('Integer', () => {
+  hc.hold(
+    'x + y = y + x'
+    hc.int, hc.int,
+    (x, y) => x + y === y + x
+    );
+});
 </script>
 ```
 
