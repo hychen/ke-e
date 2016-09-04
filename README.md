@@ -4,7 +4,7 @@
 
 HyCheck is a property-based testing library, inspired by QuickCheck, Hypothesis, JSVerify.
 
-- warrning: only arbitraries are implemented now.
+- warrning: counterexample and shrink are not implemented.
 - more details see [Documents](http://hychen.me/hycheck/index.html).
 
 ## Getting Started
