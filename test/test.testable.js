@@ -22,7 +22,7 @@ describe('hold()', () => {
 
   hc.hold(
     'x + y === y + x',
-    hc.int, hc.int,
-    (x, y) => x + y === y + x
+    hc.int.choose(-15, 15),
+    (x)  => _.isInteger(x)
   );
 });
