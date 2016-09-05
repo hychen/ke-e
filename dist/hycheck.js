@@ -475,7 +475,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
 
 
 exports.forall = forall;
-exports.check = check;
 exports.hold = hold;
 
 var _lodash = require('lodash');
@@ -506,18 +505,59 @@ var ForAll = function () {
         var samples = _this.arbs.map(function (arb) {
           return arb.generate();
         });
-        return property.apply(null, samples);
+        try {
+          var success = !!property.apply(null, samples);
+          return {
+            success: success,
+            counterExample: samples
+          };
+        } catch (e) {
+          return {
+            success: false,
+            counterExample: samples,
+            exception: e
+          };
+        }
       };
     }
   }, {
     key: 'check',
     value: function check(property) {
-      return this.hold(property)();
+      var tests = 100;
+      var result = {
+        numTests: 1,
+        totalTests: tests,
+        pass: true
+      };
+      for (var i = result.numTests; i <= tests; i++) {
+        var r = this.hold(property)();
+        result.numTests = i;
+        if (!r.success) {
+          result.pass = false;
+          result.reason = formatFalure(r), result.testResult = r;
+          break;
+        }
+      }
+      return result;
+    }
+  }, {
+    key: 'expect',
+    value: function expect(property) {
+      var r = this.check(property);
+      if (r.testResult.exception) throw r.testResult.exception;
     }
   }]);
 
   return ForAll;
 }();
+
+function formatFalure(result) {
+  var msg = 'counter example: ' + result.counterExample;
+  if (result.exception) {
+    msg += ', exception: ' + result.exception;
+  }
+  return msg;
+}
 
 /**
  * Create a ForAll.
@@ -525,8 +565,6 @@ var ForAll = function () {
  * @param {...Arbitrary} arbitraries.
  * @return {ForAll}
  */
-
-
 function forall() {
   for (var _len = arguments.length, arbs = Array(_len), _key = 0; _key < _len; _key++) {
     arbs[_key] = arguments[_key];
@@ -536,29 +574,13 @@ function forall() {
 }
 
 /**
- * Check a proposition test.
- *
- * @param {function} test
- * @return {boolean}
- */
-function check(test) {
-  var tests = 100;
-  var pass = false;
-  for (var i = 0; i <= tests; i++) {
-    var result = test();
-    if (!result) break;
-  }
-  return pass;
-}
-
-/**
  * A helper function to run a proposition test in mocha.
  *
  * @example
  * hc.hold('x + y', hc.int, hc.int, (x,y) => x+y===y+x);
  *
  * /// it is the same as...
- * let prop = hc.forall(hc.int, hc.int).hold((x,y) => x+y === y+x);
+ * let prop = hc.forall(hc.int, hc.int).check((x,y) => x+y === y+x);
  * it('x+y=y+x', prop);
  */
 function hold() {
@@ -569,9 +591,9 @@ function hold() {
   var name = args[0];
   var arbs = args.slice(1, args.length - 1);
   var prop = args[args.length - 1];
-  var test = forall.apply(null, arbs).hold(prop);
   it(name, function (done) {
-    check(test);
+    var result = forall.apply(null, arbs).check(prop);
+    (0, _assert2.default)(result.pass, name + ' doesn\'t hold, ' + result.reason + (', tried: ' + result.numTests + '/' + result.totalTests));
     done();
   });
 }
