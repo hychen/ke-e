@@ -39,10 +39,13 @@ export function forall(...arbs) {
  */
 export function check(test) {
   let tests = 100;
-  let pass = false;
+  let pass = true;
   for (let i = 0; i <= tests; i++) {
     let result = test();
-    if (!result) break;
+    if (!result) {
+      pass = false;
+      break;
+    }
   }
   return pass;
 }
@@ -63,7 +66,8 @@ export function hold(...args) {
   let prop = args[args.length - 1];
   let test = forall.apply(null, arbs).hold(prop);
   it(name, (done) => {
-    check(test)
+    let pass = check(test);
+    assert(pass, `${name} doesn't hold`);
     done();
   });
 }
