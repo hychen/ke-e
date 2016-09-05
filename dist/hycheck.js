@@ -240,7 +240,7 @@ function fromGenMaker(gen, genOpts) {
 
 exports.Arbitrary = Arbitrary;
 exports.fromGenMaker = fromGenMaker;
-},{"./random":4,"assert":14,"lodash":16,"random-js":18}],2:[function(require,module,exports){
+},{"./random":4,"assert":15,"lodash":17,"random-js":19}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -252,6 +252,10 @@ exports.oneOf = oneOf;
 exports.array = array;
 exports.nearray = nearray;
 exports.elements = elements;
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
 
 var _randomJs = require('random-js');
 
@@ -270,9 +274,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @example
  * // returns 1.
  * hc.constant(1).generate();
- */
-/**
- * @module
  */
 function constant(value) {
   return new _arbitrary.Arbitrary({
@@ -294,6 +295,9 @@ function constant(value) {
  * @example
  * // returns even number.
  * hc.suchThat(hc.int, (n) => n / 2 === 0).generate();
+ */
+/**
+ * @module
  */
 function suchThat(arb, predicate) {
   var oriGen = arb.makeGen();
@@ -362,7 +366,7 @@ function array(arb) {
   return new _arbitrary.Arbitrary({
     gen: function gen(min, max) {
       return function (engine) {
-        return _.range(0, _randomJs2.default.integer(min, max)(engine)).map(function () {
+        return _lodash2.default.range(0, _randomJs2.default.integer(min, max)(engine)).map(function () {
           return arb.makeGen()(engine);
         });
       };
@@ -402,7 +406,7 @@ function elements(pool) {
     }
   });
 }
-},{"./arbitrary":1,"random-js":18}],3:[function(require,module,exports){
+},{"./arbitrary":1,"lodash":17,"random-js":19}],3:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -419,18 +423,24 @@ var _combinators = require('./combinators');
 
 var combinators = _interopRequireWildcard(_combinators);
 
+var _testable = require('./testable');
+
+var testable = _interopRequireWildcard(_testable);
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var __all__ = {
   types: types,
-  combinators: combinators
+  combinators: combinators,
+  testable: testable
 };
 
 (0, _utils.liftExport)(__all__, 'types');
 (0, _utils.liftExport)(__all__, 'combinators');
+(0, _utils.liftExport)(__all__, 'testable');
 
 exports.default = __all__;
-},{"./combinators":2,"./types":10,"./utils":13}],4:[function(require,module,exports){
+},{"./combinators":2,"./testable":5,"./types":11,"./utils":14}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -452,7 +462,120 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 var mt19937 = exports.mt19937 = _randomJs2.default.engines.mt19937().autoSeed(); /**
                                                                                   * @module
                                                                                   */
-},{"random-js":18}],5:[function(require,module,exports){
+},{"random-js":19}],5:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @module
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+
+exports.forall = forall;
+exports.check = check;
+exports.hold = hold;
+
+var _lodash = require('lodash');
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _assert = require('assert');
+
+var _assert2 = _interopRequireDefault(_assert);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ForAll = function () {
+  function ForAll(arbs) {
+    _classCallCheck(this, ForAll);
+
+    this.arbs = arbs;
+  }
+
+  _createClass(ForAll, [{
+    key: 'hold',
+    value: function hold(property) {
+      var _this = this;
+
+      return function () {
+        var samples = _this.arbs.map(function (arb) {
+          return arb.generate();
+        });
+        return property.apply(null, samples);
+      };
+    }
+  }, {
+    key: 'check',
+    value: function check(property) {
+      return this.hold(property)();
+    }
+  }]);
+
+  return ForAll;
+}();
+
+/**
+ * Create a ForAll.
+ *
+ * @param {...Arbitrary} arbitraries.
+ * @return {ForAll}
+ */
+
+
+function forall() {
+  for (var _len = arguments.length, arbs = Array(_len), _key = 0; _key < _len; _key++) {
+    arbs[_key] = arguments[_key];
+  }
+
+  return new ForAll(arbs);
+}
+
+/**
+ * Check a proposition test.
+ *
+ * @param {function} test
+ * @return {boolean}
+ */
+function check(test) {
+  var tests = 100;
+  var pass = false;
+  for (var i = 0; i <= tests; i++) {
+    var result = test();
+    if (!result) break;
+  }
+  return pass;
+}
+
+/**
+ * A helper function to run a proposition test in mocha.
+ *
+ * @example
+ * hc.hold('x + y', hc.int, hc.int, (x,y) => x+y===y+x);
+ *
+ * /// it is the same as...
+ * let prop = hc.forall(hc.int, hc.int).hold((x,y) => x+y === y+x);
+ * it('x+y=y+x', prop);
+ */
+function hold() {
+  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    args[_key2] = arguments[_key2];
+  }
+
+  var name = args[0];
+  var arbs = args.slice(1, args.length - 1);
+  var prop = args[args.length - 1];
+  var test = forall.apply(null, arbs).hold(prop);
+  it(name, function (done) {
+    check(test);
+    done();
+  });
+}
+},{"assert":15,"lodash":17}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -466,6 +589,8 @@ var _falsy = require('./falsy');
 
 var _number = require('./number');
 
+var _string = require('./string');
+
 var _combinators = require('../combinators');
 
 /**
@@ -473,11 +598,10 @@ var _combinators = require('../combinators');
  *
  * @type {Arbitrary}
  */
-/**
- * @module
- */
-var any = exports.any = (0, _combinators.oneOf)([_boolean.bool, _falsy.falsy, _number.int, _number.number]);
-},{"../combinators":2,"./boolean":6,"./falsy":8,"./number":11}],6:[function(require,module,exports){
+var any = exports.any = (0, _combinators.oneOf)([_boolean.bool, _falsy.falsy, _number.int, _number.number, _string.string]); /**
+                                                                                                                              * @module
+                                                                                                                              */
+},{"../combinators":2,"./boolean":7,"./falsy":9,"./number":12,"./string":13}],7:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -513,7 +637,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @module
  */
 var bool = exports.bool = (0, _arbitrary.fromGenMaker)(_randomJs2.default.bool);
-},{"../arbitrary":1,"random-js":18}],7:[function(require,module,exports){
+},{"../arbitrary":1,"random-js":19}],8:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -547,7 +671,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  * @module
  */
 var date = exports.date = (0, _arbitrary.fromGenMaker)(_randomJs2.default.date, [new Date(1984, 3, 25), new Date()]);
-},{"../arbitrary":1,"random-js":18}],8:[function(require,module,exports){
+},{"../arbitrary":1,"random-js":19}],9:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -579,7 +703,7 @@ var FALSY_VALUES = exports.FALSY_VALUES = [undefined, void 0, null, false, 0, ''
  * @module
  */
 var falsy = exports.falsy = (0, _combinators.elements)(FALSY_VALUES);
-},{"../combinators":2}],9:[function(require,module,exports){
+},{"../combinators":2}],10:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -616,7 +740,7 @@ var func = exports.func = new _arbitrary.Arbitrary({
 }); /**
      * @module
      */
-},{"../arbitrary":1,"../combinators":2,"./any":5}],10:[function(require,module,exports){
+},{"../arbitrary":1,"../combinators":2,"./any":6}],11:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -706,7 +830,7 @@ Object.keys(_datetime).forEach(function (key) {
     }
   });
 });
-},{"./any":5,"./boolean":6,"./datetime":7,"./falsy":8,"./function":9,"./number":11,"./string":12}],11:[function(require,module,exports){
+},{"./any":6,"./boolean":7,"./datetime":8,"./falsy":9,"./function":10,"./number":12,"./string":13}],12:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -762,22 +886,22 @@ var nat = exports.nat = int.choose(1, Number.MAX_SAFE_INTEGER);
  *
  * @type {Arbitrary}
  */
-var number = exports.number = (0, _arbitrary.fromGenMaker)(_randomJs2.default.real, [-Number.MAX_VALUE, Number.MAX_VALUE]);
+var number = exports.number = (0, _arbitrary.fromGenMaker)(_randomJs2.default.real, [-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]);
 
 /**
  * Positive Number Arbitary
  *
  * @type {Arbitrary}
  */
-var pnumber = exports.pnumber = number.choose(0, Number.MAX_VALUE);
+var pnumber = exports.pnumber = number.choose(0, Number.MAX_SAFE_INTEGER);
 
 /**
  * Negative Number Arbitary
  *
  * @type {Arbitrary}
  */
-var nnumber = exports.nnumber = number.choose(-Number.MAX_VALUE, -0.0000000001);
-},{"../arbitrary":1,"random-js":18}],12:[function(require,module,exports){
+var nnumber = exports.nnumber = number.choose(-Number.MAX_SAFE_INTEGER, -0.0000000001);
+},{"../arbitrary":1,"random-js":19}],13:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -922,7 +1046,7 @@ function nestringOf(charArb) {
     return chars.join('');
   });
 }
-},{"../arbitrary":1,"../combinators":2,"./number":11,"lodash":16,"random-js":18}],13:[function(require,module,exports){
+},{"../arbitrary":1,"../combinators":2,"./number":12,"lodash":17,"random-js":19}],14:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -951,7 +1075,7 @@ function liftExport(namespace, name) {
 } /**
    * @module
    */
-},{"lodash":16}],14:[function(require,module,exports){
+},{"lodash":17}],15:[function(require,module,exports){
 // http://wiki.commonjs.org/wiki/Unit_Testing/1.0
 //
 // THIS IS NOT TESTED NOR LIKELY TO WORK OUTSIDE V8!
@@ -1312,7 +1436,7 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-},{"util/":20}],15:[function(require,module,exports){
+},{"util/":21}],16:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -1337,7 +1461,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -18074,7 +18198,7 @@ if (typeof Object.create === 'function') {
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -18256,7 +18380,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /*jshint eqnull:true*/
 (function (root) {
   "use strict";
@@ -18973,14 +19097,14 @@ process.umask = function() { return 0; };
     root[GLOBAL_KEY] = Random;
   }
 }(this));
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -19570,5 +19694,5 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":19,"_process":17,"inherits":15}]},{},[3])(3)
+},{"./support/isBuffer":20,"_process":18,"inherits":16}]},{},[3])(3)
 });

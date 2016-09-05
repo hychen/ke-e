@@ -1,6 +1,7 @@
 /**
  * @module
  */
+import _ from 'lodash';
 import Random from 'random-js';
 import {Arbitrary} from './arbitrary';
 
