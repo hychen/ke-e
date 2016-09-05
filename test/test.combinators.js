@@ -45,7 +45,7 @@ describe('array', () => {
       let min = 1 + start;
       let max = min + delta;
       let x = arb.choose(min, max).generate();
-      return _.every(x.map(_.isInteger)) &&
+      return _.every(x, _.isInteger) &&
         x.length >= min &&
         x.length <= max;
     });
