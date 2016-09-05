@@ -44,18 +44,18 @@ export const nat = int.choose(1, Number.MAX_SAFE_INTEGER);
  * @type {Arbitrary}
  */
 export const number = fromGenMaker(Random.real ,
-                                   [-Number.MAX_VALUE, Number.MAX_VALUE]);
+                                   [-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]);
 
 /**
  * Positive Number Arbitary
  *
  * @type {Arbitrary}
  */
-export const pnumber = number.choose(0, Number.MAX_VALUE);
+export const pnumber = number.choose(0, Number.MAX_SAFE_INTEGER);
 
 /**
  * Negative Number Arbitary
  *
  * @type {Arbitrary}
  */
-export const nnumber = number.choose(-Number.MAX_VALUE, -0.0000000001);
+export const nnumber = number.choose(-Number.MAX_SAFE_INTEGER, -0.0000000001);
