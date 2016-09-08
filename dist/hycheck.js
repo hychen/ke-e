@@ -427,9 +427,13 @@ var _testable = require('./testable');
 
 var testable = _interopRequireWildcard(_testable);
 
+var _arbitrary = require('./arbitrary');
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 var __all__ = {
+  Arbitrary: _arbitrary.Arbitrary,
+  fromGenMaker: _arbitrary.fromGenMaker,
   types: types,
   combinators: combinators,
   testable: testable
@@ -440,7 +444,7 @@ var __all__ = {
 (0, _utils.liftExport)(__all__, 'testable');
 
 exports.default = __all__;
-},{"./combinators":2,"./testable":5,"./types":11,"./utils":14}],4:[function(require,module,exports){
+},{"./arbitrary":1,"./combinators":2,"./testable":5,"./types":11,"./utils":14}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
