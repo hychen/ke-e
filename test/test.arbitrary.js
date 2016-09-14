@@ -1,85 +1,63 @@
 import Random from 'random-js';
 import {Arbitrary, fromGenMaker} from '../src/arbitrary';
 
-describe('Class Arbitrary', () => {
+describe.only('Arbitrary', () => {
 
-  let return0arb = new Arbitrary(
-    {gen: (x) => (engine) => { return x}, genOpts: [0]});
+  let engine = Random.engines.mt19937();
 
-  describe('constructor()', () => {
-
-    it("catchs invalid arbitrary options", () => {
-      expect(() => new Arbitrary()).throw(Error);
-    })
-
-    it("catchs invalid generator.", () => {
-      expect(() => new Arbitrary({gen: null})).throw(Error);
+  jsc.property(
+    'value generation is repeatable.',
+    'integer',
+    (n) => {
+      let g = Random.integer;
+      let opts = [-n, n];
+      let arb1 = fromGenMaker(Random.integer, opts);
+      let arb2 = new Arbitrary({gen: g, genOpts: opts});
+      let r1 = g.apply(null, opts)(engine.seed(n));
+      let r2 = arb1.seed(n).generate();
+      let r3 = arb2.seed(n).generate();
+      return r1 === r2 && r2 === r3 && r2 === r1;
     });
 
-    it("catchs invalid generator options.", () => {
-      expect(() => new Arbitrary({gen: () => {}, genOpts: 5})).throw(Error);
+  jsc.property(
+    'inclusive ranges is immutable.',
+    'nat',
+    (n) => {
+      let arb1 = new Arbitrary({gen: Random.integer, genOpts: [1, 1 + n]});
+      let arb2 = arb1.choose(-n, 0);
+      let r1 = arb1.generate();
+      let r2 = arb2.generate();
+      return r1 >= 1 && r1 <= 1 + n && r2 >= -n && r2 <= 0;
     });
 
-  });
-
-  describe('engine()', () => {
-
-    it("catchs invalid engine.", () => {
-      let arb = new Arbitrary({gen: () => {}});
-      expect(() => arb.engine()).throw(Error);
-    });
-
-  });
-
-  describe('generate()', () => {
-
-    it('runs a generator.', () => {
-      expect(return0arb.generate()).eq(0);
-    })
-
-  });
-
-  describe('sample()', () => {
-
-    it('catchs invalid size', () => {
-      expect(() => return0arb.sample(-4.9)).throw(Error);
-      expect(() => return0arb.sample(-4)).throw(Error);
-      expect(() => return0arb.sample([12])).throw(Error);
-      expect(() => return0arb.sample({})).throw(Error);
-    });
-
-    it('generators sample', () => {
-      expect(return0arb.sample().length).eq(30);
-    })
-
-  });
-
-  describe('choose()', () => {
-
-    it('makes a clone with new generator options.', () => {
-      let return1arb= return0arb.choose(1);
-      expect(return0arb.generate() + 1).eq(return1arb.generate());
-    });
-
-  });
-
-  describe('transform()', () => {
-
-    it("transform arbitrary A to arbitrary B", () => {
-      let f = n => n + 1;
-      let x = return0arb.transform(f).generate();
-      expect(f(return0arb.generate())).eq(x);
-    });
-
-  });
 
 });
 
-describe('fromGenMaker', () => {
+describe('Arbitrary Transform', () => {
 
-  it('convert a generator maker to an arbitrary.', () => {
-    let int = fromGenMaker(Random.integer, [-10, 10]);
-    expect(_.isInteger(int.generate())).eq(true);
-  });
+  jsc.property(
+    'idempotent.',
+    'nat',
+    (n) => {
+      let arb1 = new Arbitrary({gen: Random.integer, genOpts: [1, 1 + n]});
+      let arb2 = arb1.transform(_.identity);
+      let r1 = arb1.seed(n).generate();
+      let r2 = arb2.seed(n).generate();
+      return r1 === r2;
+    }
+
+  );
+
+  jsc.property(
+    'immutable.',
+    'nat',
+    (n) => {
+      let arb1 = new Arbitrary({gen: Random.integer, genOpts: [1, 1 + n]});
+      let arb2 = arb1.transform(String.fromCharCode);
+      let r1 = arb1.seed(n).generate();
+      let r2 = arb2.seed(n).generate();
+      return String.fromCharCode(r1) === r2;
+    }
+  )
 
 });

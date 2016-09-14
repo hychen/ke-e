@@ -82,6 +82,7 @@ class Arbitrary {
    */
   seed(seed) {
     this._engine.seed(seed);
+    return this;
   }
   /**
    * Set a random value generator.
