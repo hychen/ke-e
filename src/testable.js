@@ -8,6 +8,9 @@ class ForAll{
   constructor(arbs) {
     this.arbs = arbs;
   }
+  eval(f) {
+    return f.apply(null, this.arbs.map(arb => arb.generate()));
+  }
   hold(property) {
     return () => {
       let samples = this.arbs.map(arb => {

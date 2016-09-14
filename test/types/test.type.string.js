@@ -1,4 +1,4 @@
-describe('String', () => {
+describe('Arbitrary String', () => {
 
   it('generate a random string.', () => {
     let c0 = hc.char.generate();

@@ -1,4 +1,4 @@
-describe('Nat', () => {
+describe('Arbitrary Nat', () => {
   jsc.property(
     'generate a random nature number.',
     'nat', 'nat',
@@ -10,7 +10,7 @@ describe('Nat', () => {
     });
 });
 
-describe('Integer', () => {
+describe('Arbitrary Integer', () => {
   jsc.property(
     'generate a random nature number.',
     'integer', 'integer',
@@ -20,7 +20,7 @@ describe('Integer', () => {
     });
 });
 
-describe('Number', () => {
+describe('Arbitrary Number', () => {
   jsc.property(
     'generate a random float number.',
     'number', 'number',

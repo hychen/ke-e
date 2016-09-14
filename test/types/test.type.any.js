@@ -1,5 +1,5 @@
-describe('Any', () => {
-  it('generates one of boolean, falsy, integer, number.', () => {
+describe('Arbitrary Any', () => {
+  it('generate one of boolean, falsy, integer, number.', () => {
     let xs = hc.any.sample(100);
     xs.forEach((x) => {
       expect(_.isNumber(x) ||

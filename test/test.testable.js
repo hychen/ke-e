@@ -1,28 +1,22 @@
 import Random from 'random-js';
 
-describe('forall()', () => {
+describe('Testable', () => {
 
-  it('forall()', () => {
+  describe('Forall', () => {
 
-    let p = hc.forall(hc.int, hc.int).hold((x, y) => {
-      expect(_.isInteger(x + y)).eq(true);
-    });
-    p();
-  })
+    jsc.property(
+      'evaluating a test.',
+      'nat',
+      (n) => {
+        let f = (x, y) => (n+x) + y === y + (n+x);
+        let r1 = hc.forall(hc.int, hc.int).eval(f);
+        let r2 = f(hc.int.generate(), hc.int.generate());
+        return r1 === r2;
+      }
+    )
 
-  it('check().', () => {
-    hc.forall(hc.int, hc.int).check((x, y) => {
-      expect(_.isInteger(x + y)).eq(true);
-    });
+    hc.hold('mocha intergration works.', hc.int, n => n === n);
+
   });
 
-});
-
-describe('hold()', () => {
-
-  hc.hold(
-    'x + y === y + x',
-    hc.int.choose(-15, 15),
-    (x)  => _.isInteger(x)
-  );
 });
