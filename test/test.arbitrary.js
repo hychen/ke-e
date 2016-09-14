@@ -1,7 +1,7 @@
 import Random from 'random-js';
 import {Arbitrary, fromGenMaker} from '../src/arbitrary';
 
-describe.only('Arbitrary', () => {
+describe('Arbitrary', () => {
 
   let engine = Random.engines.mt19937();
 
