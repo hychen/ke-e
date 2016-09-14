@@ -4,10 +4,29 @@
 import _ from 'lodash';
 import assert from 'assert';
 
+/**
+ * For All Quantifiler.
+ */
 class ForAll{
+  /**
+   * Create a ForAll.
+   *
+   * @param {Array} arbs arbitraries
+   * @return {ForAll}
+   * @example
+   * new ForAll([hc.int, hc.int])
+   */
   constructor(arbs) {
     this.arbs = arbs;
   }
+  /**
+   * Evaluating a test.
+   *
+   * @param {function} f any function takes generated values as parameters.
+   * @return {*}
+   * @example
+   * new ForAll([hc.int]).eval(x => x + 1);
+   */
   eval(f) {
     return f.apply(null, this.arbs.map(arb => arb.generate()));
   }
@@ -68,7 +87,7 @@ function formatFalure(result) {
 /**
  * Create a ForAll.
  *
- * @param {...Arbitrary} arbitraries.
+ * @param {...Arbitrary} arbs arbitraries.
  * @return {ForAll}
  */
 export function forall(...arbs) {
