@@ -1,31 +1,79 @@
 describe('Arbitrary Nat', () => {
+
   jsc.property(
-    'generate a random nature number.',
-    'nat', 'nat',
-    (min, delta) => {
-      let begin = 1 + min;
-      let end = delta;
-      let n = hc.nat.choose(begin, end).generate();
+    'generate non-negative integers.',
+    'nat',
+    () => {
+      let n = hc.nat.generate();
       return _.isInteger(n) && n > 0;
     });
+
+  jsc.property(
+    'with inclusive ranges.',
+    'nat', 'nat',
+    (s, d) => {
+      let sprime = s == 0 ? s + 1 : s;
+      let n = hc.nat.choose(sprime, sprime + d).generate();
+      return _.isInteger(n) && n > 0 && sprime <= n && n <= sprime + d;
+    }
+  )
+
 });
 
 describe('Arbitrary Integer', () => {
+
   jsc.property(
-    'generate a random nature number.',
+    'generate integers.',
+    'integer',
+    () => {
+      return _.isInteger(hc.int.generate());
+    }
+  )
+
+  jsc.property(
+    'with inclusive ranges.',
     'integer', 'integer',
-    (min, delta) => {
-      let n = hc.int.choose(min, min + delta).generate();
-      return _.isInteger(n);
+    (min, max) => {
+      let s = min < max ? min : max;
+      let e = min > max ? max : min;
+      let n = hc.int.choose(s, e).generate();
+      return _.isInteger(n) && s <= n && n <= e;
     });
+
 });
 
 describe('Arbitrary Number', () => {
+
   jsc.property(
-    'generate a random float number.',
-    'number', 'number',
-    (min, delta) => {
-      let n = hc.number.choose(min, min + delta).generate();
+    'generate numbers.',
+    'number',
+    () => {
+      let n = hc.number.generate();
       return _.isNumber(n);
     });
+
+  jsc.property(
+    'with inclusive ranges.',
+    'number', 'number',
+    (min, max) => {
+      let s = min < max ? min : max;
+      let e = min > max ? max : min;
+      let n = hc.number.choose(s, e).generate();
+      return _.isNumber(n) && s <= n && n <= e;
+    });
+
+  jsc.property(
+    'does not generate Infinity',
+    'nat',
+    () => {
+      return Infinity != hc.number.generate();
+    })
+
+  jsc.property(
+    'does not generate Nan',
+    'nat',
+    () => {
+      return !isNaN(hc.number.generate());
+    })
+
 });
