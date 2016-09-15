@@ -1,13 +1,15 @@
 describe('Arbitrary Date', () => {
 
   jsc.property(
-    "should return date.", () => {
+    'should return date.',
+    'nat',
+    () => {
       let d = hc.date.generate();
       return _.isDate(d);
-  });
+    });
 
   jsc.property(
-    "takes two date for range.",
+    'takes two date for range.',
     'datetime',
     'datetime',
     (d1, d2) => {
@@ -24,6 +26,6 @@ describe('Arbitrary Date', () => {
         }
       };
       return _.isDate(d3) && inRange();
-  });
+    });
 
 });

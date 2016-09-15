@@ -5,9 +5,8 @@ describe('Arbitrary Boolean', () => {
     () => {
       let x = hc.bool.generate();
       return _.isBoolean(x);
-    }
-  );
+    });
 
-  it("with sepecified changes to be true");
+  it('with sepecified changes to be true');
 
 });

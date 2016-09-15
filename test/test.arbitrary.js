@@ -57,7 +57,6 @@ describe('Arbitrary Transform', () => {
       let r1 = arb1.seed(n).generate();
       let r2 = arb2.seed(n).generate();
       return String.fromCharCode(r1) === r2;
-    }
-  )
+    });
 
 });

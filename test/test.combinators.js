@@ -6,8 +6,8 @@ describe('Combinators', () => {
       'should always return given value.',
       'json',
       (v) => {
-      return v === hc.constant(v).generate();
-    });
+        return v === hc.constant(v).generate();
+      });
 
   });
 
@@ -36,15 +36,14 @@ describe('Combinators', () => {
       'terminated',
       'nat',
       () => {
-        try{
+        try {
           hc.suchThat(hc.bool, (b) => false ).generate();
         }
-        catch(e){
+        catch (e) {
           return true;
         }
         return false;
-      }
-    )
+      });
 
   });
 
@@ -85,8 +84,7 @@ describe('Combinators', () => {
       'nat',
       () => {
         return hc.nearray(hc.int).generate().length > 0;
-      }
-    )
+      });
 
   });
 

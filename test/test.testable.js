@@ -12,8 +12,7 @@ describe('Testable', () => {
         let r1 = hc.forall(hc.int, hc.int).eval(f);
         let r2 = f(hc.int.generate(), hc.int.generate());
         return r1 === r2;
-      }
-    )
+      });
 
     hc.hold('mocha intergration works.', hc.int, n => n === n);
 

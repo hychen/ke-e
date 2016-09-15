@@ -130,7 +130,8 @@ class Arbitrary {
    */
   makeGen() {
     return (engine, genOpts) => {
-      return this._transform(this._gen.apply(this, genOpts || this._genOpts || [])(engine));
+      return this._transform(
+        this._gen.apply(this, genOpts || this._genOpts || [])(engine));
     };
   }
   /**

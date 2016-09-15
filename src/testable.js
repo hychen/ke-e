@@ -7,7 +7,7 @@ import assert from 'assert';
 /**
  * For All Quantifiler.
  */
-class ForAll{
+class ForAll {
   /**
    * Create a ForAll.
    *
@@ -40,14 +40,14 @@ class ForAll{
         return {
           success: success,
           counterExample: samples
-        }
+        };
       }
-      catch(e) {
+      catch (e) {
         return {
           success: false,
           counterExample: samples,
           exception: e
-        }
+        };
       }
     };
   }
@@ -57,14 +57,14 @@ class ForAll{
       numTests: 1,
       totalTests: tests,
       pass: true
-    }
-    for(let i = result.numTests; i <= tests; i++) {
+    };
+    for (let i = result.numTests; i <= tests; i++) {
       let r = this.hold(property)();
       result.numTests = i;
       if (!r.success) {
         result.pass = false;
-        result.reason = formatFalure(r),
-        result.testResult = r
+        result.reason = formatFalure(r);
+        result.testResult = r;
         break;
       }
     }

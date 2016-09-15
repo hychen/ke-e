@@ -15,8 +15,7 @@ describe('Arbitrary Nat', () => {
       let sprime = s == 0 ? s + 1 : s;
       let n = hc.nat.choose(sprime, sprime + d).generate();
       return _.isInteger(n) && n > 0 && sprime <= n && n <= sprime + d;
-    }
-  )
+    });
 
 });
 
@@ -27,8 +26,7 @@ describe('Arbitrary Integer', () => {
     'integer',
     () => {
       return _.isInteger(hc.int.generate());
-    }
-  )
+    });
 
   jsc.property(
     'with inclusive ranges.',
@@ -67,13 +65,13 @@ describe('Arbitrary Number', () => {
     'nat',
     () => {
       return Infinity != hc.number.generate();
-    })
+    });
 
   jsc.property(
     'does not generate Nan',
     'nat',
     () => {
       return !isNaN(hc.number.generate());
-    })
+    });
 
 });

@@ -22,7 +22,7 @@ describe('Arbitrary Char', () => {
         charCode <= 127;
     });
 
-})
+});
 
 describe('Arbitrary String', () => {
 

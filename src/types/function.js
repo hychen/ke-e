@@ -20,7 +20,7 @@ export const func = new Arbitrary({
     return function(engine) {
       return function() {
         return outputArb.engine(engine).generate();
-      }
-    }
+      };
+    };
   }
 });
