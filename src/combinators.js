@@ -82,6 +82,32 @@ export function oneOf(arbs) {
 }
 
 /**
+ * Generates a pair of two arbitraries.
+ *
+ * @param {!Arbitrary} arb1
+ * @param {!Arbitrary} arb2
+ * @return {Arbitrary}
+ *
+ * @example
+ * hc.pair(hc.int, hc.int).generate();
+ *
+ * @example
+ * // choose different arbitraries.
+ * hc.pair(hc.int, hc.int).choose(hc.bool, hc.bool).generate();
+ */
+export function pair(arb1, arb2) {
+  return new Arbitrary({
+    gen: function(a1, a2) {
+      return function(engine) {
+        return [a1.engine(engine).generate(),
+                a2.engine(engine).generate()];
+      };
+    },
+    genOpts: [arb1, arb2]
+  });
+}
+
+/**
  * Generates an array of random length.
  *
  * @param {Arbitrary} arb

@@ -58,6 +58,31 @@ describe('Combinators', () => {
       });
   });
 
+  describe('pair', () => {
+
+    jsc.property(
+      'generate an array of length 2.',
+      () => {
+        let xs = hc.pair(hc.int, hc.bool).generate();
+        return _.isArray(xs) &&
+          xs.length === 2 &&
+          _.isInteger(xs[0]) &&
+          _.isBoolean(xs[1]);
+      });
+
+    jsc.property(
+      'with different arbitraries.',
+      () => {
+        let xs = hc.pair(hc.int, hc.bool)
+              .choose(hc.number, hc.number).generate();
+        return _.isArray(xs) &&
+          xs.length === 2 &&
+          _.isNumber(xs[0]) &&
+          _.isNumber(xs[1]);
+      });
+
+  });
+
   describe('array', () => {
 
     jsc.property(
