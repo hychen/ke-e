@@ -65,6 +65,29 @@ class Arbitrary {
     return _.cloneDeep(this);
   }
   /**
+   * Create a new arbitrary with new
+   * inclusive range of its generator maker.
+   *
+   * @param {...*}
+   * @return {Arbitrary}
+   */
+  choose(...args) {
+    let clone = this.clone();
+    clone._genOpts = args;
+    return clone;
+  }
+  /**
+   * Transform arbitrary A to arbitrary B.
+   *
+   * @param {function} transform function.
+   * @return {Arbitrary}
+   */
+  transform(f) {
+    let clone = this.clone();
+    clone._transform = f;
+    return clone;
+  }
+  /**
    * Set a random engine.
    *
    * @param {!Engine} engine
@@ -99,29 +122,6 @@ class Arbitrary {
       this._genOpts = opts;
     }
     return this;
-  }
-  /**
-   * Create a new arbitrary with new
-   * inclusive range of its generator maker.
-   *
-   * @param {...*}
-   * @return {Arbitrary}
-   */
-  choose(...args) {
-    let clone = this.clone();
-    clone._genOpts = args;
-    return clone;
-  }
-  /**
-   * Transform arbitrary A to arbitrary B.
-   *
-   * @param {function} transform function.
-   * @return {Arbitrary}
-   */
-  transform(f) {
-    let clone = this.clone();
-    clone._transform = f;
-    return clone;
   }
   /**
    * Make a generator.
