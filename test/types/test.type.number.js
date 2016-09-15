@@ -1,5 +1,9 @@
 describe('Arbitrary Nat', () => {
 
+  it('name is Nat', () => {
+    expect(hc.nat.name()).eq('Nat');
+  });
+
   jsc.property(
     'generate non-negative integers.',
     'nat',
@@ -21,6 +25,10 @@ describe('Arbitrary Nat', () => {
 
 describe('Arbitrary Integer', () => {
 
+  it('name is Integer', () => {
+    expect(hc.int.name()).eq('Integer');
+  });
+
   jsc.property(
     'generate integers.',
     'integer',
@@ -41,6 +49,10 @@ describe('Arbitrary Integer', () => {
 });
 
 describe('Arbitrary Number', () => {
+
+  it('name is Number', () => {
+    expect(hc.number.name()).eq('Number');
+  });
 
   jsc.property(
     'generate numbers.',

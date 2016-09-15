@@ -5,6 +5,14 @@ describe('Arbitrary', () => {
 
   let engine = Random.engines.mt19937();
 
+  it('nameable', () => {
+    let name = 'Integer';
+    let arb1 = fromGenMaker(_.identity).name(name);
+    let arb2 = new Arbitrary({gen: _.identity,
+                               name: name});
+    return arb1.name() === arb2.name() === name;
+  });
+
   jsc.property(
     'value generation is repeatable.',
     'integer',

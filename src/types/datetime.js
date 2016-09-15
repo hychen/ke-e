@@ -18,5 +18,7 @@ import {fromGenMaker} from '../arbitrary';
  * let newDate = hc.date.choose(new Date(2000, 01, 01), new Date(2016, 01,01));
  * newDate.generate();
  */
-export const date = fromGenMaker(Random.date,
-                                 [new Date(1984, 3, 25), new Date()]);
+export const date = fromGenMaker(
+  Random.date,
+  [new Date(1984, 3, 25), new Date()])
+  .name('Date');

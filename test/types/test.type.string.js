@@ -1,5 +1,9 @@
 describe('Arbitrary Char', () => {
 
+  it('name is Char', () => {
+    expect(hc.char.name()).eq('Char');
+  });
+
   jsc.property(
     'generate string of length 1.',
     'nat',
@@ -26,6 +30,10 @@ describe('Arbitrary Char', () => {
 
 describe('Arbitrary String', () => {
 
+  it('name is String ', () => {
+    expect(hc.string.name()).eq('String');
+  });
+
   jsc.property(
     'generate strings.',
     'nat',
@@ -46,6 +54,10 @@ describe('Arbitrary String', () => {
 });
 
 describe('Arbitrary Non-Empty String', () => {
+
+  it('name is Non-Empty String ', () => {
+    expect(hc.nestring.name()).eq('Non-Empty String');
+  });
 
   jsc.property(
     'does not return empty strings.',
@@ -74,6 +86,10 @@ describe('Arbitrary ASCII Char', () => {
 
 describe('Arbitrary ASCII String', () => {
 
+  it('name is ASCII String ', () => {
+    expect(hc.asciistring.name()).eq('ASCII String');
+  });
+
   jsc.property(
     'generate ascii strings.',
     'nat',
@@ -98,6 +114,10 @@ describe('Arbitrary ASCII String', () => {
 });
 
 describe('Arbitrary Non-Empty ASCII String', () => {
+
+  it('name is Non-Empty ASCII String.', () => {
+    expect(hc.neasciistring.name()).eq('Non-Empty ASCII String');
+  });
 
   jsc.property(
     'does not return empty ascii strings.',

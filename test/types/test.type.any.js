@@ -1,4 +1,9 @@
 describe('Arbitrary Any', () => {
+
+  it('name is Any', () => {
+    expect(hc.any.name()).eq('Any');
+  });
+
   it('generate one of boolean, falsy, integer, number.', () => {
     let xs = hc.any.sample(100);
     xs.forEach((x) => {
@@ -10,4 +15,5 @@ describe('Arbitrary Any', () => {
              x === void(0)).eq(true);
     });
   });
+
 });

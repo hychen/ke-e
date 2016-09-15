@@ -17,6 +17,7 @@ import {Arbitrary} from './arbitrary';
  */
 export function constant(value) {
   return new Arbitrary({
+    name: 'Constant',
     gen: () => () => value
   });
 }
@@ -71,6 +72,7 @@ export function suchThat(arb, predicate) {
  */
 export function oneOf(arbs) {
   return new Arbitrary({
+    name: 'OneOf',
     gen: function (pool) {
       return function (engine) {
         let arb = pool[Random.integer(0, arbs.length - 1)(engine)];
@@ -97,6 +99,7 @@ export function oneOf(arbs) {
  */
 export function pair(arb1, arb2) {
   return new Arbitrary({
+    name: 'Pair',
     gen: function(a1, a2) {
       return function(engine) {
         return [a1.engine(engine).generate(),
@@ -119,6 +122,7 @@ export function pair(arb1, arb2) {
  */
 export function array(arb) {
   return new Arbitrary({
+    name: 'Array',
     gen: function (min, max) {
       return function(engine) {
         return _.range(0, Random.integer(min, max)(engine)).map(() => {
@@ -138,7 +142,7 @@ export function array(arb) {
  * @return {Arbitrary}
  */
 export function nearray(arb) {
-  return array(arb).choose(1, 30);
+  return array(arb).choose(1, 30).name('Non-Empty Array');
 };
 
 /**
@@ -153,6 +157,7 @@ export function nearray(arb) {
  */
 export function elements(pool) {
   return new Arbitrary({
+    name: 'Elements',
     gen: function() {
       return function (engine) {
         let e = pool[Random.integer(0, pool.length - 1)(engine)];

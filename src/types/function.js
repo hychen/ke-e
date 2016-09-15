@@ -16,6 +16,7 @@ import {any} from './any';
  * f() // return an integer.
  */
 export const func = new Arbitrary({
+  name: 'Function',
   gen: function(outputArb = oneOf([any, array(any)])) {
     return function(engine) {
       return function() {

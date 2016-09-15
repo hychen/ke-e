@@ -20,4 +20,4 @@ import {fromGenMaker} from '../arbitrary';
  * let chance = 10;
  * hc.bool.choose(chance).generate();
  */
-export const bool = fromGenMaker(Random.bool);
+export const bool = fromGenMaker(Random.bool).name('Boolean');

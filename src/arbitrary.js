@@ -54,6 +54,7 @@ class Arbitrary {
     this._transforms = [_.identity];
 
     this.engine(opts.engine || mt19937);
+    this.name(opts.name || 'Arbitrary-' + Random.uuid4(this._engine));
     this.generator(opts.gen, opts.genOpts);
   }
   /**
@@ -86,6 +87,23 @@ class Arbitrary {
     let clone = this.clone();
     clone._transforms.push(f);
     return clone;
+  }
+  /**
+   * Name this arbitrary.
+   *
+   * @param {string} name arbitrary name.
+   * @return {Arbitrary}
+   */
+  name(name) {
+    if (name) {
+      assert(_.isString(name) && name.length >= 3,
+             'name must be a sring of length >= 3.');
+      this._name = name;
+      return this;
+    }
+    else {
+      return this._name;
+    }
   }
   /**
    * Set a random engine.

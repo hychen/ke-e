@@ -14,4 +14,4 @@ import {oneOf} from '../combinators';
  */
 export const any = oneOf([
   bool, falsy, int, number, string
-]);
+]).name('Any');

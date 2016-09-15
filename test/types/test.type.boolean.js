@@ -1,5 +1,9 @@
 describe('Arbitrary Boolean', () => {
 
+  it('name is Boolean', () => {
+    expect(hc.bool.name()).eq('Boolean');
+  });
+
   jsc.property(
     'generate either true or false.',
     () => {

@@ -28,4 +28,4 @@ export const FALSY_VALUES = [
  * @example
  * hc.falsy.generate();
  */
-export const falsy = elements(FALSY_VALUES);
+export const falsy = elements(FALSY_VALUES).name('Falsy');

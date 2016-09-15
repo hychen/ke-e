@@ -1,5 +1,9 @@
 describe('Arbitrary Date', () => {
 
+  it('name is Date', () => {
+    expect(hc.date.name()).eq('Date');
+  });
+
   jsc.property(
     'should return date.',
     'nat',
