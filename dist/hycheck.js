@@ -76,9 +76,10 @@ var Arbitrary = function () {
     this._engine = null;
     this._gen = null;
     this._genOpts = null;
-    this._transform = _lodash2.default.identity;
+    this._transforms = [_lodash2.default.identity];
 
     this.engine(opts.engine || _random.mt19937);
+    this.name(opts.name || 'Arbitrary-' + _randomJs2.default.uuid4(this._engine));
     this.generator(opts.gen, opts.genOpts);
   }
   /**
@@ -92,50 +93,6 @@ var Arbitrary = function () {
     key: 'clone',
     value: function clone() {
       return _lodash2.default.cloneDeep(this);
-    }
-    /**
-     * Set a random engine.
-     *
-     * @param {!Engine} engine
-     * @return {Arbitrary}
-     */
-
-  }, {
-    key: 'engine',
-    value: function engine(_engine) {
-      (0, _assert2.default)(_engine, 'engine is required.');
-      this._engine = _engine;
-      return this;
-    }
-    /**
-     * Set a seed number.
-     *
-     * @param {!number} 32-bit integer.
-     */
-
-  }, {
-    key: 'seed',
-    value: function seed(_seed) {
-      this._engine.seed(_seed);
-    }
-    /**
-     * Set a random value generator.
-     *
-     * @param {!GeneratorMaker} gen
-     * @param {?GeneratorMakerOptions} opts
-     * @return {Arbitrary}
-     */
-
-  }, {
-    key: 'generator',
-    value: function generator(gen, opts) {
-      (0, _assert2.default)(_lodash2.default.isFunction(gen), 'gen must be a function.');
-      this._gen = gen.bind(this);
-      if (opts) {
-        (0, _assert2.default)(_lodash2.default.isArray(opts), 'opts must be an object.');
-        this._genOpts = opts;
-      }
-      return this;
     }
     /**
      * Create a new arbitrary with new
@@ -168,8 +125,71 @@ var Arbitrary = function () {
     key: 'transform',
     value: function transform(f) {
       var clone = this.clone();
-      clone._transform = f;
+      clone._transforms.push(f);
       return clone;
+    }
+    /**
+     * Name this arbitrary.
+     *
+     * @param {string} name arbitrary name.
+     * @return {Arbitrary}
+     */
+
+  }, {
+    key: 'name',
+    value: function name(_name) {
+      if (_name) {
+        (0, _assert2.default)(_lodash2.default.isString(_name) && _name.length >= 3, 'name must be a sring of length >= 3.');
+        this._name = _name;
+        return this;
+      } else {
+        return this._name;
+      }
+    }
+    /**
+     * Set a random engine.
+     *
+     * @param {!Engine} engine
+     * @return {Arbitrary}
+     */
+
+  }, {
+    key: 'engine',
+    value: function engine(_engine) {
+      (0, _assert2.default)(_engine, 'engine is required.');
+      this._engine = _engine;
+      return this;
+    }
+    /**
+     * Set a seed number.
+     *
+     * @param {!number} 32-bit integer.
+     */
+
+  }, {
+    key: 'seed',
+    value: function seed(_seed) {
+      this._engine.seed(_seed);
+      return this;
+    }
+    /**
+     * Set a random value generator.
+     *
+     * @param {!GeneratorMaker} gen
+     * @param {?GeneratorMakerOptions} opts
+     * @return {Arbitrary}
+     */
+
+  }, {
+    key: 'generator',
+    value: function generator(gen, opts) {
+      (0, _assert2.default)(_lodash2.default.isFunction(gen), 'gen must be a function.');
+      this._gen = gen.bind(this);
+      if (opts) {
+        (0, _assert2.default)(_lodash2.default.isArray(opts), 'opts must be an object.');
+        this._genOpts = opts;
+      }
+      return this;
     }
     /**
      * Make a generator.
@@ -183,7 +203,7 @@ var Arbitrary = function () {
       var _this = this;
 
       return function (engine, genOpts) {
-        return _this._transform(_this._gen.apply(_this, genOpts || _this._genOpts || [])(engine));
+        return _lodash2.default.flow(_this._transforms)(_this._gen.apply(_this, genOpts || _this._genOpts || [])(engine));
       };
     }
     /**
@@ -249,6 +269,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.constant = constant;
 exports.suchThat = suchThat;
 exports.oneOf = oneOf;
+exports.pair = pair;
 exports.array = array;
 exports.nearray = nearray;
 exports.elements = elements;
@@ -277,6 +298,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
  */
 function constant(value) {
   return new _arbitrary.Arbitrary({
+    name: 'Constant',
     gen: function gen() {
       return function () {
         return value;
@@ -342,6 +364,7 @@ function suchThat(arb, predicate) {
  */
 function oneOf(arbs) {
   return new _arbitrary.Arbitrary({
+    name: 'OneOf',
     gen: function gen(pool) {
       return function (engine) {
         var arb = pool[_randomJs2.default.integer(0, arbs.length - 1)(engine)];
@@ -349,6 +372,32 @@ function oneOf(arbs) {
       };
     },
     genOpts: [arbs]
+  });
+}
+
+/**
+ * Generates a pair of two arbitraries.
+ *
+ * @param {!Arbitrary} arb1
+ * @param {!Arbitrary} arb2
+ * @return {Arbitrary}
+ *
+ * @example
+ * hc.pair(hc.int, hc.int).generate();
+ *
+ * @example
+ * // choose different arbitraries.
+ * hc.pair(hc.int, hc.int).choose(hc.bool, hc.bool).generate();
+ */
+function pair(arb1, arb2) {
+  return new _arbitrary.Arbitrary({
+    name: 'Pair',
+    gen: function gen(a1, a2) {
+      return function (engine) {
+        return [a1.engine(engine).generate(), a2.engine(engine).generate()];
+      };
+    },
+    genOpts: [arb1, arb2]
   });
 }
 
@@ -364,6 +413,7 @@ function oneOf(arbs) {
  */
 function array(arb) {
   return new _arbitrary.Arbitrary({
+    name: 'Array',
     gen: function gen(min, max) {
       return function (engine) {
         return _lodash2.default.range(0, _randomJs2.default.integer(min, max)(engine)).map(function () {
@@ -383,7 +433,7 @@ function array(arb) {
  * @return {Arbitrary}
  */
 function nearray(arb) {
-  return array(arb).choose(1, 30);
+  return array(arb).choose(1, 30).name('Non-Empty Array');
 };
 
 /**
@@ -398,6 +448,7 @@ function nearray(arb) {
  */
 function elements(pool) {
   return new _arbitrary.Arbitrary({
+    name: 'Elements',
     gen: function gen() {
       return function (engine) {
         var e = pool[_randomJs2.default.integer(0, pool.length - 1)(engine)];
@@ -493,14 +544,41 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * For All Quantifiler.
+ */
 var ForAll = function () {
+  /**
+   * Create a ForAll.
+   *
+   * @param {Array} arbs arbitraries
+   * @return {ForAll}
+   * @example
+   * new ForAll([hc.int, hc.int])
+   */
   function ForAll(arbs) {
     _classCallCheck(this, ForAll);
 
     this.arbs = arbs;
   }
+  /**
+   * Evaluating a test.
+   *
+   * @param {function} f any function takes generated values as parameters.
+   * @return {*}
+   * @example
+   * new ForAll([hc.int]).eval(x => x + 1);
+   */
+
 
   _createClass(ForAll, [{
+    key: 'eval',
+    value: function _eval(f) {
+      return f.apply(null, this.arbs.map(function (arb) {
+        return arb.generate();
+      }));
+    }
+  }, {
     key: 'hold',
     value: function hold(property) {
       var _this = this;
@@ -538,7 +616,8 @@ var ForAll = function () {
         result.numTests = i;
         if (!r.success) {
           result.pass = false;
-          result.reason = formatFalure(r), result.testResult = r;
+          result.reason = formatFalure(r);
+          result.testResult = r;
           break;
         }
       }
@@ -566,7 +645,7 @@ function formatFalure(result) {
 /**
  * Create a ForAll.
  *
- * @param {...Arbitrary} arbitraries.
+ * @param {...Arbitrary} arbs arbitraries.
  * @return {ForAll}
  */
 function forall() {
@@ -624,9 +703,9 @@ var _combinators = require('../combinators');
  *
  * @type {Arbitrary}
  */
-var any = exports.any = (0, _combinators.oneOf)([_boolean.bool, _falsy.falsy, _number.int, _number.number, _string.string]); /**
-                                                                                                                              * @module
-                                                                                                                              */
+var any = exports.any = (0, _combinators.oneOf)([_boolean.bool, _falsy.falsy, _number.int, _number.number, _string.string]).name('Any'); /**
+                                                                                                                                          * @module
+                                                                                                                                          */
 },{"../combinators":2,"./boolean":7,"./falsy":9,"./number":12,"./string":13}],7:[function(require,module,exports){
 'use strict';
 
@@ -662,7 +741,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * @module
  */
-var bool = exports.bool = (0, _arbitrary.fromGenMaker)(_randomJs2.default.bool);
+var bool = exports.bool = (0, _arbitrary.fromGenMaker)(_randomJs2.default.bool).name('Boolean');
 },{"../arbitrary":1,"random-js":19}],8:[function(require,module,exports){
 'use strict';
 
@@ -696,7 +775,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * @module
  */
-var date = exports.date = (0, _arbitrary.fromGenMaker)(_randomJs2.default.date, [new Date(1984, 3, 25), new Date()]);
+var date = exports.date = (0, _arbitrary.fromGenMaker)(_randomJs2.default.date, [new Date(1984, 3, 25), new Date()]).name('Date');
 },{"../arbitrary":1,"random-js":19}],9:[function(require,module,exports){
 'use strict';
 
@@ -728,7 +807,7 @@ var FALSY_VALUES = exports.FALSY_VALUES = [undefined, void 0, null, false, 0, ''
 /**
  * @module
  */
-var falsy = exports.falsy = (0, _combinators.elements)(FALSY_VALUES);
+var falsy = exports.falsy = (0, _combinators.elements)(FALSY_VALUES).name('Falsy');
 },{"../combinators":2}],10:[function(require,module,exports){
 'use strict';
 
@@ -754,6 +833,7 @@ var _any = require('./any');
  * f() // return an integer.
  */
 var func = exports.func = new _arbitrary.Arbitrary({
+  name: 'Function',
   gen: function gen() {
     var outputArb = arguments.length <= 0 || arguments[0] === undefined ? (0, _combinators.oneOf)([_any.any, (0, _combinators.array)(_any.any)]) : arguments[0];
 
@@ -884,49 +964,49 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 /**
  * @module
  */
-var int = exports.int = (0, _arbitrary.fromGenMaker)(_randomJs2.default.integer, [-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]);
+var int = exports.int = (0, _arbitrary.fromGenMaker)(_randomJs2.default.integer, [-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]).name('Integer');
 
 /**
  * Positive Integer Arbitary
  *
  * @type {Arbitary}
  */
-var pint = exports.pint = int.choose(0, Number.MAX_SAFE_INTEGER);
+var pint = exports.pint = int.choose(0, Number.MAX_SAFE_INTEGER).name('Positive Integer');
 
 /**
  * Negative Arbitrary
  *
  * @type {Arbitrary}
  */
-var nint = exports.nint = int.choose(-Number.MAX_SAFE_INTEGER, -1);
+var nint = exports.nint = int.choose(-Number.MAX_SAFE_INTEGER, -1).name('Negative Integer');
 
 /**
  * Nature Number Arbitary
  *
  * @type {Arbitrary}
  */
-var nat = exports.nat = int.choose(1, Number.MAX_SAFE_INTEGER);
+var nat = exports.nat = int.choose(1, Number.MAX_SAFE_INTEGER).name('Nat');
 
 /**
  * Nature Number Arbitary
  *
  * @type {Arbitrary}
  */
-var number = exports.number = (0, _arbitrary.fromGenMaker)(_randomJs2.default.real, [-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]);
+var number = exports.number = (0, _arbitrary.fromGenMaker)(_randomJs2.default.real, [-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]).name('Number');
 
 /**
  * Positive Number Arbitary
  *
  * @type {Arbitrary}
  */
-var pnumber = exports.pnumber = number.choose(0, Number.MAX_SAFE_INTEGER);
+var pnumber = exports.pnumber = number.choose(0, Number.MAX_SAFE_INTEGER).name('Positive Number');
 
 /**
  * Negative Number Arbitary
  *
  * @type {Arbitrary}
  */
-var nnumber = exports.nnumber = number.choose(-Number.MAX_SAFE_INTEGER, -0.0000000001);
+var nnumber = exports.nnumber = number.choose(-Number.MAX_SAFE_INTEGER, -0.0000000001).name('Negative Number');
 },{"../arbitrary":1,"random-js":19}],13:[function(require,module,exports){
 'use strict';
 
@@ -975,7 +1055,7 @@ var UNICODE_RANGES_MAX = exports.UNICODE_RANGES_MAX = 0xE007F;
  * // and yes, this is how hc.asciichar be made.
  * hc.char.choose(0x0020, 0x007F).generate();
  */
-var char = exports.char = _char.choose(UNICODE_RANGES_MIN, UNICODE_RANGES_MAX);
+var char = exports.char = _char.choose(UNICODE_RANGES_MIN, UNICODE_RANGES_MAX).name('Char');
 
 /**
  * Unicode String Arbitrary.
@@ -991,14 +1071,14 @@ var char = exports.char = _char.choose(UNICODE_RANGES_MIN, UNICODE_RANGES_MAX);
  * // you can set minimun and maximun length.
  * hc.string.choose(1, 5).generate();
  */
-var string = exports.string = stringOf(char);
+var string = exports.string = stringOf(char).name('String');
 
 /**
  * Nom-empty Unicode String Arbitrary.
  *
  * @type {Arbitrary}
  */
-var nestring = exports.nestring = nestringOf(char);
+var nestring = exports.nestring = nestringOf(char).name('Non-Empty String');
 
 /**
  * Ascii Character Arbitrary.
@@ -1009,7 +1089,7 @@ var nestring = exports.nestring = nestringOf(char);
  * // generate a ascii character.
  * hc.asciichar.generate();
  */
-var asciichar = exports.asciichar = char.choose(ASCII_RANGE_MIN, ASCII_RANGE_MAX);
+var asciichar = exports.asciichar = char.choose(ASCII_RANGE_MIN, ASCII_RANGE_MAX).name('ASCII Char');
 
 /**
  * Ascii String Arbitrary.
@@ -1024,21 +1104,21 @@ var asciichar = exports.asciichar = char.choose(ASCII_RANGE_MIN, ASCII_RANGE_MAX
  * // you can set minimun and maximun length.
  * hc.asciistring.choose(1, 5).generate();
  */
-var asciistring = exports.asciistring = stringOf(asciichar);
+var asciistring = exports.asciistring = stringOf(asciichar).name('ASCII String');
 
 /**
  * Ascii String Arbitrary.
  *
  * @type {Arbitrary}
  */
-var neasciistring = exports.neasciistring = nestringOf(asciichar);
+var neasciistring = exports.neasciistring = nestringOf(asciichar).name('Non-Empty ASCII String');
 
 /**
  * UUID version 4 Arbitrary.
  *
  * @type {Arbitrary}
  */
-var uuid4 = exports.uuid4 = (0, _arbitrary.fromGenMaker)(_randomJs2.default.uuid4);
+var uuid4 = exports.uuid4 = (0, _arbitrary.fromGenMaker)(_randomJs2.default.uuid4).name('UUID version 4');
 
 /**
  * Create a string arbitrary based on given character arbitrary.
@@ -1061,7 +1141,7 @@ var uuid4 = exports.uuid4 = (0, _arbitrary.fromGenMaker)(_randomJs2.default.uuid
 function stringOf(charArb) {
   return (0, _combinators.array)(charArb).transform(function (chars) {
     return chars.join('');
-  });
+  }).name('stringOf');
 }
 
 /**
@@ -1070,7 +1150,7 @@ function stringOf(charArb) {
 function nestringOf(charArb) {
   return (0, _combinators.nearray)(charArb).transform(function (chars) {
     return chars.join('');
-  });
+  }).name('nestringOf');
 }
 },{"../arbitrary":1,"../combinators":2,"./number":12,"lodash":17,"random-js":19}],14:[function(require,module,exports){
 'use strict';
