@@ -59,4 +59,17 @@ describe('Arbitrary Transform', () => {
       return String.fromCharCode(r1) === r2;
     });
 
+  jsc.property(
+    'composable',
+    'nat',
+    (n) => {
+      let arb = new Arbitrary(
+        {gen: Random.integer,
+         genOpts: [24, 127]})
+            .transform(String.fromCharCode)
+            .transform(s => s.charCodeAt(0))
+            .transform(s => [s]);
+      return 24 <= arb.generate()[0] <= 127;
+    });
+
 });

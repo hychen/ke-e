@@ -51,7 +51,7 @@ class Arbitrary {
     this._engine = null;
     this._gen = null;
     this._genOpts = null;
-    this._transform = _.identity;
+    this._transforms = [_.identity];
 
     this.engine(opts.engine || mt19937);
     this.generator(opts.gen, opts.genOpts);
@@ -84,7 +84,7 @@ class Arbitrary {
    */
   transform(f) {
     let clone = this.clone();
-    clone._transform = f;
+    clone._transforms.push(f);
     return clone;
   }
   /**
@@ -130,7 +130,7 @@ class Arbitrary {
    */
   makeGen() {
     return (engine, genOpts) => {
-      return this._transform(
+      return _.flow(this._transforms)(
         this._gen.apply(this, genOpts || this._genOpts || [])(engine));
     };
   }
