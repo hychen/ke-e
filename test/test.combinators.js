@@ -113,4 +113,15 @@ describe('Combinators', () => {
 
   });
 
+  describe('object', () => {
+
+    it('with spec object.', () => {
+      let o1 = hc.object({key1: hc.int, key2: hc.bool}).generate();
+      return _.isObject(o1) &&
+        _.isInteger(o1.keys1) &&
+        _.isBoolean(o1.key2);
+    });
+
+  });
+
 });

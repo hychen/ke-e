@@ -146,6 +146,35 @@ export function nearray(arb) {
 };
 
 /**
+ * Generate a object.
+ *
+ * Takes an object as a template and will go through the enumerable own
+ * properties of object and expanding.
+ *
+ * @param {Object} spec an object
+ * @return {Arbitrary}
+ *
+ * @example
+ * // return {k: 1234};
+ * hc.object({k: hc.int}).generate();
+ */
+export function object(spec) {
+  return new Arbitrary({
+    name: 'Object',
+    gen: function(spec) {
+      return function(engine) {
+        let o = {};
+        Object.keys(spec).forEach((k) => {
+          o[k] = spec[k].engine(engine).generate();
+        });
+        return o;
+      };
+    },
+    genOpts: [spec]
+  });
+}
+
+/**
  * Generates one of the given values. The input list must be non-empty.
  *
  * @param {Array} pool
