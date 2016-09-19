@@ -23,12 +23,19 @@ class ForAll {
    * Evaluating a test.
    *
    * @param {function} f any function takes generated values as parameters.
+   * @param {?random-js.Engine} random engine.
    * @return {*}
    * @example
    * new ForAll([hc.int]).eval(x => x + 1);
    */
-  eval(f) {
-    return f.apply(null, this.arbs.map(arb => arb.generate()));
+  eval(f, engine) {
+    function genValue(arb) {
+      if (engine) {
+        arb.engine(engine);
+      }
+      return arb.generate();
+    };
+    return f.apply(null, this.arbs.map(genValue));
   }
   hold(property) {
     return () => {
