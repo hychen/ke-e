@@ -172,8 +172,12 @@ export function hold(...args) {
   let name = args[0];
   let arbs = args.slice(1, args.length - 1);
   let prop = args[args.length - 1];
+  let opts = stdOpts;
+  if (process.env.HCSeed) {
+    opts.seed = process.env.HCSeed;
+  }
   it(name, (done) => {
-    let result = forall.apply(null, arbs).hold(prop).check(stdOpts);
+    let result = forall.apply(null, arbs).hold(prop).check(opts);
     assert(result.pass,
            `${name} doesn't hold, ${result.reason}` +
            `, tried: ${result.numTests}/${result.totalTests}`);

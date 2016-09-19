@@ -82,6 +82,23 @@ describe('Nat', () => {
 })
 ```
 
+### Repeatable
+
+test results are repeatable.
+
+```
+$ mocha
+1) Int >0:
+AssertionError: >0 doesn't hold, seed: -1764850555, counter example: -5265798245849472, tried: 3/3`
+
+```
+
+```
+HCSeed=-1764850555 mocha
+1) Int >0:
+AssertionError: >0 doesn't hold, seed: -1764850555, counter example: -5265798245849472, tried: 3/3`
+```
+
 ### License
 
 The MIT License (MIT)
