@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/hychen/hycheck.svg?branch=master)](https://travis-ci.org/hycheck/hycheck)
+[![Build Status](https://travis-ci.org/hychen/hycheck.svg?branch=master)](https://travis-ci.org/hychen/hycheck)
 [![Coverage STatus](https://coveralls.io/repos/github/hychen/hycheck/badge.svg?branch=master)](https://coveralls.io/github/hychen/hycheck?branch=master)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org/)
 
