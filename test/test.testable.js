@@ -14,8 +14,12 @@ describe('Testable', () => {
         return r1 === r2;
       });
 
-    hc.hold('mocha intergration works.', hc.int, n => n === n);
-
   });
+
+});
+
+describe('Mocha Integeration', () => {
+
+  hc.hold('works.', hc.int, n => n === n);
 
 });
