@@ -2,6 +2,7 @@
  * @module
  */
 import _ from 'lodash';
+import Random from 'random-js';
 import assert from 'assert';
 
 /**
@@ -37,13 +38,49 @@ class ForAll {
     };
     return f.apply(null, this.arbs.map(genValue));
   }
-  hold(property) {
-    return () => {
-      let samples = this.arbs.map(arb => {
+  /**
+   * Creates a Property.
+   *
+   * @param {function} predicate
+   * @return {Property}
+   */
+  hold(predicate) {
+    return new Property(this, predicate);
+  }
+  /**
+   * Run a property expectation checking.
+   *
+   * @param {function} predicate
+   * @return {Property}
+   */
+  expect(predicate) {
+    return new Property(this, predicate).expect();
+  }
+}
+
+/**
+ * Property.
+ */
+class Property {
+  /**
+   * @param {ForAll} forall
+   * @param {function} predicate
+   * @return {Property}
+   */
+  constructor(forall, predicate) {
+    this._forall = forall;
+    this._predicate = predicate;
+  }
+  makeFormula() {
+    return (engine) => {
+      let samples = this._forall.arbs.map(arb => {
+        if (engine) {
+          arb.engine(engine);
+        }
         return arb.generate();
       });
       try {
-        let success = !!property.apply(null, samples);
+        let success = !!this._predicate.apply(null, samples);
         return {
           success: success,
           counterExample: samples
@@ -58,33 +95,51 @@ class ForAll {
       }
     };
   }
-  check(property) {
-    let tests = 100;
+  /**
+   * Check this property.
+   *
+   * @param {object} opts check options.
+   * @return {boolean} returns true if it is valid.
+   *
+   * @example
+   *
+   * hc.forall(hc.int).hold(n => n === n).check();
+   */
+  check(opts = {}) {
+    let tests = opts.tests || 100;
     let result = {
       numTests: 1,
-      totalTests: tests,
-      pass: true
+      totalTests: 0,
+      pass: false
     };
+    let engine = Random.engines.mt19937();
+    let seed = opts.seed ? opts.seed : engine.autoSeed()();
+    engine.seed(seed);
     for (let i = result.numTests; i <= tests; i++) {
-      let r = this.hold(property)();
+      let r = this.makeFormula(this._predicate)(engine);
       result.numTests = i;
-      if (!r.success) {
+      result.totalTests++;
+      if (r.success) {
+        result.pass = true;
+      }
+      else {
         result.pass = false;
-        result.reason = formatFalure(r);
+        result.reason = formatFalure(seed, r);
         result.testResult = r;
         break;
       }
     }
     return result;
   }
-  expect(property) {
-    let r = this.check(property);
+  expect(opts) {
+    let r = this.check(this.makeFormula(), opts);
     if (r.testResult.exception) throw r.testResult.exception;
   }
 }
 
-function formatFalure(result) {
-  let msg = `counter example: ${result.counterExample}`;
+function formatFalure(seed, result) {
+  let rngStateMsg= `seed: ${seed}`;
+  let msg = `${rngStateMsg}, counter example: ${result.counterExample}`;
   if (result.exception) {
     msg += `, exception: ${result.exception}`;
   }
@@ -116,7 +171,7 @@ export function hold(...args) {
   let arbs = args.slice(1, args.length - 1);
   let prop = args[args.length - 1];
   it(name, (done) => {
-    let result = forall.apply(null, arbs).check(prop);
+    let result = forall.apply(null, arbs).hold(prop).check();
     assert(result.pass,
            `${name} doesn't hold, ${result.reason}` +
            `, tried: ${result.numTests}/${result.totalTests}`);

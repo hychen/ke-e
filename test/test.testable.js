@@ -27,7 +27,7 @@ describe('Testable', () => {
 
     jsc.property(
       'evaluating tests should be repeatable',
-      'integer',
+      'int32',
       (seed) => {
         let engine = Random.engines.mt19937();
         let rep = (seed) => {
@@ -39,6 +39,28 @@ describe('Testable', () => {
         return _.isEqual(rep(seed), rep(seed));
       });
 
+  });
+
+  describe('Porperty', () => {
+
+    jsc.property(
+      'checking results is repeatable.',
+      'int32',
+      (seed) => {
+        let prop = hc.forall(hc.nat).hold(x => x / 2 === 0);
+        let r1 = prop.check({seed: seed});
+        let r2 = prop.check({seed: seed});
+        return _.isEqual(r1,r2);
+      });
+
+    it('throws error when expecting',
+      () => {
+        expect(() => {
+          hc.forall(hc.nat.choose(1, 1)).expect(() => {
+            throw new Error();
+          }).throw(Error);
+        });
+      });
   });
 
 });
