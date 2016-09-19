@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: types/falsy.js</title>
+    <title>JSDoc: Source: constants.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: types/falsy.js</h1>
+    <h1 class="page-title">Source: constants.js</h1>
 
     
 
@@ -29,34 +29,20 @@
             <pre class="prettyprint source linenums"><code>/**
  * @module
  */
-import {elements} from '../combinators';
+import Random from 'random-js';
+
+const mt19937 = Random.engines.mt19937().autoSeed();
 
 /**
- * falsy values.
+ * Options specifies arguments to the HyCheck driver.
  *
- * @type {Array}
+ * @type {Object} stdOpts
  */
-export const FALSY_VALUES = [
-  undefined,
-  void(0),
-  null,
-  false,
-  0,
-  ''
-];
-
-/**
- * Falsy Arbitrary
- *
- * generates falsy values: false, null, undefined, '',
- * 0, void(0) and NaN.
- *
- * @type {Arbitrary}
- *
- * @example
- * hc.falsy.generate();
- */
-export const falsy = elements(FALSY_VALUES).name('Falsy');
+export const stdOpts = {
+  tests : 100,
+  engine : mt19937,
+  seed: mt19937()
+};
 </code></pre>
         </article>
     </section>

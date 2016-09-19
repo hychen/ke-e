@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Module: utils</title>
+    <title>JSDoc: Class: Property</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Module: utils</h1>
+    <h1 class="page-title">Class: Property</h1>
 
     
 
@@ -28,6 +28,10 @@
 
 <header>
     
+        <h2>
+            <span class="ancestors"><a href="module-testable.html">testable</a>~</span>Property</h2>
+        
+            <div class="class-description">Property.</div>
         
     
 </header>
@@ -37,39 +41,15 @@
     
         
 
-        
     
-    </div>
-
+    <h2>Constructor</h2>
     
 
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Methods</h3>
-
-        
-            
-
-    
-
-    <h4 class="name" id=".liftExport"><span class="type-signature">(static) </span>liftExport<span class="signature">(namespace<span class="signature-attributes">non-null</span>, name<span class="signature-attributes">non-null</span>)</span><span class="type-signature"> &rarr; {Object}</span></h4>
+    <h4 class="name" id="Property"><span class="type-signature"></span>new Property<span class="signature">(forall, predicate)</span><span class="type-signature"></span></h4>
 
     
 
 
-
-<div class="description">
-    Merge namespace
-</div>
 
 
 
@@ -104,13 +84,13 @@
 
         <tr>
             
-                <td class="name"><code>namespace</code></td>
+                <td class="name"><code>forall</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">ForAll</span>
 
 
             
@@ -127,13 +107,13 @@
 
         <tr>
             
-                <td class="name"><code>name</code></td>
+                <td class="name"><code>predicate</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">function</span>
 
 
             
@@ -184,7 +164,168 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="utils.js.html">utils.js</a>, <a href="utils.js.html#line13">line 13</a>
+        <a href="testable.js.html">testable.js</a>, <a href="testable.js.html#line65">line 65</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+
+    
+
+    
+
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="check"><span class="type-signature"></span>check<span class="signature">(opts<span class="signature-attributes">nullable</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Check this property.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>opts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">check options.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="testable.js.html">testable.js</a>, <a href="testable.js.html#line109">line 109</a>
     </li></ul></dd>
     
 
@@ -210,6 +351,10 @@
 <h5>Returns:</h5>
 
         
+<div class="param-desc">
+    returns true if it is valid.
+</div>
+
 
 
 <dl>
@@ -218,13 +363,18 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type">boolean</span>
 
 
     </dd>
 </dl>
 
     
+
+
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>hc.forall(hc.int).hold(n => n === n).check();</code></pre>
 
 
 

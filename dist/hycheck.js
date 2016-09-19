@@ -23,7 +23,7 @@ var _assert = require('assert');
 
 var _assert2 = _interopRequireDefault(_assert);
 
-var _random = require('./random');
+var _constants = require('./constants');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -78,7 +78,7 @@ var Arbitrary = function () {
     this._genOpts = null;
     this._transforms = [_lodash2.default.identity];
 
-    this.engine(opts.engine || _random.mt19937);
+    this.engine(opts.engine || _constants.stdOpts.engine);
     this.name(opts.name || 'Arbitrary-' + _randomJs2.default.uuid4(this._engine));
     this.generator(opts.gen, opts.genOpts);
   }
@@ -260,7 +260,7 @@ function fromGenMaker(gen, genOpts) {
 
 exports.Arbitrary = Arbitrary;
 exports.fromGenMaker = fromGenMaker;
-},{"./random":4,"assert":15,"lodash":17,"random-js":19}],2:[function(require,module,exports){
+},{"./constants":3,"assert":15,"lodash":17,"random-js":19}],2:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -272,6 +272,7 @@ exports.oneOf = oneOf;
 exports.pair = pair;
 exports.array = array;
 exports.nearray = nearray;
+exports.object = object;
 exports.elements = elements;
 
 var _lodash = require('lodash');
@@ -437,6 +438,35 @@ function nearray(arb) {
 };
 
 /**
+ * Generate a object.
+ *
+ * Takes an object as a template and will go through the enumerable own
+ * properties of object and expanding.
+ *
+ * @param {Object} spec an object
+ * @return {Arbitrary}
+ *
+ * @example
+ * // return {k: 1234};
+ * hc.object({k: hc.int}).generate();
+ */
+function object(spec) {
+  return new _arbitrary.Arbitrary({
+    name: 'Object',
+    gen: function gen(spec) {
+      return function (engine) {
+        var o = {};
+        Object.keys(spec).forEach(function (k) {
+          o[k] = spec[k].engine(engine).generate();
+        });
+        return o;
+      };
+    },
+    genOpts: [spec]
+  });
+}
+
+/**
  * Generates one of the given values. The input list must be non-empty.
  *
  * @param {Array} pool
@@ -458,6 +488,35 @@ function elements(pool) {
   });
 }
 },{"./arbitrary":1,"lodash":17,"random-js":19}],3:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.stdOpts = undefined;
+
+var _randomJs = require('random-js');
+
+var _randomJs2 = _interopRequireDefault(_randomJs);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var mt19937 = _randomJs2.default.engines.mt19937().autoSeed();
+
+/**
+ * Options specifies arguments to the HyCheck driver.
+ *
+ * @type {Object} stdOpts
+ */
+/**
+ * @module
+ */
+var stdOpts = exports.stdOpts = {
+  tests: 100,
+  engine: mt19937,
+  seed: mt19937()
+};
+},{"random-js":19}],4:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -495,29 +554,8 @@ var __all__ = {
 (0, _utils.liftExport)(__all__, 'testable');
 
 exports.default = __all__;
-},{"./arbitrary":1,"./combinators":2,"./testable":5,"./types":11,"./utils":14}],4:[function(require,module,exports){
-'use strict';
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.mt19937 = undefined;
-
-var _randomJs = require('random-js');
-
-var _randomJs2 = _interopRequireDefault(_randomJs);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-/**
- * Random Engine.
- *
- * @type {random-js.engines.mt19937}
- */
-var mt19937 = exports.mt19937 = _randomJs2.default.engines.mt19937().autoSeed(); /**
-                                                                                  * @module
-                                                                                  */
-},{"random-js":19}],5:[function(require,module,exports){
+},{"./arbitrary":1,"./combinators":2,"./testable":5,"./types":11,"./utils":14}],5:[function(require,module,exports){
+(function (process){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -536,9 +574,15 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _randomJs = require('random-js');
+
+var _randomJs2 = _interopRequireDefault(_randomJs);
+
 var _assert = require('assert');
 
 var _assert2 = _interopRequireDefault(_assert);
+
+var _constants = require('./constants');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -565,6 +609,7 @@ var ForAll = function () {
    * Evaluating a test.
    *
    * @param {function} f any function takes generated values as parameters.
+   * @param {?random-js.Engine} random engine.
    * @return {*}
    * @example
    * new ForAll([hc.int]).eval(x => x + 1);
@@ -573,22 +618,76 @@ var ForAll = function () {
 
   _createClass(ForAll, [{
     key: 'eval',
-    value: function _eval(f) {
-      return f.apply(null, this.arbs.map(function (arb) {
+    value: function _eval(f, engine) {
+      function genValue(arb) {
+        if (engine) {
+          arb.engine(engine);
+        }
         return arb.generate();
-      }));
+      };
+      return f.apply(null, this.arbs.map(genValue));
     }
+    /**
+     * Creates a Property.
+     *
+     * @param {function} predicate
+     * @return {Property}
+     */
+
   }, {
     key: 'hold',
-    value: function hold(property) {
+    value: function hold(predicate) {
+      return new Property(this, predicate);
+    }
+    /**
+     * Run a property expectation checking.
+     *
+     * @param {function} predicate
+     * @return {Property}
+     */
+
+  }, {
+    key: 'expect',
+    value: function expect(predicate) {
+      return new Property(this, predicate).expect();
+    }
+  }]);
+
+  return ForAll;
+}();
+
+/**
+ * Property.
+ */
+
+
+var Property = function () {
+  /**
+   * @param {ForAll} forall
+   * @param {function} predicate
+   * @return {Property}
+   */
+  function Property(forall, predicate) {
+    _classCallCheck(this, Property);
+
+    this._forall = forall;
+    this._predicate = predicate;
+  }
+
+  _createClass(Property, [{
+    key: 'makeFormula',
+    value: function makeFormula() {
       var _this = this;
 
-      return function () {
-        var samples = _this.arbs.map(function (arb) {
+      return function (engine) {
+        var samples = _this._forall.arbs.map(function (arb) {
+          if (engine) {
+            arb.engine(engine);
+          }
           return arb.generate();
         });
         try {
-          var success = !!property.apply(null, samples);
+          var success = !!_this._predicate.apply(null, samples);
           return {
             success: success,
             counterExample: samples
@@ -602,21 +701,41 @@ var ForAll = function () {
         }
       };
     }
+    /**
+     * Check this property.
+     *
+     * @param {?object} opts check options.
+     * @return {boolean} returns true if it is valid.
+     *
+     * @example
+     *
+     * hc.forall(hc.int).hold(n => n === n).check();
+     */
+
   }, {
     key: 'check',
-    value: function check(property) {
-      var tests = 100;
+    value: function check() {
+      var opts = arguments.length <= 0 || arguments[0] === undefined ? _constants.stdOpts : arguments[0];
+
+      (0, _assert2.default)(opts.tests > 0, 'tests must more than 0.');
+      (0, _assert2.default)(opts.engine, 'engine is required');
+      (0, _assert2.default)(opts.seed, 'seed is required');
+      var tests = opts.tests;
       var result = {
         numTests: 1,
-        totalTests: tests,
-        pass: true
+        totalTests: 0,
+        pass: false
       };
-      for (var i = result.numTests; i <= tests; i++) {
-        var r = this.hold(property)();
+      opts.engine.seed(opts.seed);
+      for (var i = result.numTests; i <= opts.tests; i++) {
+        var r = this.makeFormula(this._predicate)(opts.engine);
         result.numTests = i;
-        if (!r.success) {
+        result.totalTests++;
+        if (r.success) {
+          result.pass = true;
+        } else {
           result.pass = false;
-          result.reason = formatFalure(r);
+          result.reason = formatFalure(opts.seed, r);
           result.testResult = r;
           break;
         }
@@ -625,17 +744,18 @@ var ForAll = function () {
     }
   }, {
     key: 'expect',
-    value: function expect(property) {
-      var r = this.check(property);
+    value: function expect(opts) {
+      var r = this.check(this.makeFormula(), opts);
       if (r.testResult.exception) throw r.testResult.exception;
     }
   }]);
 
-  return ForAll;
+  return Property;
 }();
 
-function formatFalure(result) {
-  var msg = 'counter example: ' + result.counterExample;
+function formatFalure(seed, result) {
+  var rngStateMsg = 'seed: ' + seed;
+  var msg = rngStateMsg + ', counter example: ' + result.counterExample;
   if (result.exception) {
     msg += ', exception: ' + result.exception;
   }
@@ -674,13 +794,18 @@ function hold() {
   var name = args[0];
   var arbs = args.slice(1, args.length - 1);
   var prop = args[args.length - 1];
+  var opts = _constants.stdOpts;
+  if (process.env.HCSeed) {
+    opts.seed = process.env.HCSeed;
+  }
   it(name, function (done) {
-    var result = forall.apply(null, arbs).check(prop);
+    var result = forall.apply(null, arbs).hold(prop).check(opts);
     (0, _assert2.default)(result.pass, name + ' doesn\'t hold, ' + result.reason + (', tried: ' + result.numTests + '/' + result.totalTests));
     done();
   });
 }
-},{"assert":15,"lodash":17}],6:[function(require,module,exports){
+}).call(this,require('_process'))
+},{"./constants":3,"_process":18,"assert":15,"lodash":17,"random-js":19}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -19800,5 +19925,5 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":20,"_process":18,"inherits":16}]},{},[3])(3)
+},{"./support/isBuffer":20,"_process":18,"inherits":16}]},{},[4])(4)
 });

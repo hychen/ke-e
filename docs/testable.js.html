@@ -30,7 +30,9 @@
  * @module
  */
 import _ from 'lodash';
+import Random from 'random-js';
 import assert from 'assert';
+import {stdOpts} from './constants';
 
 /**
  * For All Quantifiler.
@@ -51,20 +53,63 @@ class ForAll {
    * Evaluating a test.
    *
    * @param {function} f any function takes generated values as parameters.
+   * @param {?random-js.Engine} random engine.
    * @return {*}
    * @example
    * new ForAll([hc.int]).eval(x => x + 1);
    */
-  eval(f) {
-    return f.apply(null, this.arbs.map(arb => arb.generate()));
+  eval(f, engine) {
+    function genValue(arb) {
+      if (engine) {
+        arb.engine(engine);
+      }
+      return arb.generate();
+    };
+    return f.apply(null, this.arbs.map(genValue));
   }
-  hold(property) {
-    return () => {
-      let samples = this.arbs.map(arb => {
+  /**
+   * Creates a Property.
+   *
+   * @param {function} predicate
+   * @return {Property}
+   */
+  hold(predicate) {
+    return new Property(this, predicate);
+  }
+  /**
+   * Run a property expectation checking.
+   *
+   * @param {function} predicate
+   * @return {Property}
+   */
+  expect(predicate) {
+    return new Property(this, predicate).expect();
+  }
+}
+
+/**
+ * Property.
+ */
+class Property {
+  /**
+   * @param {ForAll} forall
+   * @param {function} predicate
+   * @return {Property}
+   */
+  constructor(forall, predicate) {
+    this._forall = forall;
+    this._predicate = predicate;
+  }
+  makeFormula() {
+    return (engine) => {
+      let samples = this._forall.arbs.map(arb => {
+        if (engine) {
+          arb.engine(engine);
+        }
         return arb.generate();
       });
       try {
-        let success = !!property.apply(null, samples);
+        let success = !!this._predicate.apply(null, samples);
         return {
           success: success,
           counterExample: samples
@@ -79,33 +124,52 @@ class ForAll {
       }
     };
   }
-  check(property) {
-    let tests = 100;
+  /**
+   * Check this property.
+   *
+   * @param {?object} opts check options.
+   * @return {boolean} returns true if it is valid.
+   *
+   * @example
+   *
+   * hc.forall(hc.int).hold(n => n === n).check();
+   */
+  check(opts = stdOpts) {
+    assert(opts.tests > 0, 'tests must more than 0.');
+    assert(opts.engine, 'engine is required');
+    assert(opts.seed, 'seed is required');
+    let tests = opts.tests;
     let result = {
       numTests: 1,
-      totalTests: tests,
-      pass: true
+      totalTests: 0,
+      pass: false
     };
-    for (let i = result.numTests; i &lt;= tests; i++) {
-      let r = this.hold(property)();
+    opts.engine.seed(opts.seed);
+    for (let i = result.numTests; i &lt;= opts.tests; i++) {
+      let r = this.makeFormula(this._predicate)(opts.engine);
       result.numTests = i;
-      if (!r.success) {
+      result.totalTests++;
+      if (r.success) {
+        result.pass = true;
+      }
+      else {
         result.pass = false;
-        result.reason = formatFalure(r);
+        result.reason = formatFalure(opts.seed, r);
         result.testResult = r;
         break;
       }
     }
     return result;
   }
-  expect(property) {
-    let r = this.check(property);
+  expect(opts) {
+    let r = this.check(this.makeFormula(), opts);
     if (r.testResult.exception) throw r.testResult.exception;
   }
 }
 
-function formatFalure(result) {
-  let msg = `counter example: ${result.counterExample}`;
+function formatFalure(seed, result) {
+  let rngStateMsg= `seed: ${seed}`;
+  let msg = `${rngStateMsg}, counter example: ${result.counterExample}`;
   if (result.exception) {
     msg += `, exception: ${result.exception}`;
   }
@@ -136,8 +200,12 @@ export function hold(...args) {
   let name = args[0];
   let arbs = args.slice(1, args.length - 1);
   let prop = args[args.length - 1];
+  let opts = stdOpts;
+  if (process.env.HCSeed) {
+    opts.seed = process.env.HCSeed;
+  }
   it(name, (done) => {
-    let result = forall.apply(null, arbs).check(prop);
+    let result = forall.apply(null, arbs).hold(prop).check(opts);
     assert(result.pass,
            `${name} doesn't hold, ${result.reason}` +
            `, tried: ${result.numTests}/${result.totalTests}`);
@@ -154,13 +222,13 @@ export function hold(...args) {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-random.html">random</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-types_any.html">types/any</a></li><li><a href="module-types_boolean.html">types/boolean</a></li><li><a href="module-types_datetime.html">types/datetime</a></li><li><a href="module-types_falsy.html">types/falsy</a></li><li><a href="module-types_function.html">types/function</a></li><li><a href="module-types_number.html">types/number</a></li><li><a href="module-types_string.html">types/string</a></li><li><a href="module-utils.html">utils</a></li></ul><h3>Classes</h3><ul><li><a href="module-arbitrary-Arbitrary.html">Arbitrary</a></li><li><a href="module-testable-ForAll.html">ForAll</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-types_any.html">types/any</a></li><li><a href="module-types_boolean.html">types/boolean</a></li><li><a href="module-types_datetime.html">types/datetime</a></li><li><a href="module-types_falsy.html">types/falsy</a></li><li><a href="module-types_function.html">types/function</a></li><li><a href="module-types_number.html">types/number</a></li><li><a href="module-types_string.html">types/string</a></li><li><a href="module-utils.html">utils</a></li></ul><h3>Classes</h3><ul><li><a href="module-arbitrary-Arbitrary.html">Arbitrary</a></li><li><a href="module-testable-ForAll.html">ForAll</a></li><li><a href="module-testable-Property.html">Property</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Sep 15 2016 15:05:14 GMT+0800 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Sep 19 2016 16:39:50 GMT+0800 (CST)
 </footer>
 
 <script> prettyPrint(); </script>
