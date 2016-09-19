@@ -4,6 +4,7 @@
 import _ from 'lodash';
 import Random from 'random-js';
 import assert from 'assert';
+import {stdOpts} from './constants';
 
 /**
  * For All Quantifiler.
@@ -98,25 +99,26 @@ class Property {
   /**
    * Check this property.
    *
-   * @param {object} opts check options.
+   * @param {?object} opts check options.
    * @return {boolean} returns true if it is valid.
    *
    * @example
    *
    * hc.forall(hc.int).hold(n => n === n).check();
    */
-  check(opts = {}) {
-    let tests = opts.tests || 100;
+  check(opts = stdOpts) {
+    assert(opts.tests > 0, 'tests must more than 0.');
+    assert(opts.engine, 'engine is required');
+    assert(opts.seed, 'seed is required');
+    let tests = opts.tests;
     let result = {
       numTests: 1,
       totalTests: 0,
       pass: false
     };
-    let engine = Random.engines.mt19937();
-    let seed = opts.seed ? opts.seed : engine.autoSeed()();
-    engine.seed(seed);
-    for (let i = result.numTests; i <= tests; i++) {
-      let r = this.makeFormula(this._predicate)(engine);
+    opts.engine.seed(opts.seed);
+    for (let i = result.numTests; i <= opts.tests; i++) {
+      let r = this.makeFormula(this._predicate)(opts.engine);
       result.numTests = i;
       result.totalTests++;
       if (r.success) {
@@ -124,7 +126,7 @@ class Property {
       }
       else {
         result.pass = false;
-        result.reason = formatFalure(seed, r);
+        result.reason = formatFalure(opts.seed, r);
         result.testResult = r;
         break;
       }
@@ -171,7 +173,7 @@ export function hold(...args) {
   let arbs = args.slice(1, args.length - 1);
   let prop = args[args.length - 1];
   it(name, (done) => {
-    let result = forall.apply(null, arbs).hold(prop).check();
+    let result = forall.apply(null, arbs).hold(prop).check(stdOpts);
     assert(result.pass,
            `${name} doesn't hold, ${result.reason}` +
            `, tried: ${result.numTests}/${result.totalTests}`);

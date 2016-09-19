@@ -4,7 +4,7 @@
 import _ from 'lodash';
 import Random from 'random-js';
 import assert from 'assert';
-import {mt19937} from './random';
+import {stdOpts} from './constants';
 
 /**
  * A function to generate a function to take a random engine in random-js.
@@ -53,7 +53,7 @@ class Arbitrary {
     this._genOpts = null;
     this._transforms = [_.identity];
 
-    this.engine(opts.engine || mt19937);
+    this.engine(opts.engine || stdOpts.engine);
     this.name(opts.name || 'Arbitrary-' + Random.uuid4(this._engine));
     this.generator(opts.gen, opts.genOpts);
   }

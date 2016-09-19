@@ -1,4 +1,5 @@
 import Random from 'random-js';
+import {stdOpts} from '../src/constants';
 
 let randomArb = hc.oneOf([
   hc.any,
@@ -47,9 +48,11 @@ describe('Testable', () => {
       'checking results is repeatable.',
       'int32',
       (seed) => {
+        let opts = stdOpts;
+        opts.seed = seed;
         let prop = hc.forall(hc.nat).hold(x => x / 2 === 0);
-        let r1 = prop.check({seed: seed});
-        let r2 = prop.check({seed: seed});
+        let r1 = prop.check(opts);
+        let r2 = prop.check(opts);
         return _.isEqual(r1,r2);
       });
 
