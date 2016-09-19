@@ -110,10 +110,9 @@ class Property {
     assert(opts.tests > 0, 'tests must more than 0.');
     assert(opts.engine, 'engine is required');
     assert(opts.seed, 'seed is required');
-    let tests = opts.tests;
     let result = {
       numTests: 1,
-      totalTests: 0,
+      totalTests: opts.tests,
       pass: false
     };
     opts.engine.seed(opts.seed);
