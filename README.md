@@ -4,14 +4,29 @@
 
 HyCheck is a property-based testing library, inspired by QuickCheck, Hypothesis, JSVerify.
 
-- warrning: shrinking is not implemented.
-- more details see [Documents](http://hychen.me/hycheck/index.html).
+- [Documents](http://hychen.me/hycheck/index.html).
+
+## What is property-based testing?
+
+Property-based tests make statements about the output of your code based on
+the input, and these statements are verified for many different possible inputs.
+
+According [this article](https://fsharpforfunandprofit.com/posts/property-based-testing-2/),
+Categories for properties are:
+
+- Different paths, same destination
+- There and back again
+- Some things never change
+- The more things change, the more they stay the same
+- Solve a smaller problem first
+- Hard to prove, easy to verify
+- The test oracle
 
 ## Getting Started
 
 ### Node.js
 
-install the module with: npm install hycheck 
+install the module with: npm install hycheck
 
 ```javascript
 import hc from `hycheck`
