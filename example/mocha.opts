@@ -1,0 +1,5 @@
+--compilers js:babel-register
+--recursive
+--colors
+--reporter spec
+--timeout 5000
