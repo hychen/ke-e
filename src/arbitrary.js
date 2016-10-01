@@ -177,7 +177,7 @@ class Arbitrary {
   }
 }
 
-export function isArbitrary(arb) {
+function isArbitrary(arb) {
   return arb instanceof Arbitrary;
 }
 
