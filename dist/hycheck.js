@@ -4,12 +4,14 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.fromGenMaker = exports.Arbitrary = undefined;
+exports.isArbitrary = exports.fromGenMaker = exports.Arbitrary = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * @module
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
 
+
+exports.isArbitrary = isArbitrary;
 
 var _lodash = require('lodash');
 
@@ -243,14 +245,16 @@ var Arbitrary = function () {
   return Arbitrary;
 }();
 
+function isArbitrary(arb) {
+  return arb instanceof Arbitrary;
+}
+
 /**
  * Transform a generator maker to an arbitrary.
  *
  * @param {!GeneratorMaker}
  * @param {?GeneratorMakerOptions}
  */
-
-
 function fromGenMaker(gen, genOpts) {
   return new Arbitrary({
     gen: gen,
@@ -260,6 +264,7 @@ function fromGenMaker(gen, genOpts) {
 
 exports.Arbitrary = Arbitrary;
 exports.fromGenMaker = fromGenMaker;
+exports.isArbitrary = isArbitrary;
 },{"./constants":3,"assert":15,"lodash":17,"random-js":19}],2:[function(require,module,exports){
 'use strict';
 
@@ -561,6 +566,7 @@ exports.default = __all__;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.Property = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * @module
@@ -584,13 +590,14 @@ var _assert2 = _interopRequireDefault(_assert);
 
 var _constants = require('./constants');
 
+var _arbitrary = require('./arbitrary');
+
+var _combinators = require('./combinators');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-/**
- * For All Quantifiler.
- */
 var ForAll = function () {
   /**
    * Create a ForAll.
@@ -627,67 +634,20 @@ var ForAll = function () {
       };
       return f.apply(null, this.arbs.map(genValue));
     }
-    /**
-     * Creates a Property.
-     *
-     * @param {function} predicate
-     * @return {Property}
-     */
-
   }, {
-    key: 'hold',
-    value: function hold(predicate) {
-      return new Property(this, predicate);
-    }
-    /**
-     * Run a property expectation checking.
-     *
-     * @param {function} predicate
-     * @return {Property}
-     */
-
-  }, {
-    key: 'expect',
-    value: function expect(predicate) {
-      return new Property(this, predicate).expect();
-    }
-  }]);
-
-  return ForAll;
-}();
-
-/**
- * Property.
- */
-
-
-var Property = function () {
-  /**
-   * @param {ForAll} forall
-   * @param {function} predicate
-   * @return {Property}
-   */
-  function Property(forall, predicate) {
-    _classCallCheck(this, Property);
-
-    this._forall = forall;
-    this._predicate = predicate;
-  }
-
-  _createClass(Property, [{
     key: 'makeFormula',
-    value: function makeFormula() {
+    value: function makeFormula(predicate) {
       var _this = this;
 
       return function (engine) {
-        var samples = _this._forall.arbs.map(function (arb) {
+        var samples = _this.arbs.map(function (arb) {
           if (engine) {
             arb.engine(engine);
           }
           return arb.generate();
         });
         try {
-          var success = !!_this._predicate.apply(null, samples);
+          var success = !!predicate.apply(null, samples);
           return {
             success: success,
             counterExample: samples
@@ -701,36 +661,92 @@ var Property = function () {
         }
       };
     }
+  }]);
+
+  return ForAll;
+}();
+
+/**
+ * Property.
+ */
+
+
+var Property = exports.Property = function () {
+  /**
+   * @param {string} name
+   * @param {function} predicate
+   * @return {Property}
+   */
+  function Property(name, predicate) {
+    _classCallCheck(this, Property);
+
+    this.name = name;
+    this.predicate = predicate;
+  }
+  /**
+   * Test this property over quantifilers.
+   *
+   * @param {...Arbitrary} arbs.
+   * @param {?Object} opts check options.
+   * @return {Property}
+   */
+
+
+  _createClass(Property, [{
+    key: 'over',
+    value: function over() {
+      var _this2 = this;
+
+      var isOpts = function isOpts(e) {
+        return _lodash2.default.isObject(e) && !(0, _arbitrary.isArbitrary)(e);
+      };
+
+      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+        args[_key] = arguments[_key];
+      }
+
+      var arbs = isOpts(args[args.length - 1]) ? args.slice(0, -1) : args;
+      var quantifilers = _lodash2.default.every(arbs, _arbitrary.isArbitrary) ? arbs : arbs.map(_combinators.constant);
+      var testName = this.name;
+      it(testName, function (done) {
+        var result = _this2.check(new ForAll(quantifilers));
+        (0, _assert2.default)(result.pass, testName + ' doesn\'t hold, ' + result.reason + (', tried: ' + result.numTests + '/' + result.totalTests));
+        done();
+      });
+      return this;
+    }
     /**
      * Check this property.
      *
+     * @param {ForAll} quantifler quantifler.
      * @param {?object} opts check options.
-     * @return {boolean} returns true if it is valid.
+     * @return {Obejct} returns check result.
      *
      * @example
      *
-     * hc.forall(hc.int).hold(n => n === n).check();
+     * new Property('identity', n => n === n).check(hc.forall(hc.int));
      */
 
   }, {
     key: 'check',
-    value: function check() {
-      var opts = arguments.length <= 0 || arguments[0] === undefined ? _constants.stdOpts : arguments[0];
+    value: function check(quantifiler) {
+      var opts = arguments.length <= 1 || arguments[1] === undefined ? _constants.stdOpts : arguments[1];
 
       (0, _assert2.default)(opts.tests > 0, 'tests must more than 0.');
       (0, _assert2.default)(opts.engine, 'engine is required');
       (0, _assert2.default)(opts.seed, 'seed is required');
-      var tests = opts.tests;
       var result = {
         numTests: 1,
-        totalTests: 0,
+        totalTests: opts.tests,
         pass: false
       };
+      if (process.env.HCSeed) {
+        opts.seed = process.env.HCSeed;
+      }
       opts.engine.seed(opts.seed);
       for (var i = result.numTests; i <= opts.tests; i++) {
-        var r = this.makeFormula(this._predicate)(opts.engine);
+        var r = quantifiler.makeFormula(this.predicate)(opts.engine);
         result.numTests = i;
-        result.totalTests++;
         if (r.success) {
           result.pass = true;
         } else {
@@ -741,12 +757,6 @@ var Property = function () {
         }
       }
       return result;
-    }
-  }, {
-    key: 'expect',
-    value: function expect(opts) {
-      var r = this.check(this.makeFormula(), opts);
-      if (r.testResult.exception) throw r.testResult.exception;
     }
   }]);
 
@@ -769,8 +779,8 @@ function formatFalure(seed, result) {
  * @return {ForAll}
  */
 function forall() {
-  for (var _len = arguments.length, arbs = Array(_len), _key = 0; _key < _len; _key++) {
-    arbs[_key] = arguments[_key];
+  for (var _len2 = arguments.length, arbs = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    arbs[_key2] = arguments[_key2];
   }
 
   return new ForAll(arbs);
@@ -780,32 +790,19 @@ function forall() {
  * A helper function to run a proposition test in mocha.
  *
  * @example
- * hc.hold('x + y', hc.int, hc.int, (x,y) => x+y===y+x);
+ * hc.hold(
+ *   'communicative' // property name.
+ *   (x, y) => x + y === y + x // predicate.
+ * )
+ * .over(1, 2) // especially case.
+ * .over(hc.int, hc.int) // universal case.
  *
- * /// it is the same as...
- * let prop = hc.forall(hc.int, hc.int).check((x,y) => x+y === y+x);
- * it('x+y=y+x', prop);
  */
-function hold() {
-  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    args[_key2] = arguments[_key2];
-  }
-
-  var name = args[0];
-  var arbs = args.slice(1, args.length - 1);
-  var prop = args[args.length - 1];
-  var opts = _constants.stdOpts;
-  if (process.env.HCSeed) {
-    opts.seed = process.env.HCSeed;
-  }
-  it(name, function (done) {
-    var result = forall.apply(null, arbs).hold(prop).check(opts);
-    (0, _assert2.default)(result.pass, name + ' doesn\'t hold, ' + result.reason + (', tried: ' + result.numTests + '/' + result.totalTests));
-    done();
-  });
+function hold(name, predicate) {
+  return new Property(name, predicate);
 }
 }).call(this,require('_process'))
-},{"./constants":3,"_process":18,"assert":15,"lodash":17,"random-js":19}],6:[function(require,module,exports){
+},{"./arbitrary":1,"./combinators":2,"./constants":3,"_process":18,"assert":15,"lodash":17,"random-js":19}],6:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {

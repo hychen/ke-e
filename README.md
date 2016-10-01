@@ -34,9 +34,8 @@ import hc from `hycheck`
 describe('Integer', () => {
   hc.hold(
     'x + y = y + x'
-    hc.int, hc.int,
     (x, y) => x + y === y + x
-    );
+    ).over(hc.int, hc.int);
 });
 ```
 
@@ -50,9 +49,8 @@ Download hycheck.js and place it in your project, then add it as the follwoing.
 describe('Integer', () => {
   hc.hold(
     'x + y = y + x'
-    hc.int, hc.int,
     (x, y) => x + y === y + x
-    );
+    ).over(hc.int, hc.int);
 });
 </script>
 ```
@@ -66,7 +64,13 @@ for example, the following test.
 
 ```
 describe('Int', () => {
-  hc.hold('> 0', hc.int, (x) => x > 0);
+  hc.hold(
+    '> 0',       // property name.
+    x => x > 0   // predicate.
+  )
+  .over(0)       // first especially case.
+  .over(2)       // second especially case.
+  .over(hc.int)  // universal case.
 })
 ```
 

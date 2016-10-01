@@ -5,10 +5,9 @@ import _ from 'lodash';
 import Random from 'random-js';
 import assert from 'assert';
 import {stdOpts} from './constants';
+import {isArbitrary} from './arbitrary';
+import {constant} from './combinators';
 
-/**
- * For All Quantifiler.
- */
 class ForAll {
   /**
    * Create a ForAll.
@@ -39,49 +38,16 @@ class ForAll {
     };
     return f.apply(null, this.arbs.map(genValue));
   }
-  /**
-   * Creates a Property.
-   *
-   * @param {function} predicate
-   * @return {Property}
-   */
-  hold(predicate) {
-    return new Property(this, predicate);
-  }
-  /**
-   * Run a property expectation checking.
-   *
-   * @param {function} predicate
-   * @return {Property}
-   */
-  expect(predicate) {
-    return new Property(this, predicate).expect();
-  }
-}
-
-/**
- * Property.
- */
-class Property {
-  /**
-   * @param {ForAll} forall
-   * @param {function} predicate
-   * @return {Property}
-   */
-  constructor(forall, predicate) {
-    this._forall = forall;
-    this._predicate = predicate;
-  }
-  makeFormula() {
+  makeFormula(predicate) {
     return (engine) => {
-      let samples = this._forall.arbs.map(arb => {
+      let samples = this.arbs.map(arb => {
         if (engine) {
           arb.engine(engine);
         }
         return arb.generate();
       });
       try {
-        let success = !!this._predicate.apply(null, samples);
+        let success = !!predicate.apply(null, samples);
         return {
           success: success,
           counterExample: samples
@@ -96,17 +62,54 @@ class Property {
       }
     };
   }
+}
+
+/**
+ * Property.
+ */
+export class Property {
+  /**
+   * @param {string} name
+   * @param {function} predicate
+   * @return {Property}
+   */
+  constructor(name, predicate) {
+    this.name = name;
+    this.predicate = predicate;
+  }
+  /**
+   * Test this property over quantifilers.
+   *
+   * @param {...Arbitrary} arbs.
+   * @param {?Object} opts check options.
+   * @return {Property}
+   */
+  over(...args) {
+    let isOpts = e => _.isObject(e) && !isArbitrary(e);
+    let arbs = isOpts(args[args.length - 1]) ? args.slice(0, -1) : args;
+    let quantifilers = _.every(arbs, isArbitrary) ? arbs : arbs.map(constant);
+    let testName = this.name;
+    it(testName, (done) => {
+      let result = this.check(new ForAll(quantifilers));
+      assert(result.pass,
+        `${testName} doesn't hold, ${result.reason}` +
+             `, tried: ${result.numTests}/${result.totalTests}`);
+      done();
+    });
+    return this;
+  }
   /**
    * Check this property.
    *
+   * @param {ForAll} quantifler quantifler.
    * @param {?object} opts check options.
-   * @return {boolean} returns true if it is valid.
+   * @return {Obejct} returns check result.
    *
    * @example
    *
-   * hc.forall(hc.int).hold(n => n === n).check();
+   * new Property('identity', n => n === n).check(hc.forall(hc.int));
    */
-  check(opts = stdOpts) {
+  check(quantifiler, opts = stdOpts) {
     assert(opts.tests > 0, 'tests must more than 0.');
     assert(opts.engine, 'engine is required');
     assert(opts.seed, 'seed is required');
@@ -115,11 +118,13 @@ class Property {
       totalTests: opts.tests,
       pass: false
     };
+    if (process.env.HCSeed) {
+      opts.seed = process.env.HCSeed;
+    }
     opts.engine.seed(opts.seed);
     for (let i = result.numTests; i <= opts.tests; i++) {
-      let r = this.makeFormula(this._predicate)(opts.engine);
+      let r = quantifiler.makeFormula(this.predicate)(opts.engine);
       result.numTests = i;
-      result.totalTests++;
       if (r.success) {
         result.pass = true;
       }
@@ -131,10 +136,6 @@ class Property {
       }
     }
     return result;
-  }
-  expect(opts) {
-    let r = this.check(this.makeFormula(), opts);
-    if (r.testResult.exception) throw r.testResult.exception;
   }
 }
 
@@ -161,25 +162,14 @@ export function forall(...arbs) {
  * A helper function to run a proposition test in mocha.
  *
  * @example
- * hc.hold('x + y', hc.int, hc.int, (x,y) => x+y===y+x);
+ * hc.hold(
+ *   'communicative' // property name.
+ *   (x, y) => x + y === y + x // predicate.
+ * )
+ * .over(1, 2) // especially case.
+ * .over(hc.int, hc.int) // universal case.
  *
- * /// it is the same as...
- * let prop = hc.forall(hc.int, hc.int).check((x,y) => x+y === y+x);
- * it('x+y=y+x', prop);
  */
-export function hold(...args) {
-  let name = args[0];
-  let arbs = args.slice(1, args.length - 1);
-  let prop = args[args.length - 1];
-  let opts = stdOpts;
-  if (process.env.HCSeed) {
-    opts.seed = process.env.HCSeed;
-  }
-  it(name, (done) => {
-    let result = forall.apply(null, arbs).hold(prop).check(opts);
-    assert(result.pass,
-           `${name} doesn't hold, ${result.reason}` +
-           `, tried: ${result.numTests}/${result.totalTests}`);
-    done();
-  });
+export function hold(name, predicate) {
+  return new Property(name, predicate);
 }

@@ -1,5 +1,6 @@
 import Random from 'random-js';
 import {stdOpts} from '../src/constants';
+import {Property} from '../src/testable';
 
 let randomArb = hc.oneOf([
   hc.any,
@@ -42,34 +43,26 @@ describe('Testable', () => {
 
   });
 
-  describe('Porperty', () => {
+  describe('Property', () => {
 
-    jsc.property(
-      'checking results is repeatable.',
-      'int32',
-      (seed) => {
-        let opts = stdOpts;
-        opts.seed = seed;
-        let prop = hc.forall(hc.nat).hold(x => x / 2 === 0);
-        let r1 = prop.check(opts);
-        let r2 = prop.check(opts);
-        return _.isEqual(r1,r2);
-      });
+    it('checks a predicate over quantifilers.', () => {
+      let p = new Property('id', _.isInteger);
+      let r1 = p.check(hc.forall(hc.int, hc.int));
+      let r2 = p.check(hc.forall(hc.constant(1), hc.constant(2)));
+      expect(r1.pass).eq(r2.pass);
+    });
 
-    it('throws error when expecting',
-      () => {
-        expect(() => {
-          hc.forall(hc.nat.choose(1, 1)).expect(() => {
-            throw new Error();
-          }).throw(Error);
-        });
-      });
   });
 
 });
 
-describe('Mocha Integeration', () => {
+describe('Mocah Integration', () => {
 
-  hc.hold('works.', hc.int, n => n === n);
+  hc.hold(
+    'communicative',
+    (x, y) => x + y === y + x
+  )
+    .over(1, 2)
+    .over(4, 3, {tests: 1});
 
 });

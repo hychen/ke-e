@@ -177,6 +177,10 @@ class Arbitrary {
   }
 }
 
+export function isArbitrary(arb) {
+  return arb instanceof Arbitrary;
+}
+
 /**
  * Transform a generator maker to an arbitrary.
  *
@@ -192,5 +196,6 @@ function fromGenMaker(gen, genOpts)  {
 
 export {
   Arbitrary,
-  fromGenMaker
+  fromGenMaker,
+  isArbitrary
 };
