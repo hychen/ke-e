@@ -45,7 +45,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="Property"><span class="type-signature"></span>new Property<span class="signature">(forall, predicate)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="Property"><span class="type-signature"></span>new Property<span class="signature">(name, predicate)</span><span class="type-signature"></span></h4>
 
     
 
@@ -84,13 +84,13 @@
 
         <tr>
             
-                <td class="name"><code>forall</code></td>
+                <td class="name"><code>name</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">ForAll</span>
+<span class="param-type">string</span>
 
 
             
@@ -164,7 +164,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="testable.js.html">testable.js</a>, <a href="testable.js.html#line65">line 65</a>
+        <a href="testable.js.html">testable.js</a>, <a href="testable.js.html#line102">line 102</a>
     </li></ul></dd>
     
 
@@ -213,7 +213,7 @@
 
     
 
-    <h4 class="name" id="check"><span class="type-signature"></span>check<span class="signature">(opts<span class="signature-attributes">nullable</span>)</span><span class="type-signature"> &rarr; {boolean}</span></h4>
+    <h4 class="name" id="check"><span class="type-signature"></span>check<span class="signature">(quantifler, opts<span class="signature-attributes">nullable</span>)</span><span class="type-signature"> &rarr; {CheckResult}</span></h4>
 
     
 
@@ -258,13 +258,44 @@
 
         <tr>
             
+                <td class="name"><code>quantifler</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">ForAll</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">quantifler.</td>
+        </tr>
+
+    
+
+        <tr>
+            
                 <td class="name"><code>opts</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">object</span>
+<span class="param-type">CheckOptions</span>
 
 
             
@@ -325,7 +356,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="testable.js.html">testable.js</a>, <a href="testable.js.html#line109">line 109</a>
+        <a href="testable.js.html">testable.js</a>, <a href="testable.js.html#line144">line 144</a>
     </li></ul></dd>
     
 
@@ -351,10 +382,6 @@
 <h5>Returns:</h5>
 
         
-<div class="param-desc">
-    returns true if it is valid.
-</div>
-
 
 
 <dl>
@@ -363,7 +390,7 @@
     </dt>
     <dd>
         
-<span class="param-type">boolean</span>
+<span class="param-type">CheckResult</span>
 
 
     </dd>
@@ -374,7 +401,201 @@
 
     <h5>Example</h5>
     
-    <pre class="prettyprint"><code>hc.forall(hc.int).hold(n => n === n).check();</code></pre>
+    <pre class="prettyprint"><code>new Property('identity', n => n === n).check(hc.forall(hc.int));</code></pre>
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="over"><span class="type-signature"></span>over<span class="signature">(opts<span class="signature-attributes">nullable</span>)</span><span class="type-signature"> &rarr; {Property}</span></h4>
+
+    
+
+
+
+<div class="description">
+    Test this property over quantifilers.
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Attributes</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>arbs.</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Arbitrary</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>opts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">CheckOptions</span>
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last">check options.</td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="testable.js.html">testable.js</a>, <a href="testable.js.html#line119">line 119</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Property</span>
+
+
+    </dd>
+</dl>
+
+    
 
 
 
@@ -400,7 +621,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Mon Sep 19 2016 16:39:50 GMT+0800 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sat Oct 08 2016 14:25:55 GMT+0800 (CST)
 </footer>
 
 <script> prettyPrint(); </script>

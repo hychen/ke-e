@@ -8,6 +8,32 @@ import {stdOpts} from './constants';
 import {isArbitrary} from './arbitrary';
 import {constant} from './combinators';
 
+/**
+ * @callback Formula
+ * @param {random-js.engine} engine
+ * @return {FormulaResult}
+ */
+
+/**
+ * @typedef {Object} FormulaResult The result of evaluating formula.
+ * @property {boolean} success formula is valid.
+ * @property {Array<*>} counterExample samples falsy this formula.
+ * @property {Exception} e
+ */
+
+/**
+ * @typedef {Object} CheckResult
+ * @property {number} numTests
+ * @property {number} totalTests tot
+ * @property {boolean} pass
+ * @property {string} reason
+ * @property {FormulaResult} testResult
+ */
+
+/**
+ * For All Quntalifier.
+ *
+ */
 class ForAll {
   /**
    * Create a ForAll.
@@ -38,6 +64,12 @@ class ForAll {
     };
     return f.apply(null, this.arbs.map(genValue));
   }
+  /**
+   * Make a formula.
+   *
+   * @param {function} predicate
+   * @return {Formula}
+   */
   makeFormula(predicate) {
     return (engine) => {
       let samples = this.arbs.map(arb => {
@@ -67,7 +99,7 @@ class ForAll {
 /**
  * Property.
  */
-export class Property {
+class Property {
   /**
    * @param {string} name
    * @param {function} predicate
@@ -81,7 +113,7 @@ export class Property {
    * Test this property over quantifilers.
    *
    * @param {...Arbitrary} arbs.
-   * @param {?Object} opts check options.
+   * @param {?CheckOptions} opts check options.
    * @return {Property}
    */
   over(...args) {
@@ -102,8 +134,8 @@ export class Property {
    * Check this property.
    *
    * @param {ForAll} quantifler quantifler.
-   * @param {?object} opts check options.
-   * @return {Obejct} returns check result.
+   * @param {?CheckOptions} opts check options.
+   * @return {CheckResult}
    *
    * @example
    *
@@ -154,7 +186,7 @@ function formatFalure(seed, result) {
  * @param {...Arbitrary} arbs arbitraries.
  * @return {ForAll}
  */
-export function forall(...arbs) {
+function forall(...arbs) {
   return new ForAll(arbs);
 }
 
@@ -170,6 +202,12 @@ export function forall(...arbs) {
  * .over(hc.int, hc.int) // universal case.
  *
  */
-export function hold(name, predicate) {
+function hold(name, predicate) {
   return new Property(name, predicate);
 }
+
+export {
+  Property,
+  hold,
+  forall
+};
