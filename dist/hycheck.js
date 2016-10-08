@@ -11,8 +11,6 @@ var _createClass = function () { function defineProperties(target, props) { for 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
 
 
-exports.isArbitrary = isArbitrary;
-
 var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
@@ -511,7 +509,14 @@ var mt19937 = _randomJs2.default.engines.mt19937().autoSeed();
 /**
  * Options specifies arguments to the HyCheck driver.
  *
- * @type {Object} stdOpts
+ * @typedef {Object} CheckOptions
+ * @property {number} tests The max number of tests.
+ * @property {random-js.engine} engine Any engine of Random-Js.
+ * @property {number} seed 32 bits integer.
+ */
+
+/** The default check options.
+ * @type {CheckOptions}
  */
 /**
  * @module
@@ -566,15 +571,12 @@ exports.default = __all__;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Property = undefined;
+exports.forall = exports.hold = exports.Property = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       * @module
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       */
 
-
-exports.forall = forall;
-exports.hold = hold;
 
 var _lodash = require('lodash');
 
@@ -598,6 +600,32 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+/**
+ * @callback Formula
+ * @param {random-js.engine} engine
+ * @return {FormulaResult}
+ */
+
+/**
+ * @typedef {Object} FormulaResult The result of evaluating formula.
+ * @property {boolean} success formula is valid.
+ * @property {Array<*>} counterExample samples falsy this formula.
+ * @property {Exception} e
+ */
+
+/**
+ * @typedef {Object} CheckResult
+ * @property {number} numTests
+ * @property {number} totalTests tot
+ * @property {boolean} pass
+ * @property {string} reason
+ * @property {FormulaResult} testResult
+ */
+
+/**
+ * For All Quntalifier.
+ *
+ */
 var ForAll = function () {
   /**
    * Create a ForAll.
@@ -634,6 +662,13 @@ var ForAll = function () {
       };
       return f.apply(null, this.arbs.map(genValue));
     }
+    /**
+     * Make a formula.
+     *
+     * @param {function} predicate
+     * @return {Formula}
+     */
+
   }, {
     key: 'makeFormula',
     value: function makeFormula(predicate) {
@@ -671,7 +706,7 @@ var ForAll = function () {
  */
 
 
-var Property = exports.Property = function () {
+var Property = function () {
   /**
    * @param {string} name
    * @param {function} predicate
@@ -687,7 +722,7 @@ var Property = exports.Property = function () {
    * Test this property over quantifilers.
    *
    * @param {...Arbitrary} arbs.
-   * @param {?Object} opts check options.
+   * @param {?CheckOptions} opts check options.
    * @return {Property}
    */
 
@@ -719,8 +754,8 @@ var Property = exports.Property = function () {
      * Check this property.
      *
      * @param {ForAll} quantifler quantifler.
-     * @param {?object} opts check options.
-     * @return {Obejct} returns check result.
+     * @param {?CheckOptions} opts check options.
+     * @return {CheckResult}
      *
      * @example
      *
@@ -801,6 +836,10 @@ function forall() {
 function hold(name, predicate) {
   return new Property(name, predicate);
 }
+
+exports.Property = Property;
+exports.hold = hold;
+exports.forall = forall;
 }).call(this,require('_process'))
 },{"./arbitrary":1,"./combinators":2,"./constants":3,"_process":18,"assert":15,"lodash":17,"random-js":19}],6:[function(require,module,exports){
 'use strict';
