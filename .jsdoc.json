@@ -1,0 +1,31 @@
+{
+  "source": {
+    "include": ["src/"],
+        "exclude": ["node_modules/"],
+    "includePattern": ".+\\.js(doc)?$",
+    "excludePattern": "(^|\\/|\\\\)_"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "opts": {
+    "encoding": "utf8",
+    "destination": "docs",
+    "recurse": true,
+    "template": "./node_modules/ink-docstrap/template",
+    "readme": "./README.md"
+  },
+    "templates": {
+      "cleverLinks": true,
+      "monospaceLinks": true,
+      "outputSourceFiles": true,
+      "systemName"      : "HyCheck",
+      "footer"          : "",
+      "copyright"       : "Copyright © 2016 The contributors to the HyCheck.",
+      "navType"         : "vertical",
+      "theme"           : "united",
+      "linenums"        : true,
+      "collapseSymbols" : false,
+      "inverseNav"      : true
+    }
+}
