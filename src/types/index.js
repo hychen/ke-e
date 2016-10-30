@@ -6,3 +6,4 @@ export * from './any';
 export * from './function';
 export * from './datetime';
 export {default as person} from './person';
+export {default as locale} from './locale';

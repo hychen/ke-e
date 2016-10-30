@@ -4,6 +4,7 @@
 import _ from 'lodash';
 import {fromGenMaker} from './arbitrary';
 import {elements} from './combinators';
+import avaliableLocaleIds from './types/locale/avaliableLocaleids.js';
 
 /**
  * Merge namespace
@@ -28,6 +29,9 @@ export function liftExport(namespace, name) {
  * @return {Object}
  */
 export function getDef(defs, locale, key) {
+  if (avaliableLocaleIds.indexOf(locale) < 0) {
+    throw new Error(`Locale ${locale} is not supported`);
+  }
   let _locale = locale.replace(/-/g, '_');
   let _def = defs[_locale];
   if (_def) {
