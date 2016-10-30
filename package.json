@@ -21,7 +21,7 @@
     "build:nodejs": "./node_modules/.bin/babel src -d lib",
     "build:browser": "./node_modules/.bin/webpack",
     "clean": "rm -rf ./lib",
-    "lint": "./node_modules/.bin/eslint src test",
+    "lint": "./node_modules/.bin/eslint src/**/**/*.js test",
     "lintgit": "./tools/eslint",
     "doc": "./node_modules/.bin/jsdoc -c ./.jsdoc.json"
   },
