@@ -48,6 +48,7 @@ class Arbitrary {
    */
   constructor(opts) {
     assert(_.isObject(opts), 'opts must be an object.');
+    this._locale = 'en';
     this._engine = null;
     this._gen = null;
     this._genOpts = null;
@@ -106,6 +107,22 @@ class Arbitrary {
     }
   }
   /**
+   * Change locale.
+   *
+   * @param {!string} locale locale tag.
+   * @return {Arbitrary|String}
+   */
+   locale(locale) {
+     if (locale){
+       let clone = this.clone();
+       clone._locale = locale;
+       return clone;
+     }
+     else {
+       return this._locale;
+     }
+   }
+  /**
    * Set a random engine.
    *
    * @param {!Engine} engine
@@ -147,9 +164,9 @@ class Arbitrary {
    * @return {Generator}
    */
   makeGen() {
-    return (engine, genOpts) => {
+    return (engine, genOpts, locale) => {
       return _.flow(this._transforms)(
-        this._gen.apply(this, genOpts || this._genOpts || [])(engine));
+        this._gen.apply(this, genOpts || this._genOpts || [])(engine, locale));
     };
   }
   /**
@@ -158,7 +175,7 @@ class Arbitrary {
    * @return {*}
    */
   generate() {
-    return this.makeGen()(this._engine, this._genOpts);
+    return this.makeGen()(this._engine, this._genOpts, this._locale);
   }
   /**
    * Generate some example values.

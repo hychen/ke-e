@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>HyCheck Source: types/function.js</title>
+	<title>HyCheck Module: types/person/index</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -67,47 +67,98 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: types/function.js</h1>
-    
+	<h1 class="page-title">Module: types/person/index</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">/**
- * @module
- */
-import {Arbitrary} from '../arbitrary';
-import {oneOf, array} from '../combinators';
-import {any} from './any';
 
-/**
- * Function Arbitrary
- *
- * @type {Arbitrar}
- *
- * @example
- *
- * let f = hc.func(hc.int).generate();
- * f() // return an integer.
- */
-export const func = new Arbitrary({
-  name: 'Function',
-  gen: function(outputArb = oneOf([any, array(any)])) {
-    return function(engine) {
-      return function() {
-        return outputArb.engine(engine).generate();
-      };
-    };
-  }
-});
-</pre>
-    </article>
+<header>
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_person_index.js.html">types/person/index.js</a>,
+				 <a href="types_person_index.js.html#sunlight-1-line-1">line 1</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -117,6 +168,10 @@ export const func = new Arbitrary({
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>

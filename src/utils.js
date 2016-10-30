@@ -16,3 +16,17 @@ export function liftExport(namespace, name) {
   });
   return namespace;
 }
+
+/**
+ * Get a definietion.
+ *
+ * @param {Object} definietions
+ * @param {string} locale
+ * @param {string} key
+ * @return {Object}
+ */
+export function getDef(defs, locale, key) {
+  let _locale = locale.replace(/-/g, '_');
+  let _def = defs[_locale]
+  return _def[key];
+}

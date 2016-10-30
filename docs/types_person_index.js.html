@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>HyCheck Source: types/function.js</title>
+	<title>HyCheck Source: types/person/index.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,7 +72,7 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: types/function.js</h1>
+		<h1 class="page-title">Source: types/person/index.js</h1>
     
 <section>
     <article>
@@ -80,30 +80,24 @@
             class="sunlight-highlight-javascript linenums">/**
  * @module
  */
-import {Arbitrary} from '../arbitrary';
-import {oneOf, array} from '../combinators';
-import {any} from './any';
+import {Arbitrary} from '../../arbitrary';
+import {elements} from '../../combinators';
+import {getDef} from '../../utils';
 
-/**
- * Function Arbitrary
- *
- * @type {Arbitrar}
- *
- * @example
- *
- * let f = hc.func(hc.int).generate();
- * f() // return an integer.
- */
-export const func = new Arbitrary({
-  name: 'Function',
-  gen: function(outputArb = oneOf([any, array(any)])) {
-    return function(engine) {
-      return function() {
-        return outputArb.engine(engine).generate();
-      };
-    };
+import definietions from './definitions';
+
+const firstName = new Arbitrary({
+  gen: function() {
+    return function(engine, locale) {
+      let pool = getDef(definietions, locale, 'firstName');
+      return elements(pool).engine(engine).generate();
+    }
   }
 });
+
+export default {
+  firstName
+}
 </pre>
     </article>
 </section>

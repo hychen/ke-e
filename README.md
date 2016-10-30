@@ -81,6 +81,16 @@ HCSeed=-1764850555 mocha
 AssertionError: >0 doesn't hold, seed: -1764850555, counter example: -5265798245849472, tried: 3/3`
 ```
 
+### i18n support
+
+```
+// Generate English first name.
+hc.person.firstName.generate();
+
+// Generate Tranditional Chinese first name.
+hc.person.firstName.locale('zh-Hant-TW').generate();
+```
+
 ## Installation
 
 ### Node.js
