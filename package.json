@@ -6,6 +6,9 @@
     "type": "git",
     "url": "git://github.com/hychen/hycheck.git"
   },
+  "directories": {
+    "lib": "./lib"
+  },
   "main": "lib/index.js",
   "bugs": {
     "url": "https://github.com/hychen/hycheck/issues"
