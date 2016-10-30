@@ -2,6 +2,8 @@
  * @module
  */
 import _ from 'lodash';
+import {fromGenMaker} from './arbitrary';
+import {elements} from './combinators';
 
 /**
  * Merge namespace
@@ -27,6 +29,22 @@ export function liftExport(namespace, name) {
  */
 export function getDef(defs, locale, key) {
   let _locale = locale.replace(/-/g, '_');
-  let _def = defs[_locale]
+  let _def = defs[_locale];
   return _def[key];
+}
+
+/**
+ * Create an arbitrary from a definition.
+ *
+ * @param {Object }definietions
+ * @param {string} name
+ * @return {Arbitary}
+ */
+export function fromDefinition(definitions, name) {
+  return fromGenMaker(function() {
+    return function(engine, locale) {
+      let pool = getDef(definitions, locale, name);
+      return elements(pool).engine(engine).generate();
+    };
+  });
 }
