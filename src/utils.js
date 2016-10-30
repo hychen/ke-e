@@ -30,7 +30,12 @@ export function liftExport(namespace, name) {
 export function getDef(defs, locale, key) {
   let _locale = locale.replace(/-/g, '_');
   let _def = defs[_locale];
-  return _def[key];
+  if (_def) {
+    return _def[key];
+  }
+  else {
+    return defs['en'][key];
+  }
 }
 
 /**
