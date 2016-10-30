@@ -37,7 +37,7 @@ export function suchThat(arb, predicate) {
   let oriGen = arb.makeGen();
   let clone = arb.clone();
   let newGenerator = function (...genOpts) {
-    return function (engine) {
+    return function (engine, locale) {
       let x;
       let j = 0;
       for (let i=0;;i++) {
@@ -45,7 +45,7 @@ export function suchThat(arb, predicate) {
         if (i > 5) {
           i = 0;
         }
-        x = oriGen(engine, genOpts);
+        x = oriGen(engine, locale);
         if (j > 5000) {
           throw new Error('can not find value in this range.');
         }
@@ -74,9 +74,9 @@ export function oneOf(arbs) {
   return new Arbitrary({
     name: 'OneOf',
     gen: function (pool) {
-      return function (engine) {
+      return function (engine, locale) {
         let arb = pool[Random.integer(0, arbs.length - 1)(engine)];
-        return arb.makeGen()(engine);
+        return arb.makeGen()(engine, locale);
       };
     },
     genOpts: [arbs]
@@ -101,9 +101,9 @@ export function pair(arb1, arb2) {
   return new Arbitrary({
     name: 'Pair',
     gen: function(a1, a2) {
-      return function(engine) {
-        return [a1.engine(engine).generate(),
-                a2.engine(engine).generate()];
+      return function(engine, locale) {
+        return [a1.makeGen()(engine, locale),
+                a2.makeGen()(engine, locale)];
       };
     },
     genOpts: [arb1, arb2]
@@ -124,9 +124,9 @@ export function array(arb) {
   return new Arbitrary({
     name: 'Array',
     gen: function (min, max) {
-      return function(engine) {
+      return function(engine, locale) {
         return _.range(0, Random.integer(min, max)(engine)).map(() => {
-          return arb.makeGen()(engine);
+          return arb.makeGen()(engine, locale);
         });
       };
     },
@@ -162,10 +162,10 @@ export function object(spec) {
   return new Arbitrary({
     name: 'Object',
     gen: function(spec) {
-      return function(engine) {
+      return function(engine, locale) {
         let o = {};
         Object.keys(spec).forEach((k) => {
-          o[k] = spec[k].engine(engine).generate();
+          o[k] = spec[k].makeGen()(engine, locale);
         });
         return o;
       };

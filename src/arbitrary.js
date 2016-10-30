@@ -32,7 +32,7 @@ import {stdOpts} from './constants';
  * A function to generate a random value.
  * @callback Generator
  * @param {Engine} engine
- * @param {GeneratorMakerOptions} genOpts
+ * @param {string} locale
  * @return {*}
  */
 
@@ -79,6 +79,17 @@ class Arbitrary {
     return clone;
   }
   /**
+   * Create a new arbitrary with new locale.
+   *
+   * @param {!string} locale locale tag.
+   * @return {Arbitrary}
+   */
+  locale(locale) {
+    let clone = this.clone();
+    clone._locale = locale;
+    return clone;
+  }
+  /**
    * Transform arbitrary A to arbitrary B.
    *
    * @param {function} transform function.
@@ -106,22 +117,6 @@ class Arbitrary {
       return this._name;
     }
   }
-  /**
-   * Change locale.
-   *
-   * @param {!string} locale locale tag.
-   * @return {Arbitrary|String}
-   */
-   locale(locale) {
-     if (locale){
-       let clone = this.clone();
-       clone._locale = locale;
-       return clone;
-     }
-     else {
-       return this._locale;
-     }
-   }
   /**
    * Set a random engine.
    *
@@ -164,9 +159,9 @@ class Arbitrary {
    * @return {Generator}
    */
   makeGen() {
-    return (engine, genOpts, locale) => {
+    return (engine, locale) => {
       return _.flow(this._transforms)(
-        this._gen.apply(this, genOpts || this._genOpts || [])(engine, locale));
+        this._gen.apply(this, this._genOpts)(engine, locale));
     };
   }
   /**
@@ -175,7 +170,7 @@ class Arbitrary {
    * @return {*}
    */
   generate() {
-    return this.makeGen()(this._engine, this._genOpts, this._locale);
+    return this.makeGen()(this._engine, this._locale);
   }
   /**
    * Generate some example values.
