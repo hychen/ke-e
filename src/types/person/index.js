@@ -1,7 +1,7 @@
 /**
  * @module
  */
-import {object} from '../../combinators';
+import {object, oneOf, constant} from '../../combinators';
 import {fromDefinition} from '../../utils';
 
 import definitions from './definitions';
@@ -16,9 +16,14 @@ const name = object({
   lastName: lastName
 }).name('Name');
 
-export default {
-  firstName,
-  lastName,
-  name,
-  gender
-};
+const person = object({
+  name: name,
+  gender: gender,
+  brithDay: date
+}).name('Person');
+
+person.firstName = firstName;
+person.lastName = lastName;
+person.gender = gender;
+
+export default person;
