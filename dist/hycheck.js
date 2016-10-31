@@ -62,19 +62,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils = __webpack_require__(1);
 
-	var _types = __webpack_require__(4);
+	var _types = __webpack_require__(14);
 
 	var types = _interopRequireWildcard(_types);
 
-	var _combinators = __webpack_require__(15);
+	var _combinators = __webpack_require__(12);
 
 	var combinators = _interopRequireWildcard(_combinators);
 
-	var _testable = __webpack_require__(21);
+	var _testable = __webpack_require__(33);
 
 	var testable = _interopRequireWildcard(_testable);
 
-	var _arbitrary = __webpack_require__(7);
+	var _arbitrary = __webpack_require__(4);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -102,10 +102,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 	exports.liftExport = liftExport;
+	exports.getDef = getDef;
+	exports.fromDefinition = fromDefinition;
 
 	var _lodash = __webpack_require__(2);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
+
+	var _arbitrary = __webpack_require__(4);
+
+	var _combinators = __webpack_require__(12);
+
+	var _avaliableLocaleids = __webpack_require__(13);
+
+	var _avaliableLocaleids2 = _interopRequireDefault(_avaliableLocaleids);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -116,14 +126,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {!string} name
 	 * @returns {Object}
 	 */
+	/**
+	 * @module
+	 */
 	function liftExport(namespace, name) {
 	  _lodash2.default.forOwn(namespace[name], function (v, k) {
 	    namespace[k] = v;
 	  });
 	  return namespace;
-	} /**
-	   * @module
-	   */
+	}
+
+	/**
+	 * Get a definietion.
+	 *
+	 * @param {Object} definietions
+	 * @param {string} locale
+	 * @param {string} key
+	 * @return {Object}
+	 */
+	function getDef(defs, locale, key) {
+	  if (_avaliableLocaleids2.default.indexOf(locale) < 0) {
+	    throw new Error('Locale ' + locale + ' is not supported');
+	  }
+	  var _locale = locale.replace(/-/g, '_');
+	  var _def = defs[_locale];
+	  if (_def) {
+	    return _def[key];
+	  } else {
+	    return defs['en'][key];
+	  }
+	}
+
+	/**
+	 * Create an arbitrary from a definition.
+	 *
+	 * @param {Object }definietions
+	 * @param {string} name
+	 * @return {Arbitary}
+	 */
+	function fromDefinition(definitions, name) {
+	  return (0, _arbitrary.fromGenMaker)(function () {
+	    return function (engine, locale) {
+	      var pool = getDef(definitions, locale, name);
+	      return (0, _combinators.elements)(pool).engine(engine).generate();
+	    };
+	  });
+	}
 
 /***/ },
 /* 2 */
@@ -16890,133 +16938,283 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.isArbitrary = exports.fromGenMaker = exports.Arbitrary = undefined;
 
-	var _boolean = __webpack_require__(5);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @module
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
 
-	Object.keys(_boolean).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _boolean[key];
-	    }
-	  });
-	});
 
-	var _falsy = __webpack_require__(14);
+	var _lodash = __webpack_require__(2);
 
-	Object.keys(_falsy).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _falsy[key];
-	    }
-	  });
-	});
+	var _lodash2 = _interopRequireDefault(_lodash);
 
-	var _number = __webpack_require__(16);
-
-	Object.keys(_number).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _number[key];
-	    }
-	  });
-	});
-
-	var _string = __webpack_require__(17);
-
-	Object.keys(_string).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _string[key];
-	    }
-	  });
-	});
-
-	var _any = __webpack_require__(18);
-
-	Object.keys(_any).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _any[key];
-	    }
-	  });
-	});
-
-	var _function = __webpack_require__(19);
-
-	Object.keys(_function).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _function[key];
-	    }
-	  });
-	});
-
-	var _datetime = __webpack_require__(20);
-
-	Object.keys(_datetime).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _datetime[key];
-	    }
-	  });
-	});
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.bool = undefined;
-
-	var _randomJs = __webpack_require__(6);
+	var _randomJs = __webpack_require__(5);
 
 	var _randomJs2 = _interopRequireDefault(_randomJs);
 
-	var _arbitrary = __webpack_require__(7);
+	var _assert = __webpack_require__(6);
+
+	var _assert2 = _interopRequireDefault(_assert);
+
+	var _constants = __webpack_require__(11);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 	/**
-	 * Boolean Arbitrary
+	 * A function to generate a function to take a random engine in random-js.
+	 * to generate a random value.
 	 *
-	 * produce true and false with equal probability.
-	 *
-	 * @type {Arbitrary}
-	 *
-	 * @example
-	 * // returns true
-	 * hc.bool.generate()
-	 *
-	 * @example
-	 * // Produce a boolean with the specified chance causing it to be true.
-	 * let chance = 10;
-	 * hc.bool.choose(chance).generate();
+	 * @callback GeneratorMaker
+	 * @param {Engine} engine - engines provided in random-js.
+	 *                          The default is mt19937 with auto seeds.
+	 * @return {*}
 	 */
+
 	/**
-	 * @module
+	 * Arguments of a GeneratorMaker.
+	 * @typedef {Array} GeneratorMakerOptions
 	 */
-	var bool = exports.bool = (0, _arbitrary.fromGenMaker)(_randomJs2.default.bool).name('Boolean');
+
+	/**
+	 * Arbitrary Options.
+	 * @typedef {Object} ArbitraryOptions
+	 * @property {GeneratorMaker} gen
+	 * @property {GeneratorMakerOptions} opts
+	 */
+
+	/**
+	 * A function to generate a random value.
+	 * @callback Generator
+	 * @param {Engine} engine
+	 * @param {string} locale
+	 * @return {*}
+	 */
+
+	/**
+	 * Random generation and shrinking of values.
+	 */
+	var Arbitrary = function () {
+	  /**
+	   * Create a arbitrary.
+	   *
+	   * @param {!ArbitraryOptions} opts the options of arbitrary creation.
+	   * @return {Arbitrary}
+	   */
+	  function Arbitrary(opts) {
+	    _classCallCheck(this, Arbitrary);
+
+	    (0, _assert2.default)(_lodash2.default.isObject(opts), 'opts must be an object.');
+	    this._locale = 'en';
+	    this._engine = null;
+	    this._gen = null;
+	    this._genOpts = null;
+	    this._transforms = [_lodash2.default.identity];
+
+	    this.engine(opts.engine || _constants.stdOpts.engine);
+	    this.name(opts.name || 'Arbitrary-' + _randomJs2.default.uuid4(this._engine));
+	    this.generator(opts.gen, opts.genOpts);
+	  }
+	  /**
+	   * Clone this arbitrary.
+	   *
+	   * @return {Arbitrary}
+	   */
+
+
+	  _createClass(Arbitrary, [{
+	    key: 'clone',
+	    value: function clone() {
+	      return _lodash2.default.cloneDeep(this);
+	    }
+	    /**
+	     * Create a new arbitrary with new
+	     * inclusive range of its generator maker.
+	     *
+	     * @param {...*}
+	     * @return {Arbitrary}
+	     */
+
+	  }, {
+	    key: 'choose',
+	    value: function choose() {
+	      var clone = this.clone();
+
+	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	        args[_key] = arguments[_key];
+	      }
+
+	      clone._genOpts = args;
+	      return clone;
+	    }
+	    /**
+	     * Create a new arbitrary with new locale.
+	     *
+	     * @param {!string} locale locale tag.
+	     * @return {Arbitrary}
+	     */
+
+	  }, {
+	    key: 'locale',
+	    value: function locale(_locale) {
+	      var clone = this.clone();
+	      clone._locale = _locale;
+	      return clone;
+	    }
+	    /**
+	     * Transform arbitrary A to arbitrary B.
+	     *
+	     * @param {function} transform function.
+	     * @return {Arbitrary}
+	     */
+
+	  }, {
+	    key: 'transform',
+	    value: function transform(f) {
+	      var clone = this.clone();
+	      clone._transforms.push(f);
+	      return clone;
+	    }
+	    /**
+	     * Name this arbitrary.
+	     *
+	     * @param {string} name arbitrary name.
+	     * @return {Arbitrary}
+	     */
+
+	  }, {
+	    key: 'name',
+	    value: function name(_name) {
+	      if (_name) {
+	        (0, _assert2.default)(_lodash2.default.isString(_name) && _name.length >= 3, 'name must be a sring of length >= 3.');
+	        this._name = _name;
+	        return this;
+	      } else {
+	        return this._name;
+	      }
+	    }
+	    /**
+	     * Set a random engine.
+	     *
+	     * @param {!Engine} engine
+	     * @return {Arbitrary}
+	     */
+
+	  }, {
+	    key: 'engine',
+	    value: function engine(_engine) {
+	      (0, _assert2.default)(_engine, 'engine is required.');
+	      this._engine = _engine;
+	      return this;
+	    }
+	    /**
+	     * Set a seed number.
+	     *
+	     * @param {!number} seed 32-bit integer.
+	     */
+
+	  }, {
+	    key: 'seed',
+	    value: function seed(_seed) {
+	      this._engine.seed(_seed);
+	      return this;
+	    }
+	    /**
+	     * Set a random value generator.
+	     *
+	     * @param {!GeneratorMaker} gen
+	     * @param {?GeneratorMakerOptions} opts
+	     * @return {Arbitrary}
+	     */
+
+	  }, {
+	    key: 'generator',
+	    value: function generator(gen, opts) {
+	      (0, _assert2.default)(_lodash2.default.isFunction(gen), 'gen must be a function.');
+	      this._gen = gen.bind(this);
+	      if (opts) {
+	        (0, _assert2.default)(_lodash2.default.isArray(opts), 'opts must be an object.');
+	        this._genOpts = opts;
+	      }
+	      return this;
+	    }
+	    /**
+	     * Make a generator.
+	     *
+	     * @return {Generator}
+	     */
+
+	  }, {
+	    key: 'makeGen',
+	    value: function makeGen() {
+	      var _this = this;
+
+	      return function (engine, locale) {
+	        return _lodash2.default.flow(_this._transforms)(_this._gen.apply(_this, _this._genOpts)(engine, locale || 'en'));
+	      };
+	    }
+	    /**
+	     * Run a generator.
+	     *
+	     * @return {*}
+	     */
+
+	  }, {
+	    key: 'generate',
+	    value: function generate() {
+	      return this.makeGen()(this._engine, this._locale);
+	    }
+	    /**
+	     * Generate some example values.
+	     *
+	     * @param {number} size
+	     * @return {Array<*>}
+	     */
+
+	  }, {
+	    key: 'sample',
+	    value: function sample() {
+	      var _this2 = this;
+
+	      var size = arguments.length <= 0 || arguments[0] === undefined ? 30 : arguments[0];
+
+	      if (size !== undefined) {
+	        (0, _assert2.default)(_lodash2.default.isInteger(size) && size >= 0, 'size must be a postive integer.');
+	      }
+	      return _lodash2.default.range(0, size).map(function () {
+	        return _this2.generate();
+	      });
+	    }
+	  }]);
+
+	  return Arbitrary;
+	}();
+
+	function isArbitrary(arb) {
+	  return arb instanceof Arbitrary;
+	}
+
+	/**
+	 * Transform a generator maker to an arbitrary.
+	 *
+	 * @param {!GeneratorMaker}
+	 * @param {?GeneratorMakerOptions}
+	 */
+	function fromGenMaker(gen, genOpts) {
+	  return new Arbitrary({
+	    gen: gen,
+	    genOpts: genOpts
+	  });
+	}
+
+	exports.Arbitrary = Arbitrary;
+	exports.fromGenMaker = fromGenMaker;
+	exports.isArbitrary = isArbitrary;
 
 /***/ },
-/* 6 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*jshint eqnull:true*/
@@ -17737,276 +17935,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(this));
 
 /***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.isArbitrary = exports.fromGenMaker = exports.Arbitrary = undefined;
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @module
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
-
-
-	var _lodash = __webpack_require__(2);
-
-	var _lodash2 = _interopRequireDefault(_lodash);
-
-	var _randomJs = __webpack_require__(6);
-
-	var _randomJs2 = _interopRequireDefault(_randomJs);
-
-	var _assert = __webpack_require__(8);
-
-	var _assert2 = _interopRequireDefault(_assert);
-
-	var _constants = __webpack_require__(13);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * A function to generate a function to take a random engine in random-js.
-	 * to generate a random value.
-	 *
-	 * @callback GeneratorMaker
-	 * @param {Engine} engine - engines provided in random-js.
-	 *                          The default is mt19937 with auto seeds.
-	 * @return {*}
-	 */
-
-	/**
-	 * Arguments of a GeneratorMaker.
-	 * @typedef {Array} GeneratorMakerOptions
-	 */
-
-	/**
-	 * Arbitrary Options.
-	 * @typedef {Object} ArbitraryOptions
-	 * @property {GeneratorMaker} gen
-	 * @property {GeneratorMakerOptions} opts
-	 */
-
-	/**
-	 * A function to generate a random value.
-	 * @callback Generator
-	 * @param {Engine} engine
-	 * @param {GeneratorMakerOptions} genOpts
-	 * @return {*}
-	 */
-
-	/**
-	 * Random generation and shrinking of values.
-	 */
-	var Arbitrary = function () {
-	  /**
-	   * Create a arbitrary.
-	   *
-	   * @param {!ArbitraryOptions} opts the options of arbitrary creation.
-	   * @return {Arbitrary}
-	   */
-	  function Arbitrary(opts) {
-	    _classCallCheck(this, Arbitrary);
-
-	    (0, _assert2.default)(_lodash2.default.isObject(opts), 'opts must be an object.');
-	    this._engine = null;
-	    this._gen = null;
-	    this._genOpts = null;
-	    this._transforms = [_lodash2.default.identity];
-
-	    this.engine(opts.engine || _constants.stdOpts.engine);
-	    this.name(opts.name || 'Arbitrary-' + _randomJs2.default.uuid4(this._engine));
-	    this.generator(opts.gen, opts.genOpts);
-	  }
-	  /**
-	   * Clone this arbitrary.
-	   *
-	   * @return {Arbitrary}
-	   */
-
-
-	  _createClass(Arbitrary, [{
-	    key: 'clone',
-	    value: function clone() {
-	      return _lodash2.default.cloneDeep(this);
-	    }
-	    /**
-	     * Create a new arbitrary with new
-	     * inclusive range of its generator maker.
-	     *
-	     * @param {...*}
-	     * @return {Arbitrary}
-	     */
-
-	  }, {
-	    key: 'choose',
-	    value: function choose() {
-	      var clone = this.clone();
-
-	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	        args[_key] = arguments[_key];
-	      }
-
-	      clone._genOpts = args;
-	      return clone;
-	    }
-	    /**
-	     * Transform arbitrary A to arbitrary B.
-	     *
-	     * @param {function} transform function.
-	     * @return {Arbitrary}
-	     */
-
-	  }, {
-	    key: 'transform',
-	    value: function transform(f) {
-	      var clone = this.clone();
-	      clone._transforms.push(f);
-	      return clone;
-	    }
-	    /**
-	     * Name this arbitrary.
-	     *
-	     * @param {string} name arbitrary name.
-	     * @return {Arbitrary}
-	     */
-
-	  }, {
-	    key: 'name',
-	    value: function name(_name) {
-	      if (_name) {
-	        (0, _assert2.default)(_lodash2.default.isString(_name) && _name.length >= 3, 'name must be a sring of length >= 3.');
-	        this._name = _name;
-	        return this;
-	      } else {
-	        return this._name;
-	      }
-	    }
-	    /**
-	     * Set a random engine.
-	     *
-	     * @param {!Engine} engine
-	     * @return {Arbitrary}
-	     */
-
-	  }, {
-	    key: 'engine',
-	    value: function engine(_engine) {
-	      (0, _assert2.default)(_engine, 'engine is required.');
-	      this._engine = _engine;
-	      return this;
-	    }
-	    /**
-	     * Set a seed number.
-	     *
-	     * @param {!number} 32-bit integer.
-	     */
-
-	  }, {
-	    key: 'seed',
-	    value: function seed(_seed) {
-	      this._engine.seed(_seed);
-	      return this;
-	    }
-	    /**
-	     * Set a random value generator.
-	     *
-	     * @param {!GeneratorMaker} gen
-	     * @param {?GeneratorMakerOptions} opts
-	     * @return {Arbitrary}
-	     */
-
-	  }, {
-	    key: 'generator',
-	    value: function generator(gen, opts) {
-	      (0, _assert2.default)(_lodash2.default.isFunction(gen), 'gen must be a function.');
-	      this._gen = gen.bind(this);
-	      if (opts) {
-	        (0, _assert2.default)(_lodash2.default.isArray(opts), 'opts must be an object.');
-	        this._genOpts = opts;
-	      }
-	      return this;
-	    }
-	    /**
-	     * Make a generator.
-	     *
-	     * @return {Generator}
-	     */
-
-	  }, {
-	    key: 'makeGen',
-	    value: function makeGen() {
-	      var _this = this;
-
-	      return function (engine, genOpts) {
-	        return _lodash2.default.flow(_this._transforms)(_this._gen.apply(_this, genOpts || _this._genOpts || [])(engine));
-	      };
-	    }
-	    /**
-	     * Run a generator.
-	     *
-	     * @return {*}
-	     */
-
-	  }, {
-	    key: 'generate',
-	    value: function generate() {
-	      return this.makeGen()(this._engine, this._genOpts);
-	    }
-	    /**
-	     * Generate some example values.
-	     *
-	     * @param {number} size
-	     * @return {Array<*>}
-	     */
-
-	  }, {
-	    key: 'sample',
-	    value: function sample() {
-	      var _this2 = this;
-
-	      var size = arguments.length <= 0 || arguments[0] === undefined ? 30 : arguments[0];
-
-	      if (size !== undefined) {
-	        (0, _assert2.default)(_lodash2.default.isInteger(size) && size >= 0, 'size must be a postive integer.');
-	      }
-	      return _lodash2.default.range(0, size).map(function () {
-	        return _this2.generate();
-	      });
-	    }
-	  }]);
-
-	  return Arbitrary;
-	}();
-
-	function isArbitrary(arb) {
-	  return arb instanceof Arbitrary;
-	}
-
-	/**
-	 * Transform a generator maker to an arbitrary.
-	 *
-	 * @param {!GeneratorMaker}
-	 * @param {?GeneratorMakerOptions}
-	 */
-	function fromGenMaker(gen, genOpts) {
-	  return new Arbitrary({
-	    gen: gen,
-	    genOpts: genOpts
-	  });
-	}
-
-	exports.Arbitrary = Arbitrary;
-	exports.fromGenMaker = fromGenMaker;
-	exports.isArbitrary = isArbitrary;
-
-/***/ },
-/* 8 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// http://wiki.commonjs.org/wiki/Unit_Testing/1.0
@@ -18036,7 +17965,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// when used in node, this will actually load the util module we depend on
 	// versus loading the builtin util module as happens otherwise
 	// this is a bug in node module loading as far as I am concerned
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(7);
 
 	var pSlice = Array.prototype.slice;
 	var hasOwn = Object.prototype.hasOwnProperty;
@@ -18371,7 +18300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 9 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {// Copyright Joyent, Inc. and other Node contributors.
@@ -18899,7 +18828,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 	exports.isPrimitive = isPrimitive;
 
-	exports.isBuffer = __webpack_require__(11);
+	exports.isBuffer = __webpack_require__(9);
 
 	function objectToString(o) {
 	  return Object.prototype.toString.call(o);
@@ -18943,7 +18872,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *     prototype.
 	 * @param {function} superCtor Constructor function to inherit prototype from.
 	 */
-	exports.inherits = __webpack_require__(12);
+	exports.inherits = __webpack_require__(10);
 
 	exports._extend = function(origin, add) {
 	  // Don't do anything if add isn't an object
@@ -18961,10 +18890,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return Object.prototype.hasOwnProperty.call(obj, prop);
 	}
 
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(10)))
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(8)))
 
 /***/ },
-/* 10 */
+/* 8 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -19150,7 +19079,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 11 */
+/* 9 */
 /***/ function(module, exports) {
 
 	module.exports = function isBuffer(arg) {
@@ -19161,7 +19090,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 12 */
+/* 10 */
 /***/ function(module, exports) {
 
 	if (typeof Object.create === 'function') {
@@ -19190,7 +19119,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 13 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19200,7 +19129,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.stdOpts = undefined;
 
-	var _randomJs = __webpack_require__(6);
+	var _randomJs = __webpack_require__(5);
 
 	var _randomJs2 = _interopRequireDefault(_randomJs);
 
@@ -19230,43 +19159,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.falsy = exports.FALSY_VALUES = undefined;
-
-	var _combinators = __webpack_require__(15);
-
-	/**
-	 * falsy values.
-	 *
-	 * @type {Array}
-	 */
-	var FALSY_VALUES = exports.FALSY_VALUES = [undefined, void 0, null, false, 0, ''];
-
-	/**
-	 * Falsy Arbitrary
-	 *
-	 * generates falsy values: false, null, undefined, '',
-	 * 0, void(0) and NaN.
-	 *
-	 * @type {Arbitrary}
-	 *
-	 * @example
-	 * hc.falsy.generate();
-	 */
-	/**
-	 * @module
-	 */
-	var falsy = exports.falsy = (0, _combinators.elements)(FALSY_VALUES).name('Falsy');
-
-/***/ },
-/* 15 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19287,11 +19180,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
-	var _randomJs = __webpack_require__(6);
+	var _randomJs = __webpack_require__(5);
 
 	var _randomJs2 = _interopRequireDefault(_randomJs);
 
-	var _arbitrary = __webpack_require__(7);
+	var _arbitrary = __webpack_require__(4);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19334,11 +19227,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var oriGen = arb.makeGen();
 	  var clone = arb.clone();
 	  var newGenerator = function newGenerator() {
-	    for (var _len = arguments.length, genOpts = Array(_len), _key = 0; _key < _len; _key++) {
-	      genOpts[_key] = arguments[_key];
-	    }
-
-	    return function (engine) {
+	    return function (engine, locale) {
 	      var x = void 0;
 	      var j = 0;
 	      for (var i = 0;; i++) {
@@ -19346,7 +19235,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (i > 5) {
 	          i = 0;
 	        }
-	        x = oriGen(engine, genOpts);
+	        x = oriGen(engine, locale);
 	        if (j > 5000) {
 	          throw new Error('can not find value in this range.');
 	        }
@@ -19375,9 +19264,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new _arbitrary.Arbitrary({
 	    name: 'OneOf',
 	    gen: function gen(pool) {
-	      return function (engine) {
+	      return function (engine, locale) {
 	        var arb = pool[_randomJs2.default.integer(0, arbs.length - 1)(engine)];
-	        return arb.makeGen()(engine);
+	        return arb.makeGen()(engine, locale);
 	      };
 	    },
 	    genOpts: [arbs]
@@ -19402,8 +19291,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new _arbitrary.Arbitrary({
 	    name: 'Pair',
 	    gen: function gen(a1, a2) {
-	      return function (engine) {
-	        return [a1.engine(engine).generate(), a2.engine(engine).generate()];
+	      return function (engine, locale) {
+	        return [a1.makeGen()(engine, locale), a2.makeGen()(engine, locale)];
 	      };
 	    },
 	    genOpts: [arb1, arb2]
@@ -19424,9 +19313,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new _arbitrary.Arbitrary({
 	    name: 'Array',
 	    gen: function gen(min, max) {
-	      return function (engine) {
+	      return function (engine, locale) {
 	        return _lodash2.default.range(0, _randomJs2.default.integer(min, max)(engine)).map(function () {
-	          return arb.makeGen()(engine);
+	          return arb.makeGen()(engine, locale);
 	        });
 	      };
 	    },
@@ -19462,10 +19351,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new _arbitrary.Arbitrary({
 	    name: 'Object',
 	    gen: function gen(spec) {
-	      return function (engine) {
+	      return function (engine, locale) {
 	        var o = {};
 	        Object.keys(spec).forEach(function (k) {
-	          o[k] = spec[k].engine(engine).generate();
+	          o[k] = spec[k].makeGen()(engine, locale);
 	        });
 	        return o;
 	      };
@@ -19497,7 +19386,228 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
+/* 13 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 * @module
+	 */
+
+	/**
+	 * @describe Avaliable Locale Ids definietion.
+	 *
+	 * Took from
+	 * https://github.com/unicode-cldr/cldr-core/blob/master/availableLocales.json.
+	 *
+	 */
+	exports.default = ['af', 'af-NA', 'am', 'ar', 'ar-AE', 'ar-BH', 'ar-DJ', 'ar-DZ', 'ar-EG', 'ar-EH', 'ar-ER', 'ar-IL', 'ar-IQ', 'ar-JO', 'ar-KM', 'ar-KW', 'ar-LB', 'ar-LY', 'ar-MA', 'ar-MR', 'ar-OM', 'ar-PS', 'ar-QA', 'ar-SA', 'ar-SD', 'ar-SO', 'ar-SS', 'ar-SY', 'ar-TD', 'ar-TN', 'ar-YE', 'az', 'az-Latn', 'be', 'bg', 'bn', 'bn-IN', 'bs', 'bs-Latn', 'ca', 'ca-AD', 'ca-ES-VALENCIA', 'ca-FR', 'ca-IT', 'cs', 'cy', 'da', 'da-GL', 'de', 'de-AT', 'de-BE', 'de-CH', 'de-IT', 'de-LI', 'de-LU', 'el', 'el-CY', 'en', 'en-001', 'en-150', 'en-AG', 'en-AI', 'en-AS', 'en-AT', 'en-AU', 'en-BB', 'en-BE', 'en-BI', 'en-BM', 'en-BS', 'en-BW', 'en-BZ', 'en-CA', 'en-CC', 'en-CH', 'en-CK', 'en-CM', 'en-CX', 'en-CY', 'en-DE', 'en-DG', 'en-DK', 'en-DM', 'en-ER', 'en-FI', 'en-FJ', 'en-FK', 'en-FM', 'en-GB', 'en-GD', 'en-GG', 'en-GH', 'en-GI', 'en-GM', 'en-GU', 'en-GY', 'en-HK', 'en-IE', 'en-IL', 'en-IM', 'en-IN', 'en-IO', 'en-JE', 'en-JM', 'en-KE', 'en-KI', 'en-KN', 'en-KY', 'en-LC', 'en-LR', 'en-LS', 'en-MG', 'en-MH', 'en-MO', 'en-MP', 'en-MS', 'en-MT', 'en-MU', 'en-MW', 'en-MY', 'en-NA', 'en-NF', 'en-NG', 'en-NL', 'en-NR', 'en-NU', 'en-NZ', 'en-PG', 'en-PH', 'en-PK', 'en-PN', 'en-PR', 'en-PW', 'en-RW', 'en-SB', 'en-SC', 'en-SD', 'en-SE', 'en-SG', 'en-SH', 'en-SI', 'en-SL', 'en-SS', 'en-SX', 'en-SZ', 'en-TC', 'en-TK', 'en-TO', 'en-TT', 'en-TV', 'en-TZ', 'en-UG', 'en-UM', 'en-US-POSIX', 'en-VC', 'en-VG', 'en-VI', 'en-VU', 'en-WS', 'en-ZA', 'en-ZM', 'en-ZW', 'es', 'es-419', 'es-AR', 'es-BO', 'es-BR', 'es-CL', 'es-CO', 'es-CR', 'es-CU', 'es-DO', 'es-EA', 'es-EC', 'es-GQ', 'es-GT', 'es-HN', 'es-IC', 'es-MX', 'es-NI', 'es-PA', 'es-PE', 'es-PH', 'es-PR', 'es-PY', 'es-SV', 'es-US', 'es-UY', 'es-VE', 'et', 'eu', 'fa', 'fa-AF', 'fi', 'fil', 'fo', 'fo-DK', 'fr', 'fr-BE', 'fr-BF', 'fr-BI', 'fr-BJ', 'fr-BL', 'fr-CA', 'fr-CD', 'fr-CF', 'fr-CG', 'fr-CH', 'fr-CI', 'fr-CM', 'fr-DJ', 'fr-DZ', 'fr-GA', 'fr-GF', 'fr-GN', 'fr-GP', 'fr-GQ', 'fr-HT', 'fr-KM', 'fr-LU', 'fr-MA', 'fr-MC', 'fr-MF', 'fr-MG', 'fr-ML', 'fr-MQ', 'fr-MR', 'fr-MU', 'fr-NC', 'fr-NE', 'fr-PF', 'fr-PM', 'fr-RE', 'fr-RW', 'fr-SC', 'fr-SN', 'fr-SY', 'fr-TD', 'fr-TG', 'fr-TN', 'fr-VU', 'fr-WF', 'fr-YT', 'ga', 'gl', 'gu', 'he', 'hi', 'hr', 'hr-BA', 'hu', 'hy', 'id', 'is', 'it', 'it-CH', 'it-SM', 'ja', 'ka', 'kk', 'km', 'kn', 'ko', 'ko-KP', 'ky', 'lo', 'lt', 'lv', 'mk', 'ml', 'mn', 'mr', 'ms', 'ms-BN', 'ms-SG', 'my', 'nb', 'nb-SJ', 'ne', 'ne-IN', 'nl', 'nl-AW', 'nl-BE', 'nl-BQ', 'nl-CW', 'nl-SR', 'nl-SX', 'pa', 'pa-Guru', 'pl', 'pt', 'pt-AO', 'pt-CH', 'pt-CV', 'pt-GQ', 'pt-GW', 'pt-LU', 'pt-MO', 'pt-MZ', 'pt-PT', 'pt-ST', 'pt-TL', 'ro', 'ro-MD', 'root', 'ru', 'ru-BY', 'ru-KG', 'ru-KZ', 'ru-MD', 'ru-UA', 'si', 'sk', 'sl', 'sq', 'sq-MK', 'sq-XK', 'sr', 'sr-Cyrl', 'sr-Cyrl-BA', 'sr-Cyrl-ME', 'sr-Cyrl-XK', 'sr-Latn', 'sr-Latn-BA', 'sr-Latn-ME', 'sr-Latn-XK', 'sv', 'sv-AX', 'sv-FI', 'sw', 'sw-CD', 'sw-KE', 'sw-UG', 'ta', 'ta-LK', 'ta-MY', 'ta-SG', 'te', 'th', 'to', 'tr', 'tr-CY', 'uk', 'ur', 'ur-IN', 'uz', 'uz-Latn', 'vi', 'yue', 'zh', 'zh-Hans', 'zh-Hans-CN', 'zh-Hans-HK', 'zh-Hans-MO', 'zh-Hans-SG', 'zh-Hant', 'zh-Hant-TW', 'zh-Hant-HK', 'zh-Hant-MO', 'zu'];
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _boolean = __webpack_require__(15);
+
+	Object.keys(_boolean).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _boolean[key];
+	    }
+	  });
+	});
+
+	var _falsy = __webpack_require__(16);
+
+	Object.keys(_falsy).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _falsy[key];
+	    }
+	  });
+	});
+
+	var _number = __webpack_require__(17);
+
+	Object.keys(_number).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _number[key];
+	    }
+	  });
+	});
+
+	var _string = __webpack_require__(18);
+
+	Object.keys(_string).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _string[key];
+	    }
+	  });
+	});
+
+	var _any = __webpack_require__(19);
+
+	Object.keys(_any).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _any[key];
+	    }
+	  });
+	});
+
+	var _function = __webpack_require__(20);
+
+	Object.keys(_function).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _function[key];
+	    }
+	  });
+	});
+
+	var _datetime = __webpack_require__(21);
+
+	Object.keys(_datetime).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _datetime[key];
+	    }
+	  });
+	});
+
+	var _person = __webpack_require__(22);
+
+	Object.defineProperty(exports, 'person', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_person).default;
+	  }
+	});
+
+	var _locale = __webpack_require__(31);
+
+	Object.defineProperty(exports, 'locale', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_locale).default;
+	  }
+	});
+
+	var _internet = __webpack_require__(32);
+
+	Object.defineProperty(exports, 'internet', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_internet).default;
+	  }
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.bool = undefined;
+
+	var _randomJs = __webpack_require__(5);
+
+	var _randomJs2 = _interopRequireDefault(_randomJs);
+
+	var _arbitrary = __webpack_require__(4);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/**
+	 * Boolean Arbitrary
+	 *
+	 * produce true and false with equal probability.
+	 *
+	 * @type {Arbitrary}
+	 *
+	 * @example
+	 * // returns true
+	 * hc.bool.generate()
+	 *
+	 * @example
+	 * // Produce a boolean with the specified chance causing it to be true.
+	 * let chance = 10;
+	 * hc.bool.choose(chance).generate();
+	 */
+	/**
+	 * @module
+	 */
+	var bool = exports.bool = (0, _arbitrary.fromGenMaker)(_randomJs2.default.bool).name('Boolean');
+
+/***/ },
 /* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.falsy = exports.FALSY_VALUES = undefined;
+
+	var _combinators = __webpack_require__(12);
+
+	/**
+	 * falsy values.
+	 *
+	 * @type {Array}
+	 */
+	var FALSY_VALUES = exports.FALSY_VALUES = [undefined, void 0, null, false, 0, ''];
+
+	/**
+	 * Falsy Arbitrary
+	 *
+	 * generates falsy values: false, null, undefined, '',
+	 * 0, void(0) and NaN.
+	 *
+	 * @type {Arbitrary}
+	 *
+	 * @example
+	 * hc.falsy.generate();
+	 */
+	/**
+	 * @module
+	 */
+	var falsy = exports.falsy = (0, _combinators.elements)(FALSY_VALUES).name('Falsy');
+
+/***/ },
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19507,11 +19617,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.nnumber = exports.pnumber = exports.number = exports.nat = exports.nint = exports.pint = exports.int = undefined;
 
-	var _randomJs = __webpack_require__(6);
+	var _randomJs = __webpack_require__(5);
 
 	var _randomJs2 = _interopRequireDefault(_randomJs);
 
-	var _arbitrary = __webpack_require__(7);
+	var _arbitrary = __webpack_require__(4);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19572,7 +19682,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var nnumber = exports.nnumber = number.choose(-Number.MAX_SAFE_INTEGER, -0.0000000001).name('Negative Number');
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19588,15 +19698,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
-	var _randomJs = __webpack_require__(6);
+	var _randomJs = __webpack_require__(5);
 
 	var _randomJs2 = _interopRequireDefault(_randomJs);
 
-	var _number = __webpack_require__(16);
+	var _number = __webpack_require__(17);
 
-	var _arbitrary = __webpack_require__(7);
+	var _arbitrary = __webpack_require__(4);
 
-	var _combinators = __webpack_require__(15);
+	var _combinators = __webpack_require__(12);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19721,7 +19831,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19731,15 +19841,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.any = undefined;
 
-	var _boolean = __webpack_require__(5);
+	var _boolean = __webpack_require__(15);
 
-	var _falsy = __webpack_require__(14);
+	var _falsy = __webpack_require__(16);
 
-	var _number = __webpack_require__(16);
+	var _number = __webpack_require__(17);
 
-	var _string = __webpack_require__(17);
+	var _string = __webpack_require__(18);
 
-	var _combinators = __webpack_require__(15);
+	var _combinators = __webpack_require__(12);
 
 	/**
 	 * Any Primitive Type Arbitrary.
@@ -19751,7 +19861,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                                                                                                                                          */
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19761,11 +19871,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.func = undefined;
 
-	var _arbitrary = __webpack_require__(7);
+	var _arbitrary = __webpack_require__(4);
 
-	var _combinators = __webpack_require__(15);
+	var _combinators = __webpack_require__(12);
 
-	var _any = __webpack_require__(18);
+	var _any = __webpack_require__(19);
 
 	/**
 	 * Function Arbitrary
@@ -19793,7 +19903,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19803,11 +19913,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.date = undefined;
 
-	var _randomJs = __webpack_require__(6);
+	var _randomJs = __webpack_require__(5);
 
 	var _randomJs2 = _interopRequireDefault(_randomJs);
 
-	var _arbitrary = __webpack_require__(7);
+	var _arbitrary = __webpack_require__(4);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19831,7 +19941,404 @@ return /******/ (function(modules) { // webpackBootstrap
 	var date = exports.date = (0, _arbitrary.fromGenMaker)(_randomJs2.default.date, [new Date(1984, 3, 25), new Date()]).name('Date');
 
 /***/ },
-/* 21 */
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _combinators = __webpack_require__(12);
+
+	var _utils = __webpack_require__(1);
+
+	var _datetime = __webpack_require__(21);
+
+	var _definitions = __webpack_require__(23);
+
+	var _definitions2 = _interopRequireDefault(_definitions);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/**
+	 * Arbitrary to generate the first name of a person.
+	 *
+	 * @type {Arbitrary}
+	 * @example
+	 * // returns Jack.
+	 * hc.person.firstName.generate();
+	 */
+	/**
+	 * @module
+	 */
+	var firstName = (0, _utils.fromDefinition)(_definitions2.default, 'firstName').name('First Name');
+
+	/**
+	 * Arbitrary to generate the last name of a person.
+	 *
+	 * @type {Arbitrary}
+	 * @example
+	 * // returns Hand.
+	 * hc.person.lastName.generate();
+	 */
+	var lastName = (0, _utils.fromDefinition)(_definitions2.default, 'lastName').name('Last Name');
+
+	/**
+	 * Aribitrary to generate the name of a person.
+	 *
+	 * @type {Arbitrary}
+	 * @example
+	 * hc.person.name.generate();
+	 */
+	var name = (0, _combinators.object)({
+	  firstName: firstName,
+	  lastName: lastName
+	}).name('Name');
+
+	/**
+	 * Arbitrary to generate the gender of a person.
+	 *
+	 * @type {Arbitrary}
+	 * @example
+	 * hc.person.gender.generate;
+	 */
+	var gender = (0, _utils.fromDefinition)(_definitions2.default, 'gender').name('Gender');
+
+	/**
+	 * Arbitrary to generate a person (alive, dead, undead, or fictional).
+	 *
+	 * @type {Arbitrary}
+	 * @example
+	 * // generate a object include person name, gender and birthday.
+	 * hc.person.generate();
+	 */
+	var person = (0, _combinators.object)({
+	  name: name,
+	  gender: gender,
+	  brithDay: _datetime.date
+	}).name('Person');
+
+	person.firstName = firstName;
+	person.lastName = lastName;
+	person.gender = gender;
+
+	exports.default = person;
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _en = __webpack_require__(24);
+
+	var en = _interopRequireWildcard(_en);
+
+	var _zhHantTW = __webpack_require__(28);
+
+	var zh_Hant_TW = _interopRequireWildcard(_zhHantTW);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	exports.default = {
+	  en: en,
+	  zh_Hant_TW: zh_Hant_TW
+	};
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _firstName = __webpack_require__(25);
+
+	Object.defineProperty(exports, 'firstName', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_firstName).default;
+	  }
+	});
+
+	var _lastName = __webpack_require__(26);
+
+	Object.defineProperty(exports, 'lastName', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_lastName).default;
+	  }
+	});
+
+	var _gender = __webpack_require__(27);
+
+	Object.defineProperty(exports, 'gender', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_gender).default;
+	  }
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = ["Aaliyah", "Aaron", "Abagail", "Abbey", "Abbie", "Abbigail", "Abby", "Abdiel", "Abdul", "Abdullah", "Abe", "Abel", "Abelardo", "Abigail", "Abigale", "Abigayle", "Abner", "Abraham", "Ada", "Adah", "Adalberto", "Adaline", "Adam", "Adan", "Addie", "Addison", "Adela", "Adelbert", "Adele", "Adelia", "Adeline", "Adell", "Adella", "Adelle", "Aditya", "Adolf", "Adolfo", "Adolph", "Adolphus", "Adonis", "Adrain", "Adrian", "Adriana", "Adrianna", "Adriel", "Adrien", "Adrienne", "Afton", "Aglae", "Agnes", "Agustin", "Agustina", "Ahmad", "Ahmed", "Aida", "Aidan", "Aiden", "Aileen", "Aimee", "Aisha", "Aiyana", "Akeem", "Al", "Alaina", "Alan", "Alana", "Alanis", "Alanna", "Alayna", "Alba", "Albert", "Alberta", "Albertha", "Alberto", "Albin", "Albina", "Alda", "Alden", "Alec", "Aleen", "Alejandra", "Alejandrin", "Alek", "Alena", "Alene", "Alessandra", "Alessandro", "Alessia", "Aletha", "Alex", "Alexa", "Alexander", "Alexandra", "Alexandre", "Alexandrea", "Alexandria", "Alexandrine", "Alexandro", "Alexane", "Alexanne", "Alexie", "Alexis", "Alexys", "Alexzander", "Alf", "Alfonso", "Alfonzo", "Alford", "Alfred", "Alfreda", "Alfredo", "Ali", "Alia", "Alice", "Alicia", "Alisa", "Alisha", "Alison", "Alivia", "Aliya", "Aliyah", "Aliza", "Alize", "Allan", "Allen", "Allene", "Allie", "Allison", "Ally", "Alphonso", "Alta", "Althea", "Alva", "Alvah", "Alvena", "Alvera", "Alverta", "Alvina", "Alvis", "Alyce", "Alycia", "Alysa", "Alysha", "Alyson", "Alysson", "Amalia", "Amanda", "Amani", "Amara", "Amari", "Amaya", "Amber", "Ambrose", "Amelia", "Amelie", "Amely", "America", "Americo", "Amie", "Amina", "Amir", "Amira", "Amiya", "Amos", "Amparo", "Amy", "Amya", "Ana", "Anabel", "Anabelle", "Anahi", "Anais", "Anastacio", "Anastasia", "Anderson", "Andre", "Andreane", "Andreanne", "Andres", "Andrew", "Andy", "Angel", "Angela", "Angelica", "Angelina", "Angeline", "Angelita", "Angelo", "Angie", "Angus", "Anibal", "Anika", "Anissa", "Anita", "Aniya", "Aniyah", "Anjali", "Anna", "Annabel", "Annabell", "Annabelle", "Annalise", "Annamae", "Annamarie", "Anne", "Annetta", "Annette", "Annie", "Ansel", "Ansley", "Anthony", "Antoinette", "Antone", "Antonetta", "Antonette", "Antonia", "Antonietta", "Antonina", "Antonio", "Antwan", "Antwon", "Anya", "April", "Ara", "Araceli", "Aracely", "Arch", "Archibald", "Ardella", "Arden", "Ardith", "Arely", "Ari", "Ariane", "Arianna", "Aric", "Ariel", "Arielle", "Arjun", "Arlene", "Arlie", "Arlo", "Armand", "Armando", "Armani", "Arnaldo", "Arne", "Arno", "Arnold", "Arnoldo", "Arnulfo", "Aron", "Art", "Arthur", "Arturo", "Arvel", "Arvid", "Arvilla", "Aryanna", "Asa", "Asha", "Ashlee", "Ashleigh", "Ashley", "Ashly", "Ashlynn", "Ashton", "Ashtyn", "Asia", "Assunta", "Astrid", "Athena", "Aubree", "Aubrey", "Audie", "Audra", "Audreanne", "Audrey", "August", "Augusta", "Augustine", "Augustus", "Aurelia", "Aurelie", "Aurelio", "Aurore", "Austen", "Austin", "Austyn", "Autumn", "Ava", "Avery", "Avis", "Axel", "Ayana", "Ayden", "Ayla", "Aylin", "Baby", "Bailee", "Bailey", "Barbara", "Barney", "Baron", "Barrett", "Barry", "Bart", "Bartholome", "Barton", "Baylee", "Beatrice", "Beau", "Beaulah", "Bell", "Bella", "Belle", "Ben", "Benedict", "Benjamin", "Bennett", "Bennie", "Benny", "Benton", "Berenice", "Bernadette", "Bernadine", "Bernard", "Bernardo", "Berneice", "Bernhard", "Bernice", "Bernie", "Berniece", "Bernita", "Berry", "Bert", "Berta", "Bertha", "Bertram", "Bertrand", "Beryl", "Bessie", "Beth", "Bethany", "Bethel", "Betsy", "Bette", "Bettie", "Betty", "Bettye", "Beulah", "Beverly", "Bianka", "Bill", "Billie", "Billy", "Birdie", "Blair", "Blaise", "Blake", "Blanca", "Blanche", "Blaze", "Bo", "Bobbie", "Bobby", "Bonita", "Bonnie", "Boris", "Boyd", "Brad", "Braden", "Bradford", "Bradley", "Bradly", "Brady", "Braeden", "Brain", "Brandi", "Brando", "Brandon", "Brandt", "Brandy", "Brandyn", "Brannon", "Branson", "Brant", "Braulio", "Braxton", "Brayan", "Breana", "Breanna", "Breanne", "Brenda", "Brendan", "Brenden", "Brendon", "Brenna", "Brennan", "Brennon", "Brent", "Bret", "Brett", "Bria", "Brian", "Briana", "Brianne", "Brice", "Bridget", "Bridgette", "Bridie", "Brielle", "Brigitte", "Brionna", "Brisa", "Britney", "Brittany", "Brock", "Broderick", "Brody", "Brook", "Brooke", "Brooklyn", "Brooks", "Brown", "Bruce", "Bryana", "Bryce", "Brycen", "Bryon", "Buck", "Bud", "Buddy", "Buford", "Bulah", "Burdette", "Burley", "Burnice", "Buster", "Cade", "Caden", "Caesar", "Caitlyn", "Cale", "Caleb", "Caleigh", "Cali", "Calista", "Callie", "Camden", "Cameron", "Camila", "Camilla", "Camille", "Camren", "Camron", "Camryn", "Camylle", "Candace", "Candelario", "Candice", "Candida", "Candido", "Cara", "Carey", "Carissa", "Carlee", "Carleton", "Carley", "Carli", "Carlie", "Carlo", "Carlos", "Carlotta", "Carmel", "Carmela", "Carmella", "Carmelo", "Carmen", "Carmine", "Carol", "Carolanne", "Carole", "Carolina", "Caroline", "Carolyn", "Carolyne", "Carrie", "Carroll", "Carson", "Carter", "Cary", "Casandra", "Casey", "Casimer", "Casimir", "Casper", "Cassandra", "Cassandre", "Cassidy", "Cassie", "Catalina", "Caterina", "Catharine", "Catherine", "Cathrine", "Cathryn", "Cathy", "Cayla", "Ceasar", "Cecelia", "Cecil", "Cecile", "Cecilia", "Cedrick", "Celestine", "Celestino", "Celia", "Celine", "Cesar", "Chad", "Chadd", "Chadrick", "Chaim", "Chance", "Chandler", "Chanel", "Chanelle", "Charity", "Charlene", "Charles", "Charley", "Charlie", "Charlotte", "Chase", "Chasity", "Chauncey", "Chaya", "Chaz", "Chelsea", "Chelsey", "Chelsie", "Chesley", "Chester", "Chet", "Cheyanne", "Cheyenne", "Chloe", "Chris", "Christ", "Christa", "Christelle", "Christian", "Christiana", "Christina", "Christine", "Christop", "Christophe", "Christopher", "Christy", "Chyna", "Ciara", "Cicero", "Cielo", "Cierra", "Cindy", "Citlalli", "Clair", "Claire", "Clara", "Clarabelle", "Clare", "Clarissa", "Clark", "Claud", "Claude", "Claudia", "Claudie", "Claudine", "Clay", "Clemens", "Clement", "Clementina", "Clementine", "Clemmie", "Cleo", "Cleora", "Cleta", "Cletus", "Cleve", "Cleveland", "Clifford", "Clifton", "Clint", "Clinton", "Clotilde", "Clovis", "Cloyd", "Clyde", "Coby", "Cody", "Colby", "Cole", "Coleman", "Colin", "Colleen", "Collin", "Colt", "Colten", "Colton", "Columbus", "Concepcion", "Conner", "Connie", "Connor", "Conor", "Conrad", "Constance", "Constantin", "Consuelo", "Cooper", "Cora", "Coralie", "Corbin", "Cordelia", "Cordell", "Cordia", "Cordie", "Corene", "Corine", "Cornelius", "Cornell", "Corrine", "Cortez", "Cortney", "Cory", "Coty", "Courtney", "Coy", "Craig", "Crawford", "Creola", "Cristal", "Cristian", "Cristina", "Cristobal", "Cristopher", "Cruz", "Crystal", "Crystel", "Cullen", "Curt", "Curtis", "Cydney", "Cynthia", "Cyril", "Cyrus", "Dagmar", "Dahlia", "Daija", "Daisha", "Daisy", "Dakota", "Dale", "Dallas", "Dallin", "Dalton", "Damaris", "Dameon", "Damian", "Damien", "Damion", "Damon", "Dan", "Dana", "Dandre", "Dane", "D'angelo", "Dangelo", "Danial", "Daniela", "Daniella", "Danielle", "Danika", "Dannie", "Danny", "Dante", "Danyka", "Daphne", "Daphnee", "Daphney", "Darby", "Daren", "Darian", "Dariana", "Darien", "Dario", "Darion", "Darius", "Darlene", "Daron", "Darrel", "Darrell", "Darren", "Darrick", "Darrin", "Darrion", "Darron", "Darryl", "Darwin", "Daryl", "Dashawn", "Dasia", "Dave", "David", "Davin", "Davion", "Davon", "Davonte", "Dawn", "Dawson", "Dax", "Dayana", "Dayna", "Dayne", "Dayton", "Dean", "Deangelo", "Deanna", "Deborah", "Declan", "Dedric", "Dedrick", "Dee", "Deion", "Deja", "Dejah", "Dejon", "Dejuan", "Delaney", "Delbert", "Delfina", "Delia", "Delilah", "Dell", "Della", "Delmer", "Delores", "Delpha", "Delphia", "Delphine", "Delta", "Demarco", "Demarcus", "Demario", "Demetris", "Demetrius", "Demond", "Dena", "Denis", "Dennis", "Deon", "Deondre", "Deontae", "Deonte", "Dereck", "Derek", "Derick", "Deron", "Derrick", "Deshaun", "Deshawn", "Desiree", "Desmond", "Dessie", "Destany", "Destin", "Destinee", "Destiney", "Destini", "Destiny", "Devan", "Devante", "Deven", "Devin", "Devon", "Devonte", "Devyn", "Dewayne", "Dewitt", "Dexter", "Diamond", "Diana", "Dianna", "Diego", "Dillan", "Dillon", "Dimitri", "Dina", "Dino", "Dion", "Dixie", "Dock", "Dolly", "Dolores", "Domenic", "Domenica", "Domenick", "Domenico", "Domingo", "Dominic", "Dominique", "Don", "Donald", "Donato", "Donavon", "Donna", "Donnell", "Donnie", "Donny", "Dora", "Dorcas", "Dorian", "Doris", "Dorothea", "Dorothy", "Dorris", "Dortha", "Dorthy", "Doug", "Douglas", "Dovie", "Doyle", "Drake", "Drew", "Duane", "Dudley", "Dulce", "Duncan", "Durward", "Dustin", "Dusty", "Dwight", "Dylan", "Earl", "Earlene", "Earline", "Earnest", "Earnestine", "Easter", "Easton", "Ebba", "Ebony", "Ed", "Eda", "Edd", "Eddie", "Eden", "Edgar", "Edgardo", "Edison", "Edmond", "Edmund", "Edna", "Eduardo", "Edward", "Edwardo", "Edwin", "Edwina", "Edyth", "Edythe", "Effie", "Efrain", "Efren", "Eileen", "Einar", "Eino", "Eladio", "Elaina", "Elbert", "Elda", "Eldon", "Eldora", "Eldred", "Eldridge", "Eleanora", "Eleanore", "Eleazar", "Electa", "Elena", "Elenor", "Elenora", "Eleonore", "Elfrieda", "Eli", "Elian", "Eliane", "Elias", "Eliezer", "Elijah", "Elinor", "Elinore", "Elisa", "Elisabeth", "Elise", "Eliseo", "Elisha", "Elissa", "Eliza", "Elizabeth", "Ella", "Ellen", "Ellie", "Elliot", "Elliott", "Ellis", "Ellsworth", "Elmer", "Elmira", "Elmo", "Elmore", "Elna", "Elnora", "Elody", "Eloisa", "Eloise", "Elouise", "Eloy", "Elroy", "Elsa", "Else", "Elsie", "Elta", "Elton", "Elva", "Elvera", "Elvie", "Elvis", "Elwin", "Elwyn", "Elyse", "Elyssa", "Elza", "Emanuel", "Emelia", "Emelie", "Emely", "Emerald", "Emerson", "Emery", "Emie", "Emil", "Emile", "Emilia", "Emiliano", "Emilie", "Emilio", "Emily", "Emma", "Emmalee", "Emmanuel", "Emmanuelle", "Emmet", "Emmett", "Emmie", "Emmitt", "Emmy", "Emory", "Ena", "Enid", "Enoch", "Enola", "Enos", "Enrico", "Enrique", "Ephraim", "Era", "Eriberto", "Eric", "Erica", "Erich", "Erick", "Ericka", "Erik", "Erika", "Erin", "Erling", "Erna", "Ernest", "Ernestina", "Ernestine", "Ernesto", "Ernie", "Ervin", "Erwin", "Eryn", "Esmeralda", "Esperanza", "Esta", "Esteban", "Estefania", "Estel", "Estell", "Estella", "Estelle", "Estevan", "Esther", "Estrella", "Etha", "Ethan", "Ethel", "Ethelyn", "Ethyl", "Ettie", "Eudora", "Eugene", "Eugenia", "Eula", "Eulah", "Eulalia", "Euna", "Eunice", "Eusebio", "Eva", "Evalyn", "Evan", "Evangeline", "Evans", "Eve", "Eveline", "Evelyn", "Everardo", "Everett", "Everette", "Evert", "Evie", "Ewald", "Ewell", "Ezekiel", "Ezequiel", "Ezra", "Fabian", "Fabiola", "Fae", "Fannie", "Fanny", "Fatima", "Faustino", "Fausto", "Favian", "Fay", "Faye", "Federico", "Felicia", "Felicita", "Felicity", "Felipa", "Felipe", "Felix", "Felton", "Fermin", "Fern", "Fernando", "Ferne", "Fidel", "Filiberto", "Filomena", "Finn", "Fiona", "Flavie", "Flavio", "Fleta", "Fletcher", "Flo", "Florence", "Florencio", "Florian", "Florida", "Florine", "Flossie", "Floy", "Floyd", "Ford", "Forest", "Forrest", "Foster", "Frances", "Francesca", "Francesco", "Francis", "Francisca", "Francisco", "Franco", "Frank", "Frankie", "Franz", "Fred", "Freda", "Freddie", "Freddy", "Frederic", "Frederick", "Frederik", "Frederique", "Fredrick", "Fredy", "Freeda", "Freeman", "Freida", "Frida", "Frieda", "Friedrich", "Fritz", "Furman", "Gabe", "Gabriel", "Gabriella", "Gabrielle", "Gaetano", "Gage", "Gail", "Gardner", "Garett", "Garfield", "Garland", "Garnet", "Garnett", "Garret", "Garrett", "Garrick", "Garrison", "Garry", "Garth", "Gaston", "Gavin", "Gay", "Gayle", "Gaylord", "Gene", "General", "Genesis", "Genevieve", "Gennaro", "Genoveva", "Geo", "Geoffrey", "George", "Georgette", "Georgiana", "Georgianna", "Geovanni", "Geovanny", "Geovany", "Gerald", "Geraldine", "Gerard", "Gerardo", "Gerda", "Gerhard", "Germaine", "German", "Gerry", "Gerson", "Gertrude", "Gia", "Gianni", "Gideon", "Gilbert", "Gilberto", "Gilda", "Giles", "Gillian", "Gina", "Gino", "Giovani", "Giovanna", "Giovanni", "Giovanny", "Gisselle", "Giuseppe", "Gladyce", "Gladys", "Glen", "Glenda", "Glenna", "Glennie", "Gloria", "Godfrey", "Golda", "Golden", "Gonzalo", "Gordon", "Grace", "Gracie", "Graciela", "Grady", "Graham", "Grant", "Granville", "Grayce", "Grayson", "Green", "Greg", "Gregg", "Gregoria", "Gregorio", "Gregory", "Greta", "Gretchen", "Greyson", "Griffin", "Grover", "Guadalupe", "Gudrun", "Guido", "Guillermo", "Guiseppe", "Gunnar", "Gunner", "Gus", "Gussie", "Gust", "Gustave", "Guy", "Gwen", "Gwendolyn", "Hadley", "Hailee", "Hailey", "Hailie", "Hal", "Haleigh", "Haley", "Halie", "Halle", "Hallie", "Hank", "Hanna", "Hannah", "Hans", "Hardy", "Harley", "Harmon", "Harmony", "Harold", "Harrison", "Harry", "Harvey", "Haskell", "Hassan", "Hassie", "Hattie", "Haven", "Hayden", "Haylee", "Hayley", "Haylie", "Hazel", "Hazle", "Heath", "Heather", "Heaven", "Heber", "Hector", "Heidi", "Helen", "Helena", "Helene", "Helga", "Hellen", "Helmer", "Heloise", "Henderson", "Henri", "Henriette", "Henry", "Herbert", "Herman", "Hermann", "Hermina", "Herminia", "Herminio", "Hershel", "Herta", "Hertha", "Hester", "Hettie", "Hilario", "Hilbert", "Hilda", "Hildegard", "Hillard", "Hillary", "Hilma", "Hilton", "Hipolito", "Hiram", "Hobart", "Holden", "Hollie", "Hollis", "Holly", "Hope", "Horace", "Horacio", "Hortense", "Hosea", "Houston", "Howard", "Howell", "Hoyt", "Hubert", "Hudson", "Hugh", "Hulda", "Humberto", "Hunter", "Hyman", "Ian", "Ibrahim", "Icie", "Ida", "Idell", "Idella", "Ignacio", "Ignatius", "Ike", "Ila", "Ilene", "Iliana", "Ima", "Imani", "Imelda", "Immanuel", "Imogene", "Ines", "Irma", "Irving", "Irwin", "Isaac", "Isabel", "Isabell", "Isabella", "Isabelle", "Isac", "Isadore", "Isai", "Isaiah", "Isaias", "Isidro", "Ismael", "Isobel", "Isom", "Israel", "Issac", "Itzel", "Iva", "Ivah", "Ivory", "Ivy", "Izabella", "Izaiah", "Jabari", "Jace", "Jacey", "Jacinthe", "Jacinto", "Jack", "Jackeline", "Jackie", "Jacklyn", "Jackson", "Jacky", "Jaclyn", "Jacquelyn", "Jacques", "Jacynthe", "Jada", "Jade", "Jaden", "Jadon", "Jadyn", "Jaeden", "Jaida", "Jaiden", "Jailyn", "Jaime", "Jairo", "Jakayla", "Jake", "Jakob", "Jaleel", "Jalen", "Jalon", "Jalyn", "Jamaal", "Jamal", "Jamar", "Jamarcus", "Jamel", "Jameson", "Jamey", "Jamie", "Jamil", "Jamir", "Jamison", "Jammie", "Jan", "Jana", "Janae", "Jane", "Janelle", "Janessa", "Janet", "Janice", "Janick", "Janie", "Janis", "Janiya", "Jannie", "Jany", "Jaquan", "Jaquelin", "Jaqueline", "Jared", "Jaren", "Jarod", "Jaron", "Jarred", "Jarrell", "Jarret", "Jarrett", "Jarrod", "Jarvis", "Jasen", "Jasmin", "Jason", "Jasper", "Jaunita", "Javier", "Javon", "Javonte", "Jay", "Jayce", "Jaycee", "Jayda", "Jayde", "Jayden", "Jaydon", "Jaylan", "Jaylen", "Jaylin", "Jaylon", "Jayme", "Jayne", "Jayson", "Jazlyn", "Jazmin", "Jazmyn", "Jazmyne", "Jean", "Jeanette", "Jeanie", "Jeanne", "Jed", "Jedediah", "Jedidiah", "Jeff", "Jefferey", "Jeffery", "Jeffrey", "Jeffry", "Jena", "Jenifer", "Jennie", "Jennifer", "Jennings", "Jennyfer", "Jensen", "Jerad", "Jerald", "Jeramie", "Jeramy", "Jerel", "Jeremie", "Jeremy", "Jermain", "Jermaine", "Jermey", "Jerod", "Jerome", "Jeromy", "Jerrell", "Jerrod", "Jerrold", "Jerry", "Jess", "Jesse", "Jessica", "Jessie", "Jessika", "Jessy", "Jessyca", "Jesus", "Jett", "Jettie", "Jevon", "Jewel", "Jewell", "Jillian", "Jimmie", "Jimmy", "Jo", "Joan", "Joana", "Joanie", "Joanne", "Joannie", "Joanny", "Joany", "Joaquin", "Jocelyn", "Jodie", "Jody", "Joe", "Joel", "Joelle", "Joesph", "Joey", "Johan", "Johann", "Johanna", "Johathan", "John", "Johnathan", "Johnathon", "Johnnie", "Johnny", "Johnpaul", "Johnson", "Jolie", "Jon", "Jonas", "Jonatan", "Jonathan", "Jonathon", "Jordan", "Jordane", "Jordi", "Jordon", "Jordy", "Jordyn", "Jorge", "Jose", "Josefa", "Josefina", "Joseph", "Josephine", "Josh", "Joshua", "Joshuah", "Josiah", "Josiane", "Josianne", "Josie", "Josue", "Jovan", "Jovani", "Jovanny", "Jovany", "Joy", "Joyce", "Juana", "Juanita", "Judah", "Judd", "Jude", "Judge", "Judson", "Judy", "Jules", "Julia", "Julian", "Juliana", "Julianne", "Julie", "Julien", "Juliet", "Julio", "Julius", "June", "Junior", "Junius", "Justen", "Justice", "Justina", "Justine", "Juston", "Justus", "Justyn", "Juvenal", "Juwan", "Kacey", "Kaci", "Kacie", "Kade", "Kaden", "Kadin", "Kaela", "Kaelyn", "Kaia", "Kailee", "Kailey", "Kailyn", "Kaitlin", "Kaitlyn", "Kale", "Kaleb", "Kaleigh", "Kaley", "Kali", "Kallie", "Kameron", "Kamille", "Kamren", "Kamron", "Kamryn", "Kane", "Kara", "Kareem", "Karelle", "Karen", "Kari", "Kariane", "Karianne", "Karina", "Karine", "Karl", "Karlee", "Karley", "Karli", "Karlie", "Karolann", "Karson", "Kasandra", "Kasey", "Kassandra", "Katarina", "Katelin", "Katelyn", "Katelynn", "Katharina", "Katherine", "Katheryn", "Kathleen", "Kathlyn", "Kathryn", "Kathryne", "Katlyn", "Katlynn", "Katrina", "Katrine", "Kattie", "Kavon", "Kay", "Kaya", "Kaycee", "Kayden", "Kayla", "Kaylah", "Kaylee", "Kayleigh", "Kayley", "Kayli", "Kaylie", "Kaylin", "Keagan", "Keanu", "Keara", "Keaton", "Keegan", "Keeley", "Keely", "Keenan", "Keira", "Keith", "Kellen", "Kelley", "Kelli", "Kellie", "Kelly", "Kelsi", "Kelsie", "Kelton", "Kelvin", "Ken", "Kendall", "Kendra", "Kendrick", "Kenna", "Kennedi", "Kennedy", "Kenneth", "Kennith", "Kenny", "Kenton", "Kenya", "Kenyatta", "Kenyon", "Keon", "Keshaun", "Keshawn", "Keven", "Kevin", "Kevon", "Keyon", "Keyshawn", "Khalid", "Khalil", "Kian", "Kiana", "Kianna", "Kiara", "Kiarra", "Kiel", "Kiera", "Kieran", "Kiley", "Kim", "Kimberly", "King", "Kip", "Kira", "Kirk", "Kirsten", "Kirstin", "Kitty", "Kobe", "Koby", "Kody", "Kolby", "Kole", "Korbin", "Korey", "Kory", "Kraig", "Kris", "Krista", "Kristian", "Kristin", "Kristina", "Kristofer", "Kristoffer", "Kristopher", "Kristy", "Krystal", "Krystel", "Krystina", "Kurt", "Kurtis", "Kyla", "Kyle", "Kylee", "Kyleigh", "Kyler", "Kylie", "Kyra", "Lacey", "Lacy", "Ladarius", "Lafayette", "Laila", "Laisha", "Lamar", "Lambert", "Lamont", "Lance", "Landen", "Lane", "Laney", "Larissa", "Laron", "Larry", "Larue", "Laura", "Laurel", "Lauren", "Laurence", "Lauretta", "Lauriane", "Laurianne", "Laurie", "Laurine", "Laury", "Lauryn", "Lavada", "Lavern", "Laverna", "Laverne", "Lavina", "Lavinia", "Lavon", "Lavonne", "Lawrence", "Lawson", "Layla", "Layne", "Lazaro", "Lea", "Leann", "Leanna", "Leanne", "Leatha", "Leda", "Lee", "Leif", "Leila", "Leilani", "Lela", "Lelah", "Leland", "Lelia", "Lempi", "Lemuel", "Lenna", "Lennie", "Lenny", "Lenora", "Lenore", "Leo", "Leola", "Leon", "Leonard", "Leonardo", "Leone", "Leonel", "Leonie", "Leonor", "Leonora", "Leopold", "Leopoldo", "Leora", "Lera", "Lesley", "Leslie", "Lesly", "Lessie", "Lester", "Leta", "Letha", "Letitia", "Levi", "Lew", "Lewis", "Lexi", "Lexie", "Lexus", "Lia", "Liam", "Liana", "Libbie", "Libby", "Lila", "Lilian", "Liliana", "Liliane", "Lilla", "Lillian", "Lilliana", "Lillie", "Lilly", "Lily", "Lilyan", "Lina", "Lincoln", "Linda", "Lindsay", "Lindsey", "Linnea", "Linnie", "Linwood", "Lionel", "Lisa", "Lisandro", "Lisette", "Litzy", "Liza", "Lizeth", "Lizzie", "Llewellyn", "Lloyd", "Logan", "Lois", "Lola", "Lolita", "Loma", "Lon", "London", "Lonie", "Lonnie", "Lonny", "Lonzo", "Lora", "Loraine", "Loren", "Lorena", "Lorenz", "Lorenza", "Lorenzo", "Lori", "Lorine", "Lorna", "Lottie", "Lou", "Louie", "Louisa", "Lourdes", "Louvenia", "Lowell", "Loy", "Loyal", "Loyce", "Lucas", "Luciano", "Lucie", "Lucienne", "Lucile", "Lucinda", "Lucio", "Lucious", "Lucius", "Lucy", "Ludie", "Ludwig", "Lue", "Luella", "Luigi", "Luis", "Luisa", "Lukas", "Lula", "Lulu", "Luna", "Lupe", "Lura", "Lurline", "Luther", "Luz", "Lyda", "Lydia", "Lyla", "Lynn", "Lyric", "Lysanne", "Mabel", "Mabelle", "Mable", "Mac", "Macey", "Maci", "Macie", "Mack", "Mackenzie", "Macy", "Madaline", "Madalyn", "Maddison", "Madeline", "Madelyn", "Madelynn", "Madge", "Madie", "Madilyn", "Madisen", "Madison", "Madisyn", "Madonna", "Madyson", "Mae", "Maegan", "Maeve", "Mafalda", "Magali", "Magdalen", "Magdalena", "Maggie", "Magnolia", "Magnus", "Maia", "Maida", "Maiya", "Major", "Makayla", "Makenna", "Makenzie", "Malachi", "Malcolm", "Malika", "Malinda", "Mallie", "Mallory", "Malvina", "Mandy", "Manley", "Manuel", "Manuela", "Mara", "Marc", "Marcel", "Marcelina", "Marcelino", "Marcella", "Marcelle", "Marcellus", "Marcelo", "Marcia", "Marco", "Marcos", "Marcus", "Margaret", "Margarete", "Margarett", "Margaretta", "Margarette", "Margarita", "Marge", "Margie", "Margot", "Margret", "Marguerite", "Maria", "Mariah", "Mariam", "Marian", "Mariana", "Mariane", "Marianna", "Marianne", "Mariano", "Maribel", "Marie", "Mariela", "Marielle", "Marietta", "Marilie", "Marilou", "Marilyne", "Marina", "Mario", "Marion", "Marisa", "Marisol", "Maritza", "Marjolaine", "Marjorie", "Marjory", "Mark", "Markus", "Marlee", "Marlen", "Marlene", "Marley", "Marlin", "Marlon", "Marques", "Marquis", "Marquise", "Marshall", "Marta", "Martin", "Martina", "Martine", "Marty", "Marvin", "Mary", "Maryam", "Maryjane", "Maryse", "Mason", "Mateo", "Mathew", "Mathias", "Mathilde", "Matilda", "Matilde", "Matt", "Matteo", "Mattie", "Maud", "Maude", "Maudie", "Maureen", "Maurice", "Mauricio", "Maurine", "Maverick", "Mavis", "Max", "Maxie", "Maxime", "Maximilian", "Maximillia", "Maximillian", "Maximo", "Maximus", "Maxine", "Maxwell", "May", "Maya", "Maybell", "Maybelle", "Maye", "Maymie", "Maynard", "Mayra", "Mazie", "Mckayla", "Mckenna", "Mckenzie", "Meagan", "Meaghan", "Meda", "Megane", "Meggie", "Meghan", "Mekhi", "Melany", "Melba", "Melisa", "Melissa", "Mellie", "Melody", "Melvin", "Melvina", "Melyna", "Melyssa", "Mercedes", "Meredith", "Merl", "Merle", "Merlin", "Merritt", "Mertie", "Mervin", "Meta", "Mia", "Micaela", "Micah", "Michael", "Michaela", "Michale", "Micheal", "Michel", "Michele", "Michelle", "Miguel", "Mikayla", "Mike", "Mikel", "Milan", "Miles", "Milford", "Miller", "Millie", "Milo", "Milton", "Mina", "Minerva", "Minnie", "Miracle", "Mireille", "Mireya", "Misael", "Missouri", "Misty", "Mitchel", "Mitchell", "Mittie", "Modesta", "Modesto", "Mohamed", "Mohammad", "Mohammed", "Moises", "Mollie", "Molly", "Mona", "Monica", "Monique", "Monroe", "Monserrat", "Monserrate", "Montana", "Monte", "Monty", "Morgan", "Moriah", "Morris", "Mortimer", "Morton", "Mose", "Moses", "Moshe", "Mossie", "Mozell", "Mozelle", "Muhammad", "Muriel", "Murl", "Murphy", "Murray", "Mustafa", "Mya", "Myah", "Mylene", "Myles", "Myra", "Myriam", "Myrl", "Myrna", "Myron", "Myrtice", "Myrtie", "Myrtis", "Myrtle", "Nadia", "Nakia", "Name", "Nannie", "Naomi", "Naomie", "Napoleon", "Narciso", "Nash", "Nasir", "Nat", "Natalia", "Natalie", "Natasha", "Nathan", "Nathanael", "Nathanial", "Nathaniel", "Nathen", "Nayeli", "Neal", "Ned", "Nedra", "Neha", "Neil", "Nelda", "Nella", "Nelle", "Nellie", "Nels", "Nelson", "Neoma", "Nestor", "Nettie", "Neva", "Newell", "Newton", "Nia", "Nicholas", "Nicholaus", "Nichole", "Nick", "Nicklaus", "Nickolas", "Nico", "Nicola", "Nicolas", "Nicole", "Nicolette", "Nigel", "Nikita", "Nikki", "Nikko", "Niko", "Nikolas", "Nils", "Nina", "Noah", "Noble", "Noe", "Noel", "Noelia", "Noemi", "Noemie", "Noemy", "Nola", "Nolan", "Nona", "Nora", "Norbert", "Norberto", "Norene", "Norma", "Norris", "Norval", "Norwood", "Nova", "Novella", "Nya", "Nyah", "Nyasia", "Obie", "Oceane", "Ocie", "Octavia", "Oda", "Odell", "Odessa", "Odie", "Ofelia", "Okey", "Ola", "Olaf", "Ole", "Olen", "Oleta", "Olga", "Olin", "Oliver", "Ollie", "Oma", "Omari", "Omer", "Ona", "Onie", "Opal", "Ophelia", "Ora", "Oral", "Oran", "Oren", "Orie", "Orin", "Orion", "Orland", "Orlando", "Orlo", "Orpha", "Orrin", "Orval", "Orville", "Osbaldo", "Osborne", "Oscar", "Osvaldo", "Oswald", "Oswaldo", "Otha", "Otho", "Otilia", "Otis", "Ottilie", "Ottis", "Otto", "Ova", "Owen", "Ozella", "Pablo", "Paige", "Palma", "Pamela", "Pansy", "Paolo", "Paris", "Parker", "Pascale", "Pasquale", "Pat", "Patience", "Patricia", "Patrick", "Patsy", "Pattie", "Paul", "Paula", "Pauline", "Paxton", "Payton", "Pearl", "Pearlie", "Pearline", "Pedro", "Peggie", "Penelope", "Percival", "Percy", "Perry", "Pete", "Peter", "Petra", "Peyton", "Philip", "Phoebe", "Phyllis", "Pierce", "Pierre", "Pietro", "Pink", "Pinkie", "Piper", "Polly", "Porter", "Precious", "Presley", "Preston", "Price", "Prince", "Princess", "Priscilla", "Providenci", "Prudence", "Queen", "Queenie", "Quentin", "Quincy", "Quinn", "Quinten", "Quinton", "Rachael", "Rachel", "Rachelle", "Rae", "Raegan", "Rafael", "Rafaela", "Raheem", "Rahsaan", "Rahul", "Raina", "Raleigh", "Ralph", "Ramiro", "Ramon", "Ramona", "Randal", "Randall", "Randi", "Randy", "Ransom", "Raoul", "Raphael", "Raphaelle", "Raquel", "Rashad", "Rashawn", "Rasheed", "Raul", "Raven", "Ray", "Raymond", "Raymundo", "Reagan", "Reanna", "Reba", "Rebeca", "Rebecca", "Rebeka", "Rebekah", "Reece", "Reed", "Reese", "Regan", "Reggie", "Reginald", "Reid", "Reilly", "Reina", "Reinhold", "Remington", "Rene", "Renee", "Ressie", "Reta", "Retha", "Retta", "Reuben", "Reva", "Rex", "Rey", "Reyes", "Reymundo", "Reyna", "Reynold", "Rhea", "Rhett", "Rhianna", "Rhiannon", "Rhoda", "Ricardo", "Richard", "Richie", "Richmond", "Rick", "Rickey", "Rickie", "Ricky", "Rico", "Rigoberto", "Riley", "Rita", "River", "Robb", "Robbie", "Robert", "Roberta", "Roberto", "Robin", "Robyn", "Rocio", "Rocky", "Rod", "Roderick", "Rodger", "Rodolfo", "Rodrick", "Rodrigo", "Roel", "Rogelio", "Roger", "Rogers", "Rolando", "Rollin", "Roma", "Romaine", "Roman", "Ron", "Ronaldo", "Ronny", "Roosevelt", "Rory", "Rosa", "Rosalee", "Rosalia", "Rosalind", "Rosalinda", "Rosalyn", "Rosamond", "Rosanna", "Rosario", "Roscoe", "Rose", "Rosella", "Roselyn", "Rosemarie", "Rosemary", "Rosendo", "Rosetta", "Rosie", "Rosina", "Roslyn", "Ross", "Rossie", "Rowan", "Rowena", "Rowland", "Roxane", "Roxanne", "Roy", "Royal", "Royce", "Rozella", "Ruben", "Rubie", "Ruby", "Rubye", "Rudolph", "Rudy", "Rupert", "Russ", "Russel", "Russell", "Rusty", "Ruth", "Ruthe", "Ruthie", "Ryan", "Ryann", "Ryder", "Rylan", "Rylee", "Ryleigh", "Ryley", "Sabina", "Sabrina", "Sabryna", "Sadie", "Sadye", "Sage", "Saige", "Sallie", "Sally", "Salma", "Salvador", "Salvatore", "Sam", "Samanta", "Samantha", "Samara", "Samir", "Sammie", "Sammy", "Samson", "Sandra", "Sandrine", "Sandy", "Sanford", "Santa", "Santiago", "Santina", "Santino", "Santos", "Sarah", "Sarai", "Sarina", "Sasha", "Saul", "Savanah", "Savanna", "Savannah", "Savion", "Scarlett", "Schuyler", "Scot", "Scottie", "Scotty", "Seamus", "Sean", "Sebastian", "Sedrick", "Selena", "Selina", "Selmer", "Serena", "Serenity", "Seth", "Shad", "Shaina", "Shakira", "Shana", "Shane", "Shanel", "Shanelle", "Shania", "Shanie", "Shaniya", "Shanna", "Shannon", "Shanny", "Shanon", "Shany", "Sharon", "Shaun", "Shawn", "Shawna", "Shaylee", "Shayna", "Shayne", "Shea", "Sheila", "Sheldon", "Shemar", "Sheridan", "Sherman", "Sherwood", "Shirley", "Shyann", "Shyanne", "Sibyl", "Sid", "Sidney", "Sienna", "Sierra", "Sigmund", "Sigrid", "Sigurd", "Silas", "Sim", "Simeon", "Simone", "Sincere", "Sister", "Skye", "Skyla", "Skylar", "Sofia", "Soledad", "Solon", "Sonia", "Sonny", "Sonya", "Sophia", "Sophie", "Spencer", "Stacey", "Stacy", "Stan", "Stanford", "Stanley", "Stanton", "Stefan", "Stefanie", "Stella", "Stephan", "Stephania", "Stephanie", "Stephany", "Stephen", "Stephon", "Sterling", "Steve", "Stevie", "Stewart", "Stone", "Stuart", "Summer", "Sunny", "Susan", "Susana", "Susanna", "Susie", "Suzanne", "Sven", "Syble", "Sydnee", "Sydney", "Sydni", "Sydnie", "Sylvan", "Sylvester", "Sylvia", "Tabitha", "Tad", "Talia", "Talon", "Tamara", "Tamia", "Tania", "Tanner", "Tanya", "Tara", "Taryn", "Tate", "Tatum", "Tatyana", "Taurean", "Tavares", "Taya", "Taylor", "Teagan", "Ted", "Telly", "Terence", "Teresa", "Terrance", "Terrell", "Terrence", "Terrill", "Terry", "Tess", "Tessie", "Tevin", "Thad", "Thaddeus", "Thalia", "Thea", "Thelma", "Theo", "Theodora", "Theodore", "Theresa", "Therese", "Theresia", "Theron", "Thomas", "Thora", "Thurman", "Tia", "Tiana", "Tianna", "Tiara", "Tierra", "Tiffany", "Tillman", "Timmothy", "Timmy", "Timothy", "Tina", "Tito", "Titus", "Tobin", "Toby", "Tod", "Tom", "Tomas", "Tomasa", "Tommie", "Toney", "Toni", "Tony", "Torey", "Torrance", "Torrey", "Toy", "Trace", "Tracey", "Tracy", "Travis", "Travon", "Tre", "Tremaine", "Tremayne", "Trent", "Trenton", "Tressa", "Tressie", "Treva", "Trever", "Trevion", "Trevor", "Trey", "Trinity", "Trisha", "Tristian", "Tristin", "Triston", "Troy", "Trudie", "Trycia", "Trystan", "Turner", "Twila", "Tyler", "Tyra", "Tyree", "Tyreek", "Tyrel", "Tyrell", "Tyrese", "Tyrique", "Tyshawn", "Tyson", "Ubaldo", "Ulices", "Ulises", "Una", "Unique", "Urban", "Uriah", "Uriel", "Ursula", "Vada", "Valentin", "Valentina", "Valentine", "Valerie", "Vallie", "Van", "Vance", "Vanessa", "Vaughn", "Veda", "Velda", "Vella", "Velma", "Velva", "Vena", "Verda", "Verdie", "Vergie", "Verla", "Verlie", "Vern", "Verna", "Verner", "Vernice", "Vernie", "Vernon", "Verona", "Veronica", "Vesta", "Vicenta", "Vicente", "Vickie", "Vicky", "Victor", "Victoria", "Vida", "Vidal", "Vilma", "Vince", "Vincent", "Vincenza", "Vincenzo", "Vinnie", "Viola", "Violet", "Violette", "Virgie", "Virgil", "Virginia", "Virginie", "Vita", "Vito", "Viva", "Vivian", "Viviane", "Vivianne", "Vivien", "Vivienne", "Vladimir", "Wade", "Waino", "Waldo", "Walker", "Wallace", "Walter", "Walton", "Wanda", "Ward", "Warren", "Watson", "Wava", "Waylon", "Wayne", "Webster", "Weldon", "Wellington", "Wendell", "Wendy", "Werner", "Westley", "Weston", "Whitney", "Wilber", "Wilbert", "Wilburn", "Wiley", "Wilford", "Wilfred", "Wilfredo", "Wilfrid", "Wilhelm", "Wilhelmine", "Will", "Willa", "Willard", "William", "Willie", "Willis", "Willow", "Willy", "Wilma", "Wilmer", "Wilson", "Wilton", "Winfield", "Winifred", "Winnifred", "Winona", "Winston", "Woodrow", "Wyatt", "Wyman", "Xander", "Xavier", "Xzavier", "Yadira", "Yasmeen", "Yasmin", "Yasmine", "Yazmin", "Yesenia", "Yessenia", "Yolanda", "Yoshiko", "Yvette", "Yvonne", "Zachariah", "Zachary", "Zachery", "Zack", "Zackary", "Zackery", "Zakary", "Zander", "Zane", "Zaria", "Zechariah", "Zelda", "Zella", "Zelma", "Zena", "Zetta", "Zion", "Zita", "Zoe", "Zoey", "Zoie", "Zoila", "Zola", "Zora", "Zula"];
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = ['Abbott', 'Abernathy', 'Abshire', 'Adams', 'Altenwerth', 'Anderson', 'Ankunding', 'Armstrong', 'Auer', 'Aufderhar', 'Bahringer', 'Bailey', 'Balistreri', 'Barrows', 'Bartell', 'Bartoletti', 'Barton', 'Bashirian', 'Batz', 'Bauch', 'Baumbach', 'Bayer', 'Beahan', 'Beatty', 'Bechtelar', 'Becker', 'Bednar', 'Beer', 'Beier', 'Berge', 'Bergnaum', 'Bergstrom', 'Bernhard', 'Bernier', 'Bins', 'Blanda', 'Blick', 'Block', 'Bode', 'Boehm', 'Bogan', 'Bogisich', 'Borer', 'Bosco', 'Botsford', 'Boyer', 'Boyle', 'Bradtke', 'Brakus', 'Braun', 'Breitenberg', 'Brekke', 'Brown', 'Bruen', 'Buckridge', 'Carroll', 'Carter', 'Cartwright', 'Casper', 'Cassin', 'Champlin', 'Christiansen', 'Cole', 'Collier', 'Collins', 'Conn', 'Connelly', 'Conroy', 'Considine', 'Corkery', 'Cormier', 'Corwin', 'Cremin', 'Crist', 'Crona', 'Cronin', 'Crooks', 'Cruickshank', 'Cummerata', 'Cummings', 'Dach', 'D\'Amore', 'Daniel', 'Dare', 'Daugherty', 'Davis', 'Deckow', 'Denesik', 'Dibbert', 'Dickens', 'Dicki', 'Dickinson', 'Dietrich', 'Donnelly', 'Dooley', 'Douglas', 'Doyle', 'DuBuque', 'Durgan', 'Ebert', 'Effertz', 'Eichmann', 'Emard', 'Emmerich', 'Erdman', 'Ernser', 'Fadel', 'Fahey', 'Farrell', 'Fay', 'Feeney', 'Feest', 'Feil', 'Ferry', 'Fisher', 'Flatley', 'Frami', 'Franecki', 'Friesen', 'Fritsch', 'Funk', 'Gaylord', 'Gerhold', 'Gerlach', 'Gibson', 'Gislason', 'Gleason', 'Gleichner', 'Glover', 'Goldner', 'Goodwin', 'Gorczany', 'Gottlieb', 'Goyette', 'Grady', 'Graham', 'Grant', 'Green', 'Greenfelder', 'Greenholt', 'Grimes', 'Gulgowski', 'Gusikowski', 'Gutkowski', 'Gutmann', 'Haag', 'Hackett', 'Hagenes', 'Hahn', 'Haley', 'Halvorson', 'Hamill', 'Hammes', 'Hand', 'Hane', 'Hansen', 'Harber', 'Harris', 'Hartmann', 'Harvey', 'Hauck', 'Hayes', 'Heaney', 'Heathcote', 'Hegmann', 'Heidenreich', 'Heller', 'Herman', 'Hermann', 'Hermiston', 'Herzog', 'Hessel', 'Hettinger', 'Hickle', 'Hilll', 'Hills', 'Hilpert', 'Hintz', 'Hirthe', 'Hodkiewicz', 'Hoeger', 'Homenick', 'Hoppe', 'Howe', 'Howell', 'Hudson', 'Huel', 'Huels', 'Hyatt', 'Jacobi', 'Jacobs', 'Jacobson', 'Jakubowski', 'Jaskolski', 'Jast', 'Jenkins', 'Jerde', 'Johns', 'Johnson', 'Johnston', 'Jones', 'Kassulke', 'Kautzer', 'Keebler', 'Keeling', 'Kemmer', 'Kerluke', 'Kertzmann', 'Kessler', 'Kiehn', 'Kihn', 'Kilback', 'King', 'Kirlin', 'Klein', 'Kling', 'Klocko', 'Koch', 'Koelpin', 'Koepp', 'Kohler', 'Konopelski', 'Koss', 'Kovacek', 'Kozey', 'Krajcik', 'Kreiger', 'Kris', 'Kshlerin', 'Kub', 'Kuhic', 'Kuhlman', 'Kuhn', 'Kulas', 'Kunde', 'Kunze', 'Kuphal', 'Kutch', 'Kuvalis', 'Labadie', 'Lakin', 'Lang', 'Langosh', 'Langworth', 'Larkin', 'Larson', 'Leannon', 'Lebsack', 'Ledner', 'Leffler', 'Legros', 'Lehner', 'Lemke', 'Lesch', 'Leuschke', 'Lind', 'Lindgren', 'Littel', 'Little', 'Lockman', 'Lowe', 'Lubowitz', 'Lueilwitz', 'Luettgen', 'Lynch', 'Macejkovic', 'MacGyver', 'Maggio', 'Mann', 'Mante', 'Marks', 'Marquardt', 'Marvin', 'Mayer', 'Mayert', 'McClure', 'McCullough', 'McDermott', 'McGlynn', 'McKenzie', 'McLaughlin', 'Medhurst', 'Mertz', 'Metz', 'Miller', 'Mills', 'Mitchell', 'Moen', 'Mohr', 'Monahan', 'Moore', 'Morar', 'Morissette', 'Mosciski', 'Mraz', 'Mueller', 'Muller', 'Murazik', 'Murphy', 'Murray', 'Nader', 'Nicolas', 'Nienow', 'Nikolaus', 'Nitzsche', 'Nolan', 'Oberbrunner', 'O\'Connell', 'O\'Conner', 'O\'Hara', 'O\'Keefe', 'O\'Kon', 'Okuneva', 'Olson', 'Ondricka', 'O\'Reilly', 'Orn', 'Ortiz', 'Osinski', 'Pacocha', 'Padberg', 'Pagac', 'Parisian', 'Parker', 'Paucek', 'Pfannerstill', 'Pfeffer', 'Pollich', 'Pouros', 'Powlowski', 'Predovic', 'Price', 'Prohaska', 'Prosacco', 'Purdy', 'Quigley', 'Quitzon', 'Rath', 'Ratke', 'Rau', 'Raynor', 'Reichel', 'Reichert', 'Reilly', 'Reinger', 'Rempel', 'Renner', 'Reynolds', 'Rice', 'Rippin', 'Ritchie', 'Robel', 'Roberts', 'Rodriguez', 'Rogahn', 'Rohan', 'Rolfson', 'Romaguera', 'Roob', 'Rosenbaum', 'Rowe', 'Ruecker', 'Runolfsdottir', 'Runolfsson', 'Runte', 'Russel', 'Rutherford', 'Ryan', 'Sanford', 'Satterfield', 'Sauer', 'Sawayn', 'Schaden', 'Schaefer', 'Schamberger', 'Schiller', 'Schimmel', 'Schinner', 'Schmeler', 'Schmidt', 'Schmitt', 'Schneider', 'Schoen', 'Schowalter', 'Schroeder', 'Schulist', 'Schultz', 'Schumm', 'Schuppe', 'Schuster', 'Senger', 'Shanahan', 'Shields', 'Simonis', 'Sipes', 'Skiles', 'Smith', 'Smitham', 'Spencer', 'Spinka', 'Sporer', 'Stamm', 'Stanton', 'Stark', 'Stehr', 'Steuber', 'Stiedemann', 'Stokes', 'Stoltenberg', 'Stracke', 'Streich', 'Stroman', 'Strosin', 'Swaniawski', 'Swift', 'Terry', 'Thiel', 'Thompson', 'Tillman', 'Torp', 'Torphy', 'Towne', 'Toy', 'Trantow', 'Tremblay', 'Treutel', 'Tromp', 'Turcotte', 'Turner', 'Ullrich', 'Upton', 'Vandervort', 'Veum', 'Volkman', 'Von', 'VonRueden', 'Waelchi', 'Walker', 'Walsh', 'Walter', 'Ward', 'Waters', 'Watsica', 'Weber', 'Wehner', 'Weimann', 'Weissnat', 'Welch', 'West', 'White', 'Wiegand', 'Wilderman', 'Wilkinson', 'Will', 'Williamson', 'Willms', 'Windler', 'Wintheiser', 'Wisoky', 'Wisozk', 'Witting', 'Wiza', 'Wolf', 'Wolff', 'Wuckert', 'Wunsch', 'Wyman', 'Yost', 'Yundt', 'Zboncak', 'Zemlak', 'Ziemann', 'Zieme', 'Zulauf'];
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = ['Male', 'Female'];
+
+/***/ },
+/* 28 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _firstName = __webpack_require__(29);
+
+	Object.defineProperty(exports, 'firstName', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_firstName).default;
+	  }
+	});
+
+	var _lastName = __webpack_require__(30);
+
+	Object.defineProperty(exports, 'lastName', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_lastName).default;
+	  }
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ },
+/* 29 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = ["王", "李", "張", "劉", "陳", "楊", "黃", "吳", "趙", "週", "徐", "孫", "馬", "朱", "胡", "林", "郭", "何", "高", "羅", "鄭", "梁", "謝", "宋", "唐", "許", "鄧", "馮", "韓", "曹", "曾", "彭", "蕭", "蔡", "潘", "田", "董", "袁", "於", "餘", "葉", "蔣", "杜", "蘇", "魏", "程", "呂", "丁", "沈", "任", "姚", "盧", "傅", "鐘", "姜", "崔", "譚", "廖", "範", "汪", "陸", "金", "石", "戴", "賈", "韋", "夏", "邱", "方", "侯", "鄒", "熊", "孟", "秦", "白", "江", "閻", "薛", "尹", "段", "雷", "黎", "史", "龍", "陶", "賀", "顧", "毛", "郝", "龔", "邵", "萬", "錢", "嚴", "賴", "覃", "洪", "武", "莫", "孔"];
+
+/***/ },
+/* 30 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = ['紹齊', '博文', '梓晨', '胤祥', '瑞霖', '明哲', '天翊', '凱瑞', '健雄', '耀傑', '瀟然', '子涵', '越彬', '鈺軒', '智輝', '致遠', '俊馳', '雨澤', '燁磊', '晟睿', '文昊', '修潔', '黎昕', '遠航', '旭堯', '鴻濤', '偉祺', '榮軒', '越澤', '浩宇', '瑾瑜', '皓軒', '擎蒼', '擎宇', '志澤', '子軒', '睿淵', '弘文', '哲瀚', '雨澤', '楷瑞', '建輝', '晉鵬', '天磊', '紹輝', '澤洋', '鑫磊', '鵬煊', '昊強', '偉宸', '博超', '君浩', '子騫', '鵬濤', '炎彬', '鶴軒', '越彬', '風華', '靖琪', '明輝', '偉誠', '明軒', '健柏', '修傑', '志澤', '弘文', '峻熙', '嘉懿', '煜城', '懿軒', '燁偉', '苑博', '偉澤', '熠彤', '鴻煊', '博濤', '燁霖', '燁華', '煜祺', '智宸', '正豪', '昊然', '明杰', '立誠', '立軒', '立輝', '峻熙', '弘文', '熠彤', '鴻煊', '燁霖', '哲瀚', '鑫鵬', '昊天', '思聰', '展鵬', '笑愚', '志強', '炫明', '雪松', '思源', '智淵', '思淼', '曉嘯', '天宇', '浩然', '文軒', '鷺洋', '振家', '樂駒', '曉博', '文博', '昊焱', '立果', '金鑫', '錦程', '嘉熙', '鵬飛', '子默', '思遠', '浩軒', '語堂', '聰健'];
+
+/***/ },
+/* 31 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _combinators = __webpack_require__(12);
+
+	var _avaliableLocaleids = __webpack_require__(13);
+
+	var _avaliableLocaleids2 = _interopRequireDefault(_avaliableLocaleids);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/**
+	 * Avaliable Locale Ids in Unicode Common Locale Data Repository.
+	 *
+	 * @type {Arbitary}
+	 *
+	 * @example
+	 * // returns zh-Hant-TW
+	 * hc.locale.localeids.generate(); 
+	 */
+	/**
+	 * @module
+	 */
+	var localeId = (0, _combinators.elements)(_avaliableLocaleids2.default).name('Locale Id');
+
+	exports.default = {
+	  avaliableLocaleIds: _avaliableLocaleids2.default,
+	  localeId: localeId
+	};
+
+/***/ },
+/* 32 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _arbitrary = __webpack_require__(4);
+
+	var _person = __webpack_require__(22);
+
+	var _person2 = _interopRequireDefault(_person);
+
+	var _number = __webpack_require__(17);
+
+	var _combinators = __webpack_require__(12);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/**
+	 * @module
+	 */
+	var userNameSep = (0, _combinators.elements)(['.', '_', '']);
+	var userNameSuffix = (0, _combinators.oneOf)([_number.nat.choose(1, 99), (0, _combinators.constant)('')]);
+
+	/**
+	 * Arbitrary to produce internet user name.
+	 *
+	 * @type {Arbitrary}
+	 * @example
+	 *
+	 * // returns jack or jack.hand or jack.hand34.
+	 * hc.internet.userName.generate();
+	 *
+	 */
+	var userName = (0, _arbitrary.fromGenMaker)(function (firstName, lastName, sepArb) {
+	  return function (engine) {
+	    var a = firstName.makeGen()(engine);
+	    var b = lastName.makeGen()(engine);
+	    var sep = sepArb.makeGen()(engine);
+	    var suffix = userNameSuffix.makeGen()(engine);
+	    var n = _number.nat.choose(0, 1).makeGen()(engine);
+	    var result = n === 0 ? '' + a : '' + a + sep + b + suffix;
+	    return result;
+	  };
+	}, [_person2.default.firstName, _person2.default.lastName, userNameSep]).name('Internet User Name');
+
+	var freeEmailProvider = (0, _combinators.elements)(['gmail.com', 'yahoo.com', 'hotmail.com']).name('Free Email Provider');
+
+	/**
+	 * Arbitary to produce an email.
+	 *
+	 * @type {Arbitary}
+	 * @example
+	 * // returns jack.hand@gmail.com
+	 * hc.internet.email.generate();
+	 */
+	var email = (0, _arbitrary.fromGenMaker)(function (userName, provider) {
+	  return function (engine) {
+	    var a = userName.makeGen()(engine);
+	    var b = provider.makeGen()(engine);
+	    return a + '@' + b;
+	  };
+	}, [userName, freeEmailProvider]).name('Email');
+
+	var proto = (0, _combinators.elements)(['http', 'https']).name('Internet Protocol');
+
+	var domainWord = _person2.default.firstName.transform(function (name) {
+	  return name.replace(/([\\~#&*{}/:<>?|\"'])/ig, '').toLowerCase();
+	}).name('Domain Word');
+
+	var domainSuffix = (0, _combinators.elements)(['com', 'org', 'io', 'info', 'today']).name('Domain Suffix');
+
+	var domainName = (0, _combinators.pair)(domainWord, domainSuffix).transform(function (arr) {
+	  return arr[0] + '.' + arr[1];
+	}).name('Domain Name');
+
+	/**
+	 * Arbitrary to produce an url.
+	 *
+	 * @type {Arbitrary}
+	 */
+	var url = (0, _combinators.pair)(proto, domainName).transform(function (arr) {
+	  return arr[0] + '://' + arr[1];
+	}).name('URL');
+
+	var ipRange = _number.nat.choose(0, 255).name('IP Range');
+
+	/**
+	 * Arbitrary to produce an IP v4 address.
+	 *
+	 * @type {Arbitrary}
+	 */
+	var ip = (0, _combinators.nearray)(ipRange).choose(4, 4).transform(function (arr) {
+	  return arr.join('.');
+	}).name('IP v4 Address');
+
+	var ipV6Range = _number.nat.choose(0, 15).transform(function (n) {
+	  return n.toString(16);
+	}).name('IPV6 Range');
+
+	var ipv6Block = (0, _combinators.nearray)(ipV6Range).choose(4, 4).transform(function (arr) {
+	  return arr.join('');
+	}).name('IPV6 Block');
+
+	/**
+	 * Arbitrary to produce an IP v6 address.
+	 *
+	 * @type {Arbitrary}
+	 */
+	var ipv6 = (0, _combinators.nearray)(ipv6Block).choose(8, 8).transform(function (arr) {
+	  return arr.join(':');
+	}).name('IP v6 Address');
+
+	exports.default = {
+	  userName: userName,
+	  email: email,
+	  url: url,
+	  ip: ip,
+	  ipv6: ipv6
+	};
+
+/***/ },
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -19850,19 +20357,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
-	var _randomJs = __webpack_require__(6);
+	var _randomJs = __webpack_require__(5);
 
 	var _randomJs2 = _interopRequireDefault(_randomJs);
 
-	var _assert = __webpack_require__(8);
+	var _assert = __webpack_require__(6);
 
 	var _assert2 = _interopRequireDefault(_assert);
 
-	var _constants = __webpack_require__(13);
+	var _constants = __webpack_require__(11);
 
-	var _arbitrary = __webpack_require__(7);
+	var _arbitrary = __webpack_require__(4);
 
-	var _combinators = __webpack_require__(15);
+	var _combinators = __webpack_require__(12);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20108,7 +20615,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.Property = Property;
 	exports.hold = hold;
 	exports.forall = forall;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
 
 /***/ }
 /******/ ])
