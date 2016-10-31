@@ -131,7 +131,7 @@ class Arbitrary {
   /**
    * Set a seed number.
    *
-   * @param {!number} 32-bit integer.
+   * @param {!number} seed 32-bit integer.
    */
   seed(seed) {
     this._engine.seed(seed);

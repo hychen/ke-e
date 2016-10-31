@@ -1,3 +1,14 @@
+/**
+ * @module
+ */
+
+/**
+ * @describe Avaliable Locale Ids definietion.
+ *
+ * Took from
+ * https://github.com/unicode-cldr/cldr-core/blob/master/availableLocales.json.
+ *
+ */
 export default [
   'af',
   'af-NA',

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>HyCheck Source: types/boolean.js</title>
+	<title>HyCheck Module: types/locale/index</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -67,43 +67,190 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: types/boolean.js</h1>
-    
+	<h1 class="page-title">Module: types/locale/index</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">/**
- * @module
- */
-import Random from 'random-js';
-import {fromGenMaker} from '../arbitrary';
 
-/**
- * Boolean Arbitrary
- *
- * produce true and false with equal probability.
- *
- * @type {Arbitrary}
- *
- * @example
- * // returns true
- * hc.bool.generate()
- *
- * @example
- * // Produce a boolean with the specified chance causing it to be true.
- * let chance = 10;
- * hc.bool.choose(chance).generate();
- */
-export const bool = fromGenMaker(Random.bool).name('Boolean');
-</pre>
-    </article>
+<header>
+    
+</header>
+
+
+<article>
+    <div class="container-overview">
+    
+        
+
+        
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_locale_index.js.html">types/locale/index.js</a>,
+				 <a href="types_locale_index.js.html#sunlight-1-line-1">line 1</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id="~localeId">
+    <h4 id="~localeId"><span class="type-signature">&lt;inner, constant> </span>localeId<span class="type-signature"> :Arbitary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Avaliable Locale Ids in Unicode Common Locale Data Repository.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_locale_index.js.html">types/locale/index.js</a>,
+				 <a href="types_locale_index.js.html#sunlight-1-line-16">line 16</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// returns zh-Hant-TW
+hc.locale.localeids.generate(); </pre>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -113,6 +260,10 @@ export const bool = fromGenMaker(Random.bool).name('Boolean');
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>

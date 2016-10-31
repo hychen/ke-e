@@ -12,6 +12,8 @@ HyCheck is a property-based testing library, inspired by [QuickCheck](https://ha
 - Property-based test utilitis library.
 - Repeatable random fake data generators.
 - Mocha test framwork integration.
+- Support for multiple localities.
+- Support for browser and Node.js.
 
 check [documents](http://hychen.me/hycheck/index.html) for more details.
 
@@ -81,7 +83,9 @@ HCSeed=-1764850555 mocha
 AssertionError: >0 doesn't hold, seed: -1764850555, counter example: -5265798245849472, tried: 3/3`
 ```
 
-### i18n support
+### Localization
+
+This project follows unicode CLDR specification. `en` is default locale id.
 
 ```
 // Generate English first name.
@@ -90,6 +94,62 @@ hc.person.firstName.generate();
 // Generate Tranditional Chinese first name.
 hc.person.firstName.locale('zh-Hant-TW').generate();
 ```
+
+## Arbitraries
+
+The pupose of a arbitraries is random generation and shrinking of values 
+in property-based testing, but you could use them to generate fake data 
+individually.
+
+some of difinitions of arbitraries took from 
+[faker.js](https://github.com/marak/Faker.js/) project.
+
+### Primitive
+
+- any - produce any primtive types.
+- boolean — produce true and false with equal probability. 
+- falsy — produce falsy values: false, null, undefined, '', 0, and NaN.
+- nat — produce a natural number.
+- int — produce a integer. 
+- pint — produce a positive integer.
+- nint — produce a negative integer.
+- number — produce a float numbers.
+- pnumber — produce a positive float numbers.
+- nnumber — produce negative float numbers.
+- char — produce a unicode character.
+- asciichar — produce an ascii character.
+- string — produce a unicode string.
+- nestring - produce a non-empty unicode string.
+- asciistring — produce an ascii string.
+- neasciistring — produce an non-empty ascii string.
+- function — produce a function.
+
+### Combinator
+
+- constant — produce a contant value.
+- elements — produce one of the given values. 
+- suchThat — produce a value that satisfies a predicate.
+- oneOf — randomly uses one of the given generators. 
+- pair — produce a pair of two arbitraries.
+- array — produce a array.
+- nearray — produce a non-empty array.
+- object — produce an object.
+
+### Locale
+
+- localeids — produce a locale id.
+
+### Datetime
+
+- date — produce a Date.
+
+### Person
+
+- person - produce an object to reprsent a person.
+ - name - produce the name of a person.
+ - firstName - produce the first name of a person.
+ - lastName - produce the last name of a person.
+ - gender - produce the gender of a person.
 
 ## Installation
 
@@ -124,6 +184,6 @@ describe('Integer', () => {
 </script>
 ```
 
-### License
+## License
 
 The MIT License (MIT)

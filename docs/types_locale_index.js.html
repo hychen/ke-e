@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>HyCheck Source: types/boolean.js</title>
+	<title>HyCheck Source: types/locale/index.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,7 +72,7 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: types/boolean.js</h1>
+		<h1 class="page-title">Source: types/locale/index.js</h1>
     
 <section>
     <article>
@@ -80,26 +80,24 @@
             class="sunlight-highlight-javascript linenums">/**
  * @module
  */
-import Random from 'random-js';
-import {fromGenMaker} from '../arbitrary';
+import {elements} from '../../combinators';
+import avaliableLocaleIds from './avaliableLocaleids';
 
 /**
- * Boolean Arbitrary
+ * Avaliable Locale Ids in Unicode Common Locale Data Repository.
  *
- * produce true and false with equal probability.
- *
- * @type {Arbitrary}
+ * @type {Arbitary}
  *
  * @example
- * // returns true
- * hc.bool.generate()
- *
- * @example
- * // Produce a boolean with the specified chance causing it to be true.
- * let chance = 10;
- * hc.bool.choose(chance).generate();
+ * // returns zh-Hant-TW
+ * hc.locale.localeids.generate(); 
  */
-export const bool = fromGenMaker(Random.bool).name('Boolean');
+const localeId = elements(avaliableLocaleIds).name('Locale Id');
+
+export default {
+  avaliableLocaleIds,
+  localeId
+};
 </pre>
     </article>
 </section>

@@ -3,19 +3,59 @@
  */
 import {object, oneOf, constant} from '../../combinators';
 import {fromDefinition} from '../../utils';
-
-import definitions from './definitions';
 import {date} from '../datetime.js';
 
-const firstName = fromDefinition(definitions, 'firstName').name('First Name');
-const lastName = fromDefinition(definitions, 'lastName').name('Last Name');
-const gender = fromDefinition(definitions, 'gender').name('Gender');
+import definitions from './definitions';
 
+/**
+ * Arbitrary to generate the first name of a person.
+ *
+ * @type {Arbitrary}
+ * @example
+ * // returns Jack.
+ * hc.person.firstName.generate();
+ */
+const firstName = fromDefinition(definitions, 'firstName').name('First Name');
+
+/**
+ * Arbitrary to generate the last name of a person.
+ *
+ * @type {Arbitrary}
+ * @example
+ * // returns Hand.
+ * hc.person.lastName.generate();
+ */
+const lastName = fromDefinition(definitions, 'lastName').name('Last Name');
+
+/**
+ * Aribitrary to generate the name of a person.
+ *
+ * @type {Arbitrary}
+ * @example
+ * hc.person.name.generate();
+ */
 const name = object({
   firstName: firstName,
   lastName: lastName
 }).name('Name');
 
+/**
+ * Arbitrary to generate the gender of a person.
+ *
+ * @type {Arbitrary}
+ * @example
+ * hc.person.gender.generate;
+ */
+const gender = fromDefinition(definitions, 'gender').name('Gender');
+
+/**
+ * Arbitrary to generate a person (alive, dead, undead, or fictional).
+ *
+ * @type {Arbitrary}
+ * @example
+ * // generate a object include person name, gender and birthday.
+ * hc.person.generate();
+ */
 const person = object({
   name: name,
   gender: gender,
