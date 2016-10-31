@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>HyCheck Source: constants.js</title>
+	<title>HyCheck Source: types/internet.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,7 +72,7 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: constants.js</h1>
+		<h1 class="page-title">Source: types/internet.js</h1>
     
 <section>
     <article>
@@ -80,26 +80,123 @@
             class="sunlight-highlight-javascript linenums">/**
  * @module
  */
-import Random from 'random-js';
+import {fromGenMaker} from '../arbitrary';
+import person from './person';
+import {nat} from './number';
+import {oneOf,
+        pair,
+        nearray,
+        elements,
+        constant} from '../combinators';
 
-const mt19937 = Random.engines.mt19937().autoSeed();
+const userNameSep = elements(['.', '_', '']);
+const userNameSuffix = oneOf([nat.choose(1, 99), constant('')]);
 
 /**
- * Options specifies arguments to the HyCheck driver.
+ * Arbitrary to produce internet user name.
  *
- * @typedef {Object} CheckOptions
- * @property {number} tests The max number of tests.
- * @property {random-js.engine} engine Any engine of Random-Js.
- * @property {number} seed 32 bits integer.
+ * @type {Arbitrary}
+ * @example
+ *
+ * // returns jack or jack.hand or jack.hand34.
+ * hc.internet.userName.generate();
+ *
  */
+const userName = fromGenMaker(function(firstName, lastName, sepArb) {
+  return function(engine) {
+    let a = firstName.makeGen()(engine);
+    let b = lastName.makeGen()(engine);
+    let sep = sepArb.makeGen()(engine);
+    let suffix = userNameSuffix.makeGen()(engine);
+    let n = nat.choose(0, 1).makeGen()(engine);
+    let result = n === 0 ? `${a}` : `${a}${sep}${b}${suffix}`;
+    return result;
+  };
+}, [person.firstName, person.lastName, userNameSep]).name('Internet User Name');
 
-/** The default check options.
- * @type {CheckOptions}
+const freeEmailProvider = elements([
+  'gmail.com',
+  'yahoo.com',
+  'hotmail.com'
+]).name('Free Email Provider');
+
+/**
+ * Arbitary to produce an email.
+ *
+ * @type {Arbitary}
+ * @example
+ * // returns jack.hand@gmail.com
+ * hc.internet.email.generate();
  */
-export const stdOpts = {
-  tests : 100,
-  engine : mt19937,
-  seed: mt19937()
+const email = fromGenMaker(function(userName, provider) {
+  return function(engine) {
+    let a = userName.makeGen()(engine);
+    let b = provider.makeGen()(engine);
+    return `${a}@${b}`;
+  };
+}, [userName, freeEmailProvider]).name('Email');
+
+const proto = elements(['http', 'https']).name('Internet Protocol');
+
+const domainWord = person.firstName.transform((name) => {
+  return name.replace(/([\\~#&amp;*{}/:&lt;>?|\"'])/ig, '').toLowerCase();
+}).name('Domain Word');
+
+const domainSuffix = elements([
+  'com',
+  'org',
+  'io',
+  'info',
+  'today'
+]).name('Domain Suffix');
+
+const domainName = pair(domainWord, domainSuffix)
+        .transform((arr) => `${arr[0]}.${arr[1]}`).name('Domain Name');
+
+/**
+ * Arbitrary to produce an url.
+ *
+ * @type {Arbitrary}
+ */
+const url = pair(proto, domainName).
+        transform((arr) => `${arr[0]}://${arr[1]}`).name('URL');
+
+const ipRange = nat.choose(0, 255).name('IP Range');
+
+/**
+ * Arbitrary to produce an IP v4 address.
+ *
+ * @type {Arbitrary}
+ */
+const ip = nearray(ipRange).choose(4, 4)
+        .transform(arr => arr.join('.'))
+        .name('IP v4 Address');
+
+const ipV6Range = nat.choose(0, 15)
+        .transform(n => n.toString(16))
+        .name('IPV6 Range');
+
+const ipv6Block = nearray(ipV6Range)
+        .choose(4, 4)
+        .transform(arr => arr.join(''))
+        .name('IPV6 Block');
+
+/**
+ * Arbitrary to produce an IP v6 address.
+ *
+ * @type {Arbitrary}
+ */
+const ipv6 = nearray(ipv6Block)
+        .choose(8, 8)
+        .transform(arr => arr.join(':'))
+        .name('IP v6 Address');
+
+export default {
+  userName,
+  email,
+  url,
+  ip,
+  ipv6
 };
 </pre>
     </article>

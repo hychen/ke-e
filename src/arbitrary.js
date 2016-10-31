@@ -161,7 +161,7 @@ class Arbitrary {
   makeGen() {
     return (engine, locale) => {
       return _.flow(this._transforms)(
-        this._gen.apply(this, this._genOpts)(engine, locale));
+        this._gen.apply(this, this._genOpts)(engine, locale || 'en'));
     };
   }
   /**

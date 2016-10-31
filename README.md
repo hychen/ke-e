@@ -151,6 +151,13 @@ some of difinitions of arbitraries took from
  - lastName - produce the last name of a person.
  - gender - produce the gender of a person.
 
+### Internet
+
+- internet
+ - userName - produce a internet username.
+ - email - produce an email.
+ - url - produce an url.
+
 ## Installation
 
 ### Node.js
