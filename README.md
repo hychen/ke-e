@@ -5,7 +5,10 @@
 # HyCheck
 
 HyCheck is a property-based testing library, inspired by [QuickCheck](https://hackage.haskell.org/package/QuickCheck),
-[Hypothesis](https://github.com/HypothesisWorks/hypothesis-python), [JSVerify](https://github.com/jsverify/jsverify).
+[Hypothesis](https://github.com/HypothesisWorks/hypothesis-python), [JSVerify](https://github.com/jsverify/jsverify) and
+[faker.js](https://github.com/marak/Faker.js/).
+
+It is also available to generate fake data for many purpose like faker.js.
 
 ## Features
 
@@ -190,6 +193,10 @@ describe('Integer', () => {
 });
 </script>
 ```
+
+## Get Involved
+
+- source code : [github.com/hychen/hycheck](https://github.com/hychen/hycheck).
 
 ## License
 
