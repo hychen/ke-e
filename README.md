@@ -134,8 +134,9 @@ some of difinitions of arbitraries took from
 - suchThat — produce a value that satisfies a predicate.
 - oneOf — randomly uses one of the given generators. 
 - pair — produce a pair of two arbitraries.
-- array — produce a array.
+- array — produce an array.
 - nearray — produce a non-empty array.
+- sequence — produce an array of given arbitraries in order.
 - object — produce an object.
 
 ### Locale

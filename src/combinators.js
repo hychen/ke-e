@@ -3,7 +3,7 @@
  */
 import _ from 'lodash';
 import Random from 'random-js';
-import {Arbitrary} from './arbitrary';
+import {fromGenMaker, Arbitrary} from './arbitrary';
 
 /**
  * Generates a contant value.
@@ -144,6 +144,23 @@ export function array(arb) {
 export function nearray(arb) {
   return array(arb).choose(1, 30).name('Non-Empty Array');
 };
+
+/**
+ * Generate a orderd array.
+ *
+ * @param {Arbitrary...}
+ * @return {Arbitrary}
+ * @example
+ * // returns [1, true, 143.321]
+ * hc.sequence(hc.int, hc.bool, hc.number).generate();
+ */
+export function sequence(...arbs) {
+  return fromGenMaker(function(pool) {
+    return function(engine, locale) {
+      return pool.map(arb => arb.makeGen()(engine, locale));
+    };
+  }, [arbs]).name('Sequence');
+}
 
 /**
  * Generate a object.

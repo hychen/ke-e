@@ -21,6 +21,17 @@ describe('Combinators', () => {
       });
   });
 
+  describe('sequence', () => {
+
+    it('produce an array of given arbitraries in order.', () => {
+      let arb = hc.sequence(hc.int, hc.number, hc.string);
+      let a = arb.generate();
+      let result = _.isInteger(a[0]) && _.isNumber(a[1]) && _.isString(a[2]);
+      expect(result).eq(true);
+    });
+
+  });
+
   describe('suchThat', () => {
 
     jsc.property(
