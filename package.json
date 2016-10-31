@@ -1,6 +1,6 @@
 {
   "name": "hycheck",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "a property-based testing framwork.",
   "repository": {
     "type": "git",
