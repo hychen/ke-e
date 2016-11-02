@@ -11,7 +11,7 @@ import avaliableLocaleIds from './avaliableLocaleids';
  *
  * @example
  * // returns zh-Hant-TW
- * hc.locale.localeids.generate(); 
+ * ke.locale.localeids.generate(); 
  */
 const localeId = elements(avaliableLocaleIds).name('Locale Id');
 

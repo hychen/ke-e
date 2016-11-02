@@ -11,7 +11,7 @@ import {fromGenMaker} from '../arbitrary';
  *
  * @example
  * // Produce an integer within inclusive range [-5, 5].
- * hc.int.choose(-5, 5).generate();
+ * ke.int.choose(-5, 5).generate();
  */
 export const int = fromGenMaker(Random.integer,
                                 [-Number.MAX_SAFE_INTEGER,

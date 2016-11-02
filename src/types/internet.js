@@ -20,7 +20,7 @@ const userNameSuffix = oneOf([nat.choose(1, 99), constant('')]);
  * @example
  *
  * // returns jack or jack.hand or jack.hand34.
- * hc.internet.userName.generate();
+ * ke.internet.userName.generate();
  *
  */
 const userName = fromGenMaker(function(firstName, lastName, sepArb) {
@@ -47,7 +47,7 @@ const freeEmailProvider = elements([
  * @type {Arbitary}
  * @example
  * // returns jack.hand@gmail.com
- * hc.internet.email.generate();
+ * ke.internet.email.generate();
  */
 const email = fromGenMaker(function(userName, provider) {
   return function(engine) {

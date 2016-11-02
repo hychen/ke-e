@@ -2,11 +2,11 @@
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("hycheck", [], factory);
+		define("ke", [], factory);
 	else if(typeof exports === 'object')
-		exports["hycheck"] = factory();
+		exports["ke"] = factory();
 	else
-		root["hycheck"] = factory();
+		root["ke"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -19138,7 +19138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var mt19937 = _randomJs2.default.engines.mt19937().autoSeed();
 
 	/**
-	 * Options specifies arguments to the HyCheck driver.
+	 * Options specifies arguments to the checker.
 	 *
 	 * @typedef {Object} CheckOptions
 	 * @property {number} tests The max number of tests.
@@ -19173,6 +19173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.pair = pair;
 	exports.array = array;
 	exports.nearray = nearray;
+	exports.sequence = sequence;
 	exports.object = object;
 	exports.elements = elements;
 
@@ -19196,7 +19197,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // returns 1.
-	 * hc.constant(1).generate();
+	 * ke.constant(1).generate();
 	 */
 	function constant(value) {
 	  return new _arbitrary.Arbitrary({
@@ -19218,7 +19219,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // returns even number.
-	 * hc.suchThat(hc.int, (n) => n / 2 === 0).generate();
+	 * ke.suchThat(ke.int, (n) => n / 2 === 0).generate();
 	 */
 	/**
 	 * @module
@@ -19258,7 +19259,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // Produces a boolean or an integer.
-	 * hc.oneOf(hc.bool, hc.int).generate();
+	 * ke.oneOf(ke.bool, ke.int).generate();
 	 */
 	function oneOf(arbs) {
 	  return new _arbitrary.Arbitrary({
@@ -19281,11 +19282,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {Arbitrary}
 	 *
 	 * @example
-	 * hc.pair(hc.int, hc.int).generate();
+	 * ke.pair(ke.int, ke.int).generate();
 	 *
 	 * @example
 	 * // choose different arbitraries.
-	 * hc.pair(hc.int, hc.int).choose(hc.bool, hc.bool).generate();
+	 * ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();
 	 */
 	function pair(arb1, arb2) {
 	  return new _arbitrary.Arbitrary({
@@ -19307,7 +19308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // Produces an array of integer that the length between 1 and 3.
-	 * hc.array(hc.int).choose(1, 3).generate();
+	 * ke.array(ke.int).choose(1, 3).generate();
 	 */
 	function array(arb) {
 	  return new _arbitrary.Arbitrary({
@@ -19335,6 +19336,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	/**
+	 * Generate a orderd array.
+	 *
+	 * @param {Arbitrary...}
+	 * @return {Arbitrary}
+	 * @example
+	 * // returns [1, true, 143.321]
+	 * ke.sequence(ke.int, ke.bool, ke.number).generate();
+	 */
+	function sequence() {
+	  for (var _len = arguments.length, arbs = Array(_len), _key = 0; _key < _len; _key++) {
+	    arbs[_key] = arguments[_key];
+	  }
+
+	  return (0, _arbitrary.fromGenMaker)(function (pool) {
+	    return function (engine, locale) {
+	      return pool.map(function (arb) {
+	        return arb.makeGen()(engine, locale);
+	      });
+	    };
+	  }, [arbs]).name('Sequence');
+	}
+
+	/**
 	 * Generate a object.
 	 *
 	 * Takes an object as a template and will go through the enumerable own
@@ -19345,7 +19369,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // return {k: 1234};
-	 * hc.object({k: hc.int}).generate();
+	 * ke.object({k: ke.int}).generate();
 	 */
 	function object(spec) {
 	  return new _arbitrary.Arbitrary({
@@ -19371,7 +19395,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // returns 1 or 'a';
-	 * hc.elements([1, 'a']).generates();
+	 * ke.elements([1, 'a']).generates();
 	 */
 	function elements(pool) {
 	  return new _arbitrary.Arbitrary({
@@ -19558,12 +19582,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // returns true
-	 * hc.bool.generate()
+	 * ke.bool.generate()
 	 *
 	 * @example
 	 * // Produce a boolean with the specified chance causing it to be true.
 	 * let chance = 10;
-	 * hc.bool.choose(chance).generate();
+	 * ke.bool.choose(chance).generate();
 	 */
 	/**
 	 * @module
@@ -19599,7 +19623,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @type {Arbitrary}
 	 *
 	 * @example
-	 * hc.falsy.generate();
+	 * ke.falsy.generate();
 	 */
 	/**
 	 * @module
@@ -19632,7 +19656,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // Produce an integer within inclusive range [-5, 5].
-	 * hc.int.choose(-5, 5).generate();
+	 * ke.int.choose(-5, 5).generate();
 	 */
 	/**
 	 * @module
@@ -19725,12 +19749,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example 
 	 * // generate a unicode character.
-	 * hc.char.generate();
+	 * ke.char.generate();
 	 *
 	 * @example
 	 * // change character ranges. here we use ASCII range.
-	 * // and yes, this is how hc.asciichar be made.
-	 * hc.char.choose(0x0020, 0x007F).generate();
+	 * // and yes, this is how ke.asciichar be made.
+	 * ke.char.choose(0x0020, 0x007F).generate();
 	 */
 	var char = exports.char = _char.choose(UNICODE_RANGES_MIN, UNICODE_RANGES_MAX).name('Char');
 
@@ -19742,11 +19766,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // generate a unicode string. the length between 0 and 30 by default.
-	 * hc.string.generate();
+	 * ke.string.generate();
 	 *
 	 * @example
 	 * // you can set minimun and maximun length.
-	 * hc.string.choose(1, 5).generate();
+	 * ke.string.choose(1, 5).generate();
 	 */
 	var string = exports.string = stringOf(char).name('String');
 
@@ -19764,7 +19788,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // generate a ascii character.
-	 * hc.asciichar.generate();
+	 * ke.asciichar.generate();
 	 */
 	var asciichar = exports.asciichar = char.choose(ASCII_RANGE_MIN, ASCII_RANGE_MAX).name('ASCII Char');
 
@@ -19775,11 +19799,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // generate a unicode string. the length between 0 and 30 by default.
-	 * hc.asciistring.generate();
+	 * ke.asciistring.generate();
 	 *
 	 * @example
 	 * // you can set minimun and maximun length.
-	 * hc.asciistring.choose(1, 5).generate();
+	 * ke.asciistring.choose(1, 5).generate();
 	 */
 	var asciistring = exports.asciistring = stringOf(asciichar).name('ASCII String');
 
@@ -19804,16 +19828,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {Arbitrary} a string arbitrary.
 	 *
 	 * @example
-	 * // this is how we make a hc.`string`.
-	 * hc.stringOf(hc.char).generate();
+	 * // this is how we make a ke.`string`.
+	 * ke.stringOf(ke.char).generate();
 	 *
 	 * @example
 	 * // generate a string that the character is 'a', 'b' or 'c'.
-	 * hc.stringOf(hc.elements(['a','b', 'c'])).generate();
+	 * ke.stringOf(ke.elements(['a','b', 'c'])).generate();
 	 *
 	 * @example
 	 * // yes, minimun and maximun length still can be changed.
-	 * hc.stringOf(hc.elements(['a','b', 'c'])).choose(0, 3).generate();
+	 * ke.stringOf(ke.elements(['a','b', 'c'])).choose(0, 3).generate();
 	 */
 	function stringOf(charArb) {
 	  return (0, _combinators.array)(charArb).transform(function (chars) {
@@ -19884,7 +19908,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 *
-	 * let f = hc.func(hc.int).generate();
+	 * let f = ke.func(ke.int).generate();
 	 * f() // return an integer.
 	 */
 	var func = exports.func = new _arbitrary.Arbitrary({
@@ -19928,11 +19952,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // generate a random date.
-	 * hc.date.generate();
+	 * ke.date.generate();
 	 *
 	 * @example
 	 * // generate a random date between 2000/01/01 and 2016/01/01.
-	 * let newDate = hc.date.choose(new Date(2000, 01, 01), new Date(2016, 01,01));
+	 * let newDate = ke.date.choose(new Date(2000, 01, 01), new Date(2016, 01,01));
 	 * newDate.generate();
 	 */
 	/**
@@ -19968,7 +19992,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @type {Arbitrary}
 	 * @example
 	 * // returns Jack.
-	 * hc.person.firstName.generate();
+	 * ke.person.firstName.generate();
 	 */
 	/**
 	 * @module
@@ -19981,7 +20005,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @type {Arbitrary}
 	 * @example
 	 * // returns Hand.
-	 * hc.person.lastName.generate();
+	 * ke.person.lastName.generate();
 	 */
 	var lastName = (0, _utils.fromDefinition)(_definitions2.default, 'lastName').name('Last Name');
 
@@ -19990,7 +20014,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @type {Arbitrary}
 	 * @example
-	 * hc.person.name.generate();
+	 * ke.person.name.generate();
 	 */
 	var name = (0, _combinators.object)({
 	  firstName: firstName,
@@ -20002,7 +20026,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @type {Arbitrary}
 	 * @example
-	 * hc.person.gender.generate;
+	 * ke.person.gender.generate;
 	 */
 	var gender = (0, _utils.fromDefinition)(_definitions2.default, 'gender').name('Gender');
 
@@ -20012,7 +20036,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @type {Arbitrary}
 	 * @example
 	 * // generate a object include person name, gender and birthday.
-	 * hc.person.generate();
+	 * ke.person.generate();
 	 */
 	var person = (0, _combinators.object)({
 	  name: name,
@@ -20200,7 +20224,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * @example
 	 * // returns zh-Hant-TW
-	 * hc.locale.localeids.generate(); 
+	 * ke.locale.localeids.generate(); 
 	 */
 	/**
 	 * @module
@@ -20247,7 +20271,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @example
 	 *
 	 * // returns jack or jack.hand or jack.hand34.
-	 * hc.internet.userName.generate();
+	 * ke.internet.userName.generate();
 	 *
 	 */
 	var userName = (0, _arbitrary.fromGenMaker)(function (firstName, lastName, sepArb) {
@@ -20270,7 +20294,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @type {Arbitary}
 	 * @example
 	 * // returns jack.hand@gmail.com
-	 * hc.internet.email.generate();
+	 * ke.internet.email.generate();
 	 */
 	var email = (0, _arbitrary.fromGenMaker)(function (userName, provider) {
 	  return function (engine) {
@@ -20408,7 +20432,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {Array} arbs arbitraries
 	   * @return {ForAll}
 	   * @example
-	   * new ForAll([hc.int, hc.int])
+	   * new ForAll([ke.int, ke.int])
 	   */
 	  function ForAll(arbs) {
 	    _classCallCheck(this, ForAll);
@@ -20422,7 +20446,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param {?random-js.Engine} random engine.
 	   * @return {*}
 	   * @example
-	   * new ForAll([hc.int]).eval(x => x + 1);
+	   * new ForAll([ke.int]).eval(x => x + 1);
 	   */
 
 
@@ -20534,7 +20558,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     *
 	     * @example
 	     *
-	     * new Property('identity', n => n === n).check(hc.forall(hc.int));
+	     * new Property('identity', n => n === n).check(ke.forall(ke.int));
 	     */
 
 	  }, {
@@ -20600,12 +20624,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * A helper function to run a proposition test in mocha.
 	 *
 	 * @example
-	 * hc.hold(
+	 * ke.hold(
 	 *   'communicative' // property name.
 	 *   (x, y) => x + y === y + x // predicate.
 	 * )
 	 * .over(1, 2) // especially case.
-	 * .over(hc.int, hc.int) // universal case.
+	 * .over(ke.int, ke.int) // universal case.
 	 *
 	 */
 	function hold(name, predicate) {

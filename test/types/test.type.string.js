@@ -1,14 +1,14 @@
 describe('Arbitrary Char', () => {
 
   it('name is Char', () => {
-    expect(hc.char.name()).eq('Char');
+    expect(ke.char.name()).eq('Char');
   });
 
   jsc.property(
     'generate string of length 1.',
     'nat',
     () => {
-      let c = hc.char.generate();
+      let c = ke.char.generate();
       return _.isString(c) && c.length === 1;
     });
 
@@ -18,7 +18,7 @@ describe('Arbitrary Char', () => {
     (min, max) => {
       let s = min < max ? min : max;
       let e = min > max ? max : min;
-      let c = hc.char.choose(s, e).generate();
+      let c = ke.char.choose(s, e).generate();
       let charCode = c.charCodeAt(0);
       return _.isString(c) &&
         c.length === 1 &&
@@ -31,14 +31,14 @@ describe('Arbitrary Char', () => {
 describe('Arbitrary String', () => {
 
   it('name is String ', () => {
-    expect(hc.string.name()).eq('String');
+    expect(ke.string.name()).eq('String');
   });
 
   jsc.property(
     'generate strings.',
     'nat',
     () => {
-      return _.isString(hc.string.generate());
+      return _.isString(ke.string.generate());
     });
 
   jsc.property(
@@ -47,7 +47,7 @@ describe('Arbitrary String', () => {
     (min, max) => {
       let s = min < max ? min : max;
       let e = min > max ? max : min;
-      let str = hc.string.choose(s, e).generate();
+      let str = ke.string.choose(s, e).generate();
       return _.isString(str) && s <= str.length && str.length <= e;
     });
 
@@ -56,14 +56,14 @@ describe('Arbitrary String', () => {
 describe('Arbitrary Non-Empty String', () => {
 
   it('name is Non-Empty String ', () => {
-    expect(hc.nestring.name()).eq('Non-Empty String');
+    expect(ke.nestring.name()).eq('Non-Empty String');
   });
 
   jsc.property(
     'does not return empty strings.',
     'nat',
     () => {
-      return '' !== hc.nestring.generate();
+      return '' !== ke.nestring.generate();
     });
 
 });
@@ -74,7 +74,7 @@ describe('Arbitrary ASCII Char', () => {
     'generate with only ascii characters.',
     'nat',
     () => {
-      let c= hc.asciichar.generate();
+      let c= ke.asciichar.generate();
       let charCode = c.charCodeAt(0);
       return _.isString(c) &&
         c.length === 1 &&
@@ -87,14 +87,14 @@ describe('Arbitrary ASCII Char', () => {
 describe('Arbitrary ASCII String', () => {
 
   it('name is ASCII String ', () => {
-    expect(hc.asciistring.name()).eq('ASCII String');
+    expect(ke.asciistring.name()).eq('ASCII String');
   });
 
   jsc.property(
     'generate ascii strings.',
     'nat',
     () => {
-      let str = hc.asciistring.generate();
+      let str = ke.asciistring.generate();
       return str
         .split('')
         .map(c => c.charCodeAt(0))
@@ -107,7 +107,7 @@ describe('Arbitrary ASCII String', () => {
     (min, max) => {
       let s = min < max ? min : max;
       let e = min > max ? max : min;
-      let str = hc.asciistring.choose(s, e).generate();
+      let str = ke.asciistring.choose(s, e).generate();
       return _.isString(str) && s <= str.length && str.length <= e;
     });
 
@@ -116,14 +116,14 @@ describe('Arbitrary ASCII String', () => {
 describe('Arbitrary Non-Empty ASCII String', () => {
 
   it('name is Non-Empty ASCII String.', () => {
-    expect(hc.neasciistring.name()).eq('Non-Empty ASCII String');
+    expect(ke.neasciistring.name()).eq('Non-Empty ASCII String');
   });
 
   jsc.property(
     'does not return empty ascii strings.',
     'nat',
     () => {
-      return '' !== hc.neasciistring.generate();
+      return '' !== ke.neasciistring.generate();
     });
 
 });

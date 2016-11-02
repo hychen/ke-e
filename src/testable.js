@@ -41,7 +41,7 @@ class ForAll {
    * @param {Array} arbs arbitraries
    * @return {ForAll}
    * @example
-   * new ForAll([hc.int, hc.int])
+   * new ForAll([ke.int, ke.int])
    */
   constructor(arbs) {
     this.arbs = arbs;
@@ -53,7 +53,7 @@ class ForAll {
    * @param {?random-js.Engine} random engine.
    * @return {*}
    * @example
-   * new ForAll([hc.int]).eval(x => x + 1);
+   * new ForAll([ke.int]).eval(x => x + 1);
    */
   eval(f, engine) {
     function genValue(arb) {
@@ -139,7 +139,7 @@ class Property {
    *
    * @example
    *
-   * new Property('identity', n => n === n).check(hc.forall(hc.int));
+   * new Property('identity', n => n === n).check(ke.forall(ke.int));
    */
   check(quantifiler, opts = stdOpts) {
     assert(opts.tests > 0, 'tests must more than 0.');
@@ -194,12 +194,12 @@ function forall(...arbs) {
  * A helper function to run a proposition test in mocha.
  *
  * @example
- * hc.hold(
+ * ke.hold(
  *   'communicative' // property name.
  *   (x, y) => x + y === y + x // predicate.
  * )
  * .over(1, 2) // especially case.
- * .over(hc.int, hc.int) // universal case.
+ * .over(ke.int, ke.int) // universal case.
  *
  */
 function hold(name, predicate) {

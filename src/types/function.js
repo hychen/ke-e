@@ -12,7 +12,7 @@ import {any} from './any';
  *
  * @example
  *
- * let f = hc.func(hc.int).generate();
+ * let f = ke.func(ke.int).generate();
  * f() // return an integer.
  */
 export const func = new Arbitrary({

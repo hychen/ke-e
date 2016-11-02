@@ -1,17 +1,17 @@
 {
-  "name": "hycheck",
+  "name": "ke-e",
   "version": "0.2.1",
   "description": "a property-based testing framwork.",
   "repository": {
     "type": "git",
-    "url": "git://github.com/hychen/hycheck.git"
+    "url": "git://github.com/hychen/ke-e.git"
   },
   "directories": {
     "lib": "./lib"
   },
   "main": "lib/index.js",
   "bugs": {
-    "url": "https://github.com/hychen/hycheck/issues"
+    "url": "https://github.com/hychen/ke-e/issues"
   },
   "scripts": {
     "prepublish": "npm run clean && npm run build",

@@ -6,7 +6,7 @@ describe('Combinators', () => {
       'should always return given value.',
       'json',
       (v) => {
-        return v === hc.constant(v).generate();
+        return v === ke.constant(v).generate();
       });
 
   });
@@ -16,7 +16,7 @@ describe('Combinators', () => {
       'picks one of argument array.',
       'nearray',
       (want) => {
-        let x = hc.elements(want).generate();
+        let x = ke.elements(want).generate();
         return _.includes(want, x);
       });
   });
@@ -24,7 +24,7 @@ describe('Combinators', () => {
   describe('sequence', () => {
 
     it('produce an array of given arbitraries in order.', () => {
-      let arb = hc.sequence(hc.int, hc.number, hc.string);
+      let arb = ke.sequence(ke.int, ke.number, ke.string);
       let a = arb.generate();
       let result = _.isInteger(a[0]) && _.isNumber(a[1]) && _.isString(a[2]);
       expect(result).eq(true);
@@ -38,7 +38,7 @@ describe('Combinators', () => {
       'generate a value passs predicates',
       'nat',
       () => {
-        let x = hc.suchThat(hc.bool, (b) => b === true).generate();
+        let x = ke.suchThat(ke.bool, (b) => b === true).generate();
         return x === true;
       }
     );
@@ -48,7 +48,7 @@ describe('Combinators', () => {
       'nat',
       () => {
         try {
-          hc.suchThat(hc.bool, (b) => false ).generate();
+          ke.suchThat(ke.bool, (b) => false ).generate();
         }
         catch (e) {
           return true;
@@ -63,7 +63,7 @@ describe('Combinators', () => {
       'generates a value by one of given types',
       'nat',
       () => {
-        let arb = hc.oneOf([hc.bool, hc.int, hc.number]);
+        let arb = ke.oneOf([ke.bool, ke.int, ke.number]);
         let x = arb.generate();
         return _.isBoolean(x) || _.isInteger(x) || _.isNumber(x);
       });
@@ -74,7 +74,7 @@ describe('Combinators', () => {
     jsc.property(
       'generate an array of length 2.',
       () => {
-        let xs = hc.pair(hc.int, hc.bool).generate();
+        let xs = ke.pair(ke.int, ke.bool).generate();
         return _.isArray(xs) &&
           xs.length === 2 &&
           _.isInteger(xs[0]) &&
@@ -84,8 +84,8 @@ describe('Combinators', () => {
     jsc.property(
       'with different arbitraries.',
       () => {
-        let xs = hc.pair(hc.int, hc.bool)
-              .choose(hc.number, hc.number).generate();
+        let xs = ke.pair(ke.int, ke.bool)
+              .choose(ke.number, ke.number).generate();
         return _.isArray(xs) &&
           xs.length === 2 &&
           _.isNumber(xs[0]) &&
@@ -101,7 +101,7 @@ describe('Combinators', () => {
       'nat',
       'nat',
       (start, delta) => {
-        let arb = hc.array(hc.int);
+        let arb = ke.array(ke.int);
         let min = 1 + start;
         let max = min + delta;
         let x = arb.choose(min, max).generate();
@@ -119,7 +119,7 @@ describe('Combinators', () => {
       'always return non-empty array.',
       'nat',
       () => {
-        return hc.nearray(hc.int).generate().length > 0;
+        return ke.nearray(ke.int).generate().length > 0;
       });
 
   });
@@ -127,7 +127,7 @@ describe('Combinators', () => {
   describe('object', () => {
 
     it('with spec object.', () => {
-      let o1 = hc.object({key1: hc.int, key2: hc.bool}).generate();
+      let o1 = ke.object({key1: ke.int, key2: ke.bool}).generate();
       return _.isObject(o1) &&
         _.isInteger(o1.keys1) &&
         _.isBoolean(o1.key2);

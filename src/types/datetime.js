@@ -11,11 +11,11 @@ import {fromGenMaker} from '../arbitrary';
  *
  * @example
  * // generate a random date.
- * hc.date.generate();
+ * ke.date.generate();
  *
  * @example
  * // generate a random date between 2000/01/01 and 2016/01/01.
- * let newDate = hc.date.choose(new Date(2000, 01, 01), new Date(2016, 01,01));
+ * let newDate = ke.date.choose(new Date(2000, 01, 01), new Date(2016, 01,01));
  * newDate.generate();
  */
 export const date = fromGenMaker(

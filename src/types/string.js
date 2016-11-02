@@ -21,12 +21,12 @@ export const UNICODE_RANGES_MAX = 0xE007F;
  *
  * @example 
  * // generate a unicode character.
- * hc.char.generate();
+ * ke.char.generate();
  *
  * @example
  * // change character ranges. here we use ASCII range.
- * // and yes, this is how hc.asciichar be made.
- * hc.char.choose(0x0020, 0x007F).generate();
+ * // and yes, this is how ke.asciichar be made.
+ * ke.char.choose(0x0020, 0x007F).generate();
  */
 export const char = _char
   .choose(UNICODE_RANGES_MIN, UNICODE_RANGES_MAX)
@@ -40,11 +40,11 @@ export const char = _char
  *
  * @example
  * // generate a unicode string. the length between 0 and 30 by default.
- * hc.string.generate();
+ * ke.string.generate();
  *
  * @example
  * // you can set minimun and maximun length.
- * hc.string.choose(1, 5).generate();
+ * ke.string.choose(1, 5).generate();
  */
 export const string = stringOf(char).name('String');
 
@@ -62,7 +62,7 @@ export const nestring = nestringOf(char).name('Non-Empty String');
  *
  * @example
  * // generate a ascii character.
- * hc.asciichar.generate();
+ * ke.asciichar.generate();
  */
 export const asciichar = char
   .choose(ASCII_RANGE_MIN, ASCII_RANGE_MAX)
@@ -75,11 +75,11 @@ export const asciichar = char
  *
  * @example
  * // generate a unicode string. the length between 0 and 30 by default.
- * hc.asciistring.generate();
+ * ke.asciistring.generate();
  *
  * @example
  * // you can set minimun and maximun length.
- * hc.asciistring.choose(1, 5).generate();
+ * ke.asciistring.choose(1, 5).generate();
  */
 export const asciistring = stringOf(asciichar)
   .name('ASCII String');
@@ -106,16 +106,16 @@ export const uuid4 = fromGenMaker(Random.uuid4).name('UUID version 4');
  * @return {Arbitrary} a string arbitrary.
  *
  * @example
- * // this is how we make a hc.`string`.
- * hc.stringOf(hc.char).generate();
+ * // this is how we make a ke.`string`.
+ * ke.stringOf(ke.char).generate();
  *
  * @example
  * // generate a string that the character is 'a', 'b' or 'c'.
- * hc.stringOf(hc.elements(['a','b', 'c'])).generate();
+ * ke.stringOf(ke.elements(['a','b', 'c'])).generate();
  *
  * @example
  * // yes, minimun and maximun length still can be changed.
- * hc.stringOf(hc.elements(['a','b', 'c'])).choose(0, 3).generate();
+ * ke.stringOf(ke.elements(['a','b', 'c'])).choose(0, 3).generate();
  */
 export function stringOf(charArb) {
   return array(charArb).transform(chars => chars.join('')).name('stringOf');

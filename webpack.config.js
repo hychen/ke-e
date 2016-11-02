@@ -5,8 +5,8 @@ module.exports = {
   entry: './src/index.js',
   output: {
     path: './dist',
-    filename: 'hycheck.js',
-    library: 'hycheck',
+    filename: 'ke-e.js',
+    library: 'ke',
     libraryTarget: 'umd',
     umdNamedDefine: true
   },
@@ -15,7 +15,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: "babel-loader"
+        loader: 'babel-loader'
       }
     ]
   }

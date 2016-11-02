@@ -13,7 +13,7 @@ import {fromGenMaker, Arbitrary} from './arbitrary';
  *
  * @example
  * // returns 1.
- * hc.constant(1).generate();
+ * ke.constant(1).generate();
  */
 export function constant(value) {
   return new Arbitrary({
@@ -31,7 +31,7 @@ export function constant(value) {
  *
  * @example
  * // returns even number.
- * hc.suchThat(hc.int, (n) => n / 2 === 0).generate();
+ * ke.suchThat(ke.int, (n) => n / 2 === 0).generate();
  */
 export function suchThat(arb, predicate) {
   let oriGen = arb.makeGen();
@@ -68,7 +68,7 @@ export function suchThat(arb, predicate) {
  *
  * @example
  * // Produces a boolean or an integer.
- * hc.oneOf(hc.bool, hc.int).generate();
+ * ke.oneOf(ke.bool, ke.int).generate();
  */
 export function oneOf(arbs) {
   return new Arbitrary({
@@ -91,11 +91,11 @@ export function oneOf(arbs) {
  * @return {Arbitrary}
  *
  * @example
- * hc.pair(hc.int, hc.int).generate();
+ * ke.pair(ke.int, ke.int).generate();
  *
  * @example
  * // choose different arbitraries.
- * hc.pair(hc.int, hc.int).choose(hc.bool, hc.bool).generate();
+ * ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();
  */
 export function pair(arb1, arb2) {
   return new Arbitrary({
@@ -118,7 +118,7 @@ export function pair(arb1, arb2) {
  *
  * @example
  * // Produces an array of integer that the length between 1 and 3.
- * hc.array(hc.int).choose(1, 3).generate();
+ * ke.array(ke.int).choose(1, 3).generate();
  */
 export function array(arb) {
   return new Arbitrary({
@@ -152,7 +152,7 @@ export function nearray(arb) {
  * @return {Arbitrary}
  * @example
  * // returns [1, true, 143.321]
- * hc.sequence(hc.int, hc.bool, hc.number).generate();
+ * ke.sequence(ke.int, ke.bool, ke.number).generate();
  */
 export function sequence(...arbs) {
   return fromGenMaker(function(pool) {
@@ -173,7 +173,7 @@ export function sequence(...arbs) {
  *
  * @example
  * // return {k: 1234};
- * hc.object({k: hc.int}).generate();
+ * ke.object({k: ke.int}).generate();
  */
 export function object(spec) {
   return new Arbitrary({
@@ -199,7 +199,7 @@ export function object(spec) {
  *
  * @example
  * // returns 1 or 'a';
- * hc.elements([1, 'a']).generates();
+ * ke.elements([1, 'a']).generates();
  */
 export function elements(pool) {
   return new Arbitrary({

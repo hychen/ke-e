@@ -13,11 +13,11 @@ import {fromGenMaker} from '../arbitrary';
  *
  * @example
  * // returns true
- * hc.bool.generate()
+ * ke.bool.generate()
  *
  * @example
  * // Produce a boolean with the specified chance causing it to be true.
  * let chance = 10;
- * hc.bool.choose(chance).generate();
+ * ke.bool.choose(chance).generate();
  */
 export const bool = fromGenMaker(Random.bool).name('Boolean');

@@ -26,6 +26,6 @@ export const FALSY_VALUES = [
  * @type {Arbitrary}
  *
  * @example
- * hc.falsy.generate();
+ * ke.falsy.generate();
  */
 export const falsy = elements(FALSY_VALUES).name('Falsy');

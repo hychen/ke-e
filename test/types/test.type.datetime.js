@@ -1,14 +1,14 @@
 describe('Arbitrary Date', () => {
 
   it('name is Date', () => {
-    expect(hc.date.name()).eq('Date');
+    expect(ke.date.name()).eq('Date');
   });
 
   jsc.property(
     'should return date.',
     'nat',
     () => {
-      let d = hc.date.generate();
+      let d = ke.date.generate();
       return _.isDate(d);
     });
 
@@ -17,7 +17,7 @@ describe('Arbitrary Date', () => {
     'datetime',
     'datetime',
     (d1, d2) => {
-      let d3 = hc.date.choose(d1, d2).generate();
+      let d3 = ke.date.choose(d1, d2).generate();
       let inRange = () => {
         let t1 = d1.getTime();
         let t2 = d2.getTime();

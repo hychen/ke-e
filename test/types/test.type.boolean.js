@@ -1,13 +1,13 @@
 describe('Arbitrary Boolean', () => {
 
   it('name is Boolean', () => {
-    expect(hc.bool.name()).eq('Boolean');
+    expect(ke.bool.name()).eq('Boolean');
   });
 
   jsc.property(
     'generate either true or false.',
     () => {
-      let x = hc.bool.generate();
+      let x = ke.bool.generate();
       return _.isBoolean(x);
     });
 

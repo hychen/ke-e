@@ -13,7 +13,7 @@ import definitions from './definitions';
  * @type {Arbitrary}
  * @example
  * // returns Jack.
- * hc.person.firstName.generate();
+ * ke.person.firstName.generate();
  */
 const firstName = fromDefinition(definitions, 'firstName').name('First Name');
 
@@ -23,7 +23,7 @@ const firstName = fromDefinition(definitions, 'firstName').name('First Name');
  * @type {Arbitrary}
  * @example
  * // returns Hand.
- * hc.person.lastName.generate();
+ * ke.person.lastName.generate();
  */
 const lastName = fromDefinition(definitions, 'lastName').name('Last Name');
 
@@ -32,7 +32,7 @@ const lastName = fromDefinition(definitions, 'lastName').name('Last Name');
  *
  * @type {Arbitrary}
  * @example
- * hc.person.name.generate();
+ * ke.person.name.generate();
  */
 const name = object({
   firstName: firstName,
@@ -44,7 +44,7 @@ const name = object({
  *
  * @type {Arbitrary}
  * @example
- * hc.person.gender.generate;
+ * ke.person.gender.generate;
  */
 const gender = fromDefinition(definitions, 'gender').name('Gender');
 
@@ -54,7 +54,7 @@ const gender = fromDefinition(definitions, 'gender').name('Gender');
  * @type {Arbitrary}
  * @example
  * // generate a object include person name, gender and birthday.
- * hc.person.generate();
+ * ke.person.generate();
  */
 const person = object({
   name: name,

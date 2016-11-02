@@ -6,7 +6,7 @@ import Random from 'random-js';
 const mt19937 = Random.engines.mt19937().autoSeed();
 
 /**
- * Options specifies arguments to the HyCheck driver.
+ * Options specifies arguments to the checker.
  *
  * @typedef {Object} CheckOptions
  * @property {number} tests The max number of tests.

@@ -12,22 +12,22 @@ describe('Locale', () =>{
   }, 'hi');
 
   it('pair', () => {
-    let a = hc.pair(arb, arb).generate();
+    let a = ke.pair(arb, arb).generate();
     expect(a).eql(['hi', 'hi']);
-    let b = hc.pair(arb, arb).locale('zh-Hant-TW').generate();
+    let b = ke.pair(arb, arb).locale('zh-Hant-TW').generate();
     expect(b).eql(['嗨', '嗨']);
   });
 
   it('nearray', () => {
-    let a = hc.nearray(arb, arb).generate();
+    let a = ke.nearray(arb, arb).generate();
     expect(a[0]).eq('hi');
-    let b = hc.array(arb, arb).locale('zh-Hant-TW').generate();
+    let b = ke.array(arb, arb).locale('zh-Hant-TW').generate();
     expect(b[0]).eq('嗨');
   });
 
   it('object', () => {
-    let a = hc.object({'hi': arb}).generate();
-    let b = hc.object({'hi': arb}).locale('zh-Hant-TW').generate();
+    let a = ke.object({'hi': arb}).generate();
+    let b = ke.object({'hi': arb}).locale('zh-Hant-TW').generate();
     expect(a.hi).eq('hi');
     expect(b.hi).eq('嗨');
   });
