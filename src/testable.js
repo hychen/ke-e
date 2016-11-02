@@ -150,8 +150,8 @@ class Property {
       totalTests: opts.tests,
       pass: false
     };
-    if (process.env.HCSeed) {
-      opts.seed = process.env.HCSeed;
+    if (process.env.KESEED) {
+      opts.seed = process.env.KESEED;
     }
     opts.engine.seed(opts.seed);
     for (let i = result.numTests; i <= opts.tests; i++) {
