@@ -2,13 +2,17 @@
 [![Coverage STatus](https://coveralls.io/repos/github/hychen/ke-e/badge.svg?branch=master)](https://coveralls.io/github/hychen/ke-e?branch=master)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://badges.mit-license.org/)
 
-# Ke-E
+# ké--ê
 
-Ke-E is a property-based testing library, inspired by [QuickCheck](https://hackage.haskell.org/package/QuickCheck),
+`ké--ê` is a property-based testing library, inspired by [QuickCheck](https://hackage.haskell.org/package/QuickCheck),
 [Hypothesis](https://github.com/HypothesisWorks/hypothesis-python), [JSVerify](https://github.com/jsverify/jsverify) and
 [faker.js](https://github.com/marak/Faker.js/).
 
 It is also available to generate fake data for many purpose like faker.js.
+
+## What is ké--ê?
+
+假的 (ké--ê) is a Taiwanese word. the meaning is fake things in English.
 
 ## Features
 

@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>HyCheck Module: combinators</title>
+	<title>ké--ê Module: combinators</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -20,7 +20,7 @@
 <div class="navbar navbar-default navbar-fixed-top navbar-inverse">
 <div class="container">
 	<div class="navbar-header">
-		<a class="navbar-brand" href="index.html">HyCheck</a>
+		<a class="navbar-brand" href="index.html">ké--ê</a>
 		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
@@ -313,7 +313,7 @@
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">// Produces an array of integer that the length between 1 and 3.
-hc.array(hc.int).choose(1, 3).generate();</pre>
+ke.array(ke.int).choose(1, 3).generate();</pre>
 
 
     
@@ -478,7 +478,7 @@ hc.array(hc.int).choose(1, 3).generate();</pre>
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">// returns 1.
-hc.constant(1).generate();</pre>
+ke.constant(1).generate();</pre>
 
 
     
@@ -593,7 +593,7 @@ hc.constant(1).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-187">line 187</a>
+				 <a href="combinators.js.html#sunlight-1-line-204">line 204</a>
 			</li>
 		</ul>
 	</dd>
@@ -643,7 +643,7 @@ hc.constant(1).generate();</pre>
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">// returns 1 or &#x27;a&#x27;;
-hc.elements([1, &#x27;a&#x27;]).generates();</pre>
+ke.elements([1, &#x27;a&#x27;]).generates();</pre>
 
 
     
@@ -918,7 +918,7 @@ properties of object and expanding.</p>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-161">line 161</a>
+				 <a href="combinators.js.html#sunlight-1-line-178">line 178</a>
 			</li>
 		</ul>
 	</dd>
@@ -968,7 +968,7 @@ properties of object and expanding.</p>
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">// return {k: 1234};
-hc.object({k: hc.int}).generate();</pre>
+ke.object({k: ke.int}).generate();</pre>
 
 
     
@@ -1133,7 +1133,7 @@ hc.object({k: hc.int}).generate();</pre>
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">// Produces a boolean or an integer.
-hc.oneOf(hc.bool, hc.int).generate();</pre>
+ke.oneOf(ke.bool, ke.int).generate();</pre>
 
 
     
@@ -1321,10 +1321,187 @@ hc.oneOf(hc.bool, hc.int).generate();</pre>
     
         <h5>Examples</h5>
         
-    <pre class="sunlight-highlight-javascript">hc.pair(hc.int, hc.int).generate();</pre>
+    <pre class="sunlight-highlight-javascript">ke.pair(ke.int, ke.int).generate();</pre>
 
     <pre class="sunlight-highlight-javascript">// choose different arbitraries.
-hc.pair(hc.int, hc.int).choose(hc.bool, hc.bool).generate();</pre>
+ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".sequence"><span class="type-signature">&lt;static> </span>sequence(arbs)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Generate a orderd array.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>arbs</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+
+                
+                    &lt;repeatable><br>
+                
+                </td>
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="combinators.js.html">combinators.js</a>,
+				 <a href="combinators.js.html#sunlight-1-line-157">line 157</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Arbitrary</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// returns [1, true, 143.321]
+ke.sequence(ke.int, ke.bool, ke.number).generate();</pre>
 
 
     
@@ -1513,7 +1690,7 @@ hc.pair(hc.int, hc.int).choose(hc.bool, hc.bool).generate();</pre>
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">// returns even number.
-hc.suchThat(hc.int, (n) =&gt; n / 2 === 0).generate();</pre>
+ke.suchThat(ke.int, (n) =&gt; n / 2 === 0).generate();</pre>
 
 
     
@@ -1567,13 +1744,13 @@ hc.suchThat(hc.int, (n) =&gt; n / 2 === 0).generate();</pre>
 
 
 	<span class="copyright">
-	Copyright © 2016 The contributors to the HyCheck.
+	Copyright © 2016 The contributors to the ké--ê.
 	</span>
 
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-10-31T16:52:08+08:00
+		on 2016-11-02T16:54:15+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
