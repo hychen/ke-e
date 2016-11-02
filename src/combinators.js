@@ -148,7 +148,7 @@ export function nearray(arb) {
 /**
  * Generate a orderd array.
  *
- * @param {Arbitrary...}
+ * @param {...Arbitrary}
  * @return {Arbitrary}
  * @example
  * // returns [1, true, 143.321]
