@@ -21,7 +21,7 @@ describe('Locale', () =>{
   it('nearray', () => {
     let a = ke.nearray(arb, arb).generate();
     expect(a[0]).eq('hi');
-    let b = ke.array(arb, arb).locale('zh-Hant-TW').generate();
+    let b = ke.nearray(arb, arb).locale('zh-Hant-TW').generate();
     expect(b[0]).eq('嗨');
   });
 
