@@ -151,6 +151,17 @@ some of difinitions of arbitraries took from
 
 - date — produce a Date.
 
+### Literate
+- literate
+ - word
+ - words
+ - sentence
+ - sentences
+ - pagraph
+ - pagraphs
+ - lines
+ - text
+
 ### Person
 
 - person - produce an object to reprsent a person.
