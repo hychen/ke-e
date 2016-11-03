@@ -7,7 +7,7 @@ import avaliableLocaleIds from './avaliableLocaleids';
 /**
  * Avaliable Locale Ids in Unicode Common Locale Data Repository.
  *
- * @type {Arbitary}
+ * @type {Arbitrary}
  *
  * @example
  * // returns zh-Hant-TW

@@ -47,7 +47,7 @@ export function getDef(defs, locale, key) {
  *
  * @param {Object }definietions
  * @param {string} name
- * @return {Arbitary}
+ * @return {Arbitrary}
  */
 export function fromDefinition(definitions, name) {
   return fromGenMaker(function() {

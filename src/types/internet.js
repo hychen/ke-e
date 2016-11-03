@@ -42,9 +42,9 @@ const freeEmailProvider = elements([
 ]).name('Free Email Provider');
 
 /**
- * Arbitary to produce an email.
+ * Arbitrary to produce an email.
  *
- * @type {Arbitary}
+ * @type {Arbitrary}
  * @example
  * // returns jack.hand@gmail.com
  * ke.internet.email.generate();

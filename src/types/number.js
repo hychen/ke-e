@@ -18,9 +18,9 @@ export const int = fromGenMaker(Random.integer,
                                  Number.MAX_SAFE_INTEGER]).name('Integer');
 
 /**
- * Positive Integer Arbitary
+ * Positive Integer Arbitrary
  *
- * @type {Arbitary}
+ * @type {Arbitrary}
  */
 export const pint = int
   .choose(0, Number.MAX_SAFE_INTEGER)
@@ -36,7 +36,7 @@ export const nint = int.
   .name('Negative Integer');
 
 /**
- * Nature Number Arbitary
+ * Nature Number Arbitrary
  *
  * @type {Arbitrary}
  */
@@ -45,7 +45,7 @@ export const nat = int
   .name('Nat');
 
 /**
- * Nature Number Arbitary
+ * Nature Number Arbitrary
  *
  * @type {Arbitrary}
  */
@@ -55,7 +55,7 @@ export const number = fromGenMaker(
   .name('Number');
 
 /**
- * Positive Number Arbitary
+ * Positive Number Arbitrary
  *
  * @type {Arbitrary}
  */
@@ -64,7 +64,7 @@ export const pnumber = number
   .name('Positive Number');
 
 /**
- * Negative Number Arbitary
+ * Negative Number Arbitrary
  *
  * @type {Arbitrary}
  */
