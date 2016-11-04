@@ -38,6 +38,15 @@ describe('Arbitrary', () => {
       return r1 >= 1 && r1 <= 1 + n && r2 >= -n && r2 <= 0;
     });
 
+  it('async', (done) => {
+    let arb1 = new Arbitrary({gen: Random.integer, genOpts: [1, 10]});
+    arb1.promise()
+      .then((n) => {
+        expect(n >= 1 && n <= 10).eq(true);
+        done();
+      })
+      .catch(console.error);
+  });
 
 });
 

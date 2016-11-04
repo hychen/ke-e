@@ -172,6 +172,24 @@ class Arbitrary {
   generate() {
     return this.makeGen()(this._engine, this._locale);
   }
+  promise() {
+    return new Promise((resolve, reject) => {
+      try {
+        let v = this.generate();
+        if (_.isFunction(v)) {
+          // async callback.
+          v(resolve);
+        }
+        else {
+          // pure value.
+          resolve(v);
+        }
+      }
+      catch (e) {
+        reject(e);
+      }
+    });
+  }
   /**
    * Generate some example values.
    *
