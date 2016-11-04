@@ -1,6 +1,14 @@
 let webpack = require('webpack');
 let fs = require('fs');
 
+const pkgInfo = JSON.parse(fs.readFileSync('./package.json'));
+
+const metaInfo = [
+  `Author: ${pkgInfo.author}`,
+  `Homepage: ${pkgInfo.homepage}`,
+  `License: ${pkgInfo.license}`
+].join('\n');
+
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -18,5 +26,8 @@ module.exports = {
         loader: 'babel-loader'
       }
     ]
-  }
+  },
+  plugins: [
+    new webpack.BannerPlugin(metaInfo)
+  ]
 };

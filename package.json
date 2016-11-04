@@ -9,6 +9,7 @@
   "directories": {
     "lib": "./lib"
   },
+  "homepage": "http:/hychen.me/ke-e/ke-e.js",
   "main": "lib/index.js",
   "bugs": {
     "url": "https://github.com/hychen/ke-e/issues"
