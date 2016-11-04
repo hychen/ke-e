@@ -192,6 +192,32 @@ export function object(spec) {
 }
 
 /**
+ * transform a class to an Arbitrary.
+ *
+ * @param {function} cls a class.
+ * @return {Arbitrary}
+ *
+ * @exmaple
+ * function() {}
+ *
+ * ke.objectOf(Person, ke.person.name).generate();
+ * ke.objectOf(Person).choose(ke.person.name).generate();
+ */
+export function objectOf(...args) {
+  let cls = args[0];
+  let clsarbargs1 = args.slice(1, args.length);
+  return fromGenMaker(function(...clsarbargs2) {
+    return function(engine, locale) {
+      let clsarbargs = clsarbargs2.length > 0 ? clsarbargs2 : clsarbargs1;
+      let impl = Object.create(cls.prototype);
+      let clsargs = clsarbargs.map(arb => arb.makeGen()(engine, locale));
+      cls.apply(impl, clsargs);
+      return impl;
+    };
+  });
+}
+
+/**
  * Generates one of the given values. The input list must be non-empty.
  *
  * @param {Array} pool

@@ -135,4 +135,27 @@ describe('Combinators', () => {
 
   });
 
+  describe('objectOf', () => {
+
+    it('with class', () => {
+      class Person {
+        constructor(firstName, gender) {
+          this.name = firstName;
+          this.gender = gender;
+        }
+        get bio() {
+          return `${this.name} ${this.gender}`;
+        }
+      }
+
+      let randomPerson = ke.objectOf(
+        Person,
+        ke.person.firstName,
+        ke.person.gender);
+      let person1 = randomPerson.generate();
+      expect(person1.bio).not.eq(undefined);
+    });
+
+  });
+
 });

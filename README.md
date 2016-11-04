@@ -142,6 +142,7 @@ some of difinitions of arbitraries took from
 - nearray — produce a non-empty array.
 - sequence — produce an array of given arbitraries in order.
 - object — produce an object.
+- objectOf - transform a class to an object arbitrary.
 
 ### Locale
 
