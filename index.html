@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width">
+	<title>ké--ê Index</title>
+
+	<!--[if lt IE 9]>
+	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+	<link type="text/css" rel="stylesheet" href="styles/sunlight.default.css">
+
+	<link type="text/css" rel="stylesheet" href="styles/site.united.css">
+
+</head>
+
+<body>
+
+<div class="navbar navbar-default navbar-fixed-top navbar-inverse">
+<div class="container">
+	<div class="navbar-header">
+		<a class="navbar-brand" href="index.html">ké--ê</a>
+		<button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#topNavigation">
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+			<span class="icon-bar"></span>
+        </button>
+	</div>
+	<div class="navbar-collapse collapse" id="topNavigation">
+		<ul class="nav navbar-nav">
+			
+			<li class="dropdown">
+				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-types_any.html">types/any</a></li><li><a href="module-types_boolean.html">types/boolean</a></li><li><a href="module-types_datetime.html">types/datetime</a></li><li><a href="module-types_falsy.html">types/falsy</a></li><li><a href="module-types_function.html">types/function</a></li><li><a href="module-types_internet.html">types/internet</a></li><li><a href="module-types_locale_avaliableLocaleids.html">types/locale/avaliableLocaleids</a></li><li><a href="module-types_locale_index.html">types/locale/index</a></li><li><a href="module-types_number.html">types/number</a></li><li><a href="module-types_person_index.html">types/person/index</a></li><li><a href="module-types_string.html">types/string</a></li><li><a href="module-utils.html">utils</a></li>
+				</ul>
+			</li>
+			
+			<li class="dropdown">
+				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
+				<ul class="dropdown-menu ">
+					<li><a href="module-arbitrary-Arbitrary.html">arbitrary~Arbitrary</a></li><li><a href="module-testable-ForAll.html">testable~ForAll</a></li><li><a href="module-testable-Property.html">testable~Property</a></li>
+				</ul>
+			</li>
+			
+		</ul>
+        
+            <div class="col-sm-3 col-md-3">
+                <form class="navbar-form" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search" name="q" id="search-input">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" id="search-submit"><i class="glyphicon glyphicon-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        
+	</div>
+
+</div>
+</div>
+
+
+<div class="container" id="toc-content">
+<div class="row">
+
+	
+	<div class="col-md-8">
+	
+		<div id="main">
+			
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+	
+	
+
+
+
+
+
+    <section class="readme-section">
+        <article><p><a href="https://travis-ci.org/hychen/ke-e"><img src="https://travis-ci.org/hychen/ke-e.svg?branch=master" alt="Build Status"></a>
+<a href="https://coveralls.io/github/hychen/ke-e?branch=master"><img src="https://coveralls.io/repos/github/hychen/ke-e/badge.svg?branch=master" alt="Coverage STatus"></a>
+<a href="http://badges.mit-license.org/"><img src="http://img.shields.io/:license-mit-blue.svg" alt="License"></a></p>
+<h1>ké--ê</h1><p><code>ké--ê</code> is a property-based testing library, inspired by <a href="https://hackage.haskell.org/package/QuickCheck">QuickCheck</a>,
+<a href="https://github.com/HypothesisWorks/hypothesis-python">Hypothesis</a>, <a href="https://github.com/jsverify/jsverify">JSVerify</a> and
+<a href="https://github.com/marak/Faker.js/">faker.js</a>.</p>
+<p>It is also available to generate fake data for many purpose like faker.js.</p>
+<h2>What is ké--ê?</h2><p>假的 (ké--ê) is a Taiwanese word. the meaning is fake things in English.</p>
+<h2>Features</h2><ul>
+<li>Property-based test utilitis library.</li>
+<li>Repeatable random fake data generators.</li>
+<li>Mocha test framwork integration.</li>
+<li>Support for multiple localities.</li>
+<li>Support for browser and Node.js.</li>
+</ul>
+<p>check <a href="http://hychen.me/ke-e/index.html">documents</a> for more details.</p>
+<h3>Property-Based Testing</h3><p>Property-based tests make statements about the output of your code based on the input, and these statements 
+are verified for many different possible inputs.</p>
+<p>By default, <code>ke.hold</code> runs 100 tests. it reports a counter example does not satisfy the property 
+if any test fail.</p>
+<p>for example, the following test.</p>
+<pre class="prettyprint source"><code>describe('Int', () => {
+  ke.hold(
+    '> 0',       // property name.
+    x => x > 0   // predicate.
+  )
+  .over(0)       // first especially case.
+  .over(2)       // second especially case.
+  .over(ke.int)  // universal case.
+})</code></pre><p>will report:</p>
+<pre class="prettyprint source"><code>1) Int > 0:
+
+      AssertionError: > 0 doesn't hold, counter example: -5, tried: 1/100
+      + expected - actual
+
+      -false
+      +true</code></pre><h3>Exception-Based Testing</h3><p>You can still use <code>chai</code> to do the testing with random test values 
+generated by <code>ke-e</code>.</p>
+<pre class="prettyprint source"><code>describe('Nat', () => {
+  it('>= 0',  () => {
+    ke.forall(ke.nat).eval((n) => {
+      expect(n >= 0).eq(true);
+    });
+  }
+})</code></pre><h3>Repeatable</h3><p>test results are repeatable.</p>
+<pre class="prettyprint source"><code>$ mocha
+1) Int >0:
+AssertionError: >0 doesn't hold, seed: -1764850555, counter example: -5265798245849472, tried: 3/3`</code></pre><pre class="prettyprint source"><code>KESeed=-1764850555 mocha
+1) Int >0:
+AssertionError: >0 doesn't hold, seed: -1764850555, counter example: -5265798245849472, tried: 3/3`</code></pre><h3>Localization</h3><p>This project follows unicode CLDR specification. <code>en</code> is default locale id.</p>
+<pre class="prettyprint source"><code>// Generate English first name.
+ke.person.firstName.generate();
+
+// Generate Tranditional Chinese first name.
+ke.person.firstName.locale('zh-Hant-TW').generate();</code></pre><h2>Arbitraries</h2><p>The pupose of a arbitraries is random generation and shrinking of values 
+in property-based testing, but you could use them to generate fake data 
+individually.</p>
+<p>some of difinitions of arbitraries took from 
+<a href="https://github.com/marak/Faker.js/">faker.js</a> project.</p>
+<h3>Primitive</h3><ul>
+<li>any - produce any primtive types.</li>
+<li>boolean — produce true and false with equal probability. </li>
+<li>falsy — produce falsy values: false, null, undefined, '', 0, and NaN.</li>
+<li>nat — produce a natural number.</li>
+<li>int — produce a integer. </li>
+<li>pint — produce a positive integer.</li>
+<li>nint — produce a negative integer.</li>
+<li>number — produce a float numbers.</li>
+<li>pnumber — produce a positive float numbers.</li>
+<li>nnumber — produce negative float numbers.</li>
+<li>char — produce a unicode character.</li>
+<li>asciichar — produce an ascii character.</li>
+<li>string — produce a unicode string.</li>
+<li>nestring - produce a non-empty unicode string.</li>
+<li>asciistring — produce an ascii string.</li>
+<li>neasciistring — produce an non-empty ascii string.</li>
+<li>function — produce a function.</li>
+</ul>
+<h3>Combinator</h3><ul>
+<li>constant — produce a contant value.</li>
+<li>elements — produce one of the given values. </li>
+<li>suchThat — produce a value that satisfies a predicate.</li>
+<li>oneOf — randomly uses one of the given generators. </li>
+<li>pair — produce a pair of two arbitraries.</li>
+<li>array — produce an array.</li>
+<li>nearray — produce a non-empty array.</li>
+<li>sequence — produce an array of given arbitraries in order.</li>
+<li>object — produce an object.</li>
+</ul>
+<h3>Locale</h3><ul>
+<li>localeids — produce a locale id.</li>
+</ul>
+<h3>Datetime</h3><ul>
+<li>date — produce a Date.</li>
+</ul>
+<h3>Person</h3><ul>
+<li>person - produce an object to reprsent a person.<ul>
+<li>name - produce the name of a person.</li>
+<li>firstName - produce the first name of a person.</li>
+<li>lastName - produce the last name of a person.</li>
+<li>gender - produce the gender of a person.</li>
+</ul>
+</li>
+</ul>
+<h3>Internet</h3><ul>
+<li>internet<ul>
+<li>userName - produce a internet username.</li>
+<li>email - produce an email.</li>
+<li>url - produce an url.</li>
+</ul>
+</li>
+</ul>
+<h2>Installation</h2><h3>Node.js</h3><p>install the module with: npm install ke-e</p>
+<pre class="prettyprint source lang-javascript"><code>import ke from `ke-e`
+
+describe('Integer', () => {
+  ke.hold(
+    'x + y = y + x'
+    (x, y) => x + y === y + x
+    ).over(ke.int, ke.int);
+});</code></pre><h3>Browser using script tag</h3><p>Download ke-e.js and place it in your project, then add it as the follwoing.</p>
+<pre class="prettyprint source lang-html"><code>&lt;script src=&quot;dist/ke-e.js&quot;>&lt;/script>
+&lt;script>
+describe('Integer', () => {
+  ke.hold(
+    'x + y = y + x'
+    (x, y) => x + y === y + x
+    ).over(ke.int, ke.int);
+});
+&lt;/script></code></pre><h2>Get Involved</h2><ul>
+<li>source code : <a href="https://github.com/hychen/ke-e">github.com/hychen/ke-e</a>.</li>
+</ul>
+<h2>License</h2><p>The MIT License (MIT)</p></article>
+    </section>
+
+
+
+
+
+
+
+		</div>
+	</div>
+
+	<div class="clearfix"></div>
+
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
+	
+
+</div>
+</div>
+
+
+    <div class="modal fade" id="searchResults">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Search results</h4>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div>
+
+
+<footer>
+
+
+	<span class="copyright">
+	Copyright © 2016 The contributors to the ké--ê.
+	</span>
+
+<span class="jsdoc-message">
+	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
+	
+		on 2016-11-02T16:54:15+08:00
+	
+	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
+</span>
+</footer>
+
+<script src="scripts/docstrap.lib.js"></script>
+<script src="scripts/toc.js"></script>
+
+    <script type="text/javascript" src="scripts/fulltext-search-ui.js"></script>
+
+
+<script>
+$( function () {
+	$( "[id*='$']" ).each( function () {
+		var $this = $( this );
+
+		$this.attr( "id", $this.attr( "id" ).replace( "$", "__" ) );
+	} );
+
+	$( ".tutorial-section pre, .readme-section pre, pre.prettyprint.source" ).each( function () {
+		var $this = $( this );
+
+		var example = $this.find( "code" );
+		exampleText = example.html();
+		var lang = /{@lang (.*?)}/.exec( exampleText );
+		if ( lang && lang[1] ) {
+			exampleText = exampleText.replace( lang[0], "" );
+			example.html( exampleText );
+			lang = lang[1];
+		} else {
+			var langClassMatch = example.parent()[0].className.match(/lang\-(\S+)/);
+			lang = langClassMatch ? langClassMatch[1] : "javascript";
+		}
+
+		if ( lang ) {
+
+			$this
+			.addClass( "sunlight-highlight-" + lang )
+			.addClass( "linenums" )
+			.html( example.html() );
+
+		}
+	} );
+
+	Sunlight.highlightAll( {
+		lineNumbers : true,
+		showMenu : true,
+		enableDoclinks : true
+	} );
+
+	$.catchAnchorLinks( {
+        navbarOffset: 10
+	} );
+	$( "#toc" ).toc( {
+		anchorName  : function ( i, heading, prefix ) {
+			return $( heading ).attr( "id" ) || ( prefix + i );
+		},
+		selectors   : "#toc-content h1,#toc-content h2,#toc-content h3,#toc-content h4",
+		showAndHide : false,
+		smoothScrolling: true
+	} );
+
+	$( "#main span[id^='toc']" ).addClass( "toc-shim" );
+	$( '.dropdown-toggle' ).dropdown();
+
+    $( "table" ).each( function () {
+      var $this = $( this );
+      $this.addClass('table');
+    } );
+
+} );
+</script>
+
+
+
+<!--Navigation and Symbol Display-->
+
+
+<!--Google Analytics-->
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            SearcherDisplay.init();
+        });
+    </script>
+
+
+</body>
+</html>
