@@ -10,7 +10,7 @@
   ],
   "opts": {
     "encoding": "utf8",
-    "destination": "docs",
+    "destination": "dist",
     "recurse": true,
     "template": "./node_modules/ink-docstrap/template",
     "readme": "./README.md"

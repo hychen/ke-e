@@ -23,10 +23,12 @@
     "clean": "rm -rf ./lib",
     "lint": "./node_modules/.bin/eslint src/**/**/*.js test",
     "lintgit": "./tools/eslint",
-    "doc": "./node_modules/.bin/jsdoc -c ./.jsdoc.json"
+    "doc": "./node_modules/.bin/jsdoc -c ./.jsdoc.json",
+    "ci-deploy": "npm run doc && npm run build:browser && gh-pages -d dist"
   },
   "keywords": [
-    "test", "quickcheck"
+    "test",
+    "quickcheck"
   ],
   "author": "Chen Hsin-Yi",
   "license": "MIT",
@@ -39,6 +41,7 @@
     "chai": "^3.5.0",
     "coveralls": "^2.11.8",
     "eslint": "~2.2.0",
+    "gh-pages": "^0.11.0",
     "ink-docstrap": "^1.3.0",
     "jsdoc": "^3.4.0",
     "jsverify": "^0.7.3",

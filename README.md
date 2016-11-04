@@ -199,7 +199,7 @@ describe('Integer', () => {
 Download ke-e.js and place it in your project, then add it as the follwoing.
 
 ```html
-<script src="dist/ke-e.js"></script>
+<script src="http://hychen.me/ke-e/ke-e.js"</script>
 <script>
 describe('Integer', () => {
   ke.hold(

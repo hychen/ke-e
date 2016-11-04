@@ -8,3 +8,4 @@ node_js:
 
 after_success:
   - ./node_modules/.bin/nyc npm test && ./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls
+  - npm run ci-deploy
