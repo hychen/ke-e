@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ké--ê Module: types/datetime</title>
+	<title>ké--ê Source: types/literate/index.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -67,194 +67,108 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: types/datetime</h1>
+		<h1 class="page-title">Source: types/literate/index.js</h1>
+    
 <section>
-
-<header>
-    
-</header>
-
-
-<article>
-    <div class="container-overview">
-    
-        
-
-        
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="types_datetime.js.html">types/datetime.js</a>,
-				 <a href="types_datetime.js.html#sunlight-1-line-1">line 1</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-<hr>
-<dt class="name" id=".date">
-    <h4 id=".date"><span class="type-signature">&lt;static, constant> </span>date<span class="type-signature"> :Arbitrary</span></h4>
-
-    
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Date Arbitrary</p>
-    </div>
-    
-
-    
-        <h5>Type:</h5>
-        <ul>
-            <li>
-                
-<span class="param-type">Arbitrary</span>
-
-
-
-            </li>
-        </ul>
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="types_datetime.js.html">types/datetime.js</a>,
-				 <a href="types_datetime.js.html#sunlight-1-line-21">line 21</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-        <h5>Examples</h5>
-        
-    <pre class="sunlight-highlight-javascript">// generate a random date.
-ke.date.generate();</pre>
-
-    <pre class="sunlight-highlight-javascript">// generate a random date between 2000/01/01 and 2016/01/01.
-let newDate = ke.date.choose(new Date(2000, 01, 01), new Date(2016, 01,01));
-newDate.generate();</pre>
-
-
-    
-</dd>
-
-        </dl>
-    
-
-    
-
-    
-
-    
-</article>
-
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * @module
+ */
+import {fromDefinition} from '../../utils';
+import {fromGenMaker} from '../../arbitrary';
+import {array, oneOf} from '../../combinators';
+import {nat} from '../number';
+import definitions from './definitions';
+
+/**
+ * Arbitrary to represent a word.
+ * @type {Arbitrary}
+ */
+const word = fromDefinition(definitions, 'words').name('Word');
+
+/**
+ * Arbitrary to represent a space seperated list of words.
+ * @type {Arbitrary}
+ */
+const words = array(word).choose(3, 3)
+        .transform(ws => ws.join(' '))
+        .name('Words');
+
+/**
+ * Arbitrary to represent a sentence.
+ * @type {Arbitrary}
+ */
+const sentence = words.transform(s => {
+  return s.charAt(0).toUpperCase() + s.slice(1) + '.';
+}).name('Sentence');
+
+/**
+ * Arbitrary to represent a sentences.
+ * @type {Arbitrary}
+ */
+const sentences = fromGenMaker(function(min = 2, max = 6, sep = ' ') {
+  return function(engine, locale) {
+    let ss = array(sentence).choose(min, max).makeGen()(engine, locale);
+    return ss.join(sep);
+  };
+}).name('Sentences');
+
+/**
+ * Arbitrary to represent a paragraph.
+ * @type {Arbitrary}
+ */
+const paragraph = sentences.choose(3, 3).name('Paragraph');
+
+/**
+ * Arbitrary to represent paragraphs seprated by `'\n'`.
+ * @type {Arbitrary}
+ */
+const paragraphs = fromGenMaker(function(count = 3, sep = '\n \r') {
+  return function(engine, locale) {
+    let ps = array(paragraph).choose(3, 3).makeGen()(engine, locale);
+    return ps.join(sep);
+  };
+}).name('Paragraphs');
+
+/**
+ * Arbitrary to represent lines of sentences seprated by `'\n'`.
+ * @type {Arbitrary}
+ */
+const lines = sentences.choose(1, 5, '\n').name('Lines');
+
+/**
+ * Arbitrary to represent any text based string.
+ * @type {Arbitrary}
+ */
+const text = oneOf([
+  word,
+  sentence,
+  sentences,
+  paragraph,
+  paragraphs,
+  lines
+]).name('Text');
+
+export default {
+  word,
+  words,
+  sentence,
+  sentences,
+  paragraph,
+  paragraphs,
+  lines,
+  text
+};
+</pre>
+    </article>
 </section>
+
 
 
 
@@ -264,10 +178,6 @@ newDate.generate();</pre>
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
@@ -300,7 +210,7 @@ newDate.generate();</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a>
 	
-		on 2016-11-04T15:10:32+08:00
+		on 2016-11-04T15:10:31+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

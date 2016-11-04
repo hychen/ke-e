@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ké--ê Module: types/datetime</title>
+	<title>ké--ê Module: types/literate/index</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,7 +72,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: types/datetime</h1>
+	<h1 class="page-title">Module: types/literate/index</h1>
 <section>
 
 <header>
@@ -120,8 +120,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="types_datetime.js.html">types/datetime.js</a>,
-				 <a href="types_datetime.js.html#sunlight-1-line-1">line 1</a>
+				<a href="types_literate_index.js.html">types/literate/index.js</a>,
+				 <a href="types_literate_index.js.html#sunlight-1-line-1">line 1</a>
 			</li>
 		</ul>
 	</dd>
@@ -155,15 +155,15 @@
         <dl>
             
 <hr>
-<dt class="name" id=".date">
-    <h4 id=".date"><span class="type-signature">&lt;static, constant> </span>date<span class="type-signature"> :Arbitrary</span></h4>
+<dt class="name" id="~lines">
+    <h4 id="~lines"><span class="type-signature">&lt;inner, constant> </span>lines<span class="type-signature"> :Arbitrary</span></h4>
 
     
 </dt>
 <dd>
     
     <div class="description">
-        <p>Date Arbitrary</p>
+        <p>Arbitrary to represent lines of sentences seprated by <code>'\n'</code>.</p>
     </div>
     
 
@@ -215,8 +215,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="types_datetime.js.html">types/datetime.js</a>,
-				 <a href="types_datetime.js.html#sunlight-1-line-21">line 21</a>
+				<a href="types_literate_index.js.html">types/literate/index.js</a>,
+				 <a href="types_literate_index.js.html#sunlight-1-line-64">line 64</a>
 			</li>
 		</ul>
 	</dd>
@@ -231,14 +231,570 @@
 
 
     
-        <h5>Examples</h5>
-        
-    <pre class="sunlight-highlight-javascript">// generate a random date.
-ke.date.generate();</pre>
+</dd>
 
-    <pre class="sunlight-highlight-javascript">// generate a random date between 2000/01/01 and 2016/01/01.
-let newDate = ke.date.choose(new Date(2000, 01, 01), new Date(2016, 01,01));
-newDate.generate();</pre>
+        
+            
+<hr>
+<dt class="name" id="~paragraph">
+    <h4 id="~paragraph"><span class="type-signature">&lt;inner, constant> </span>paragraph<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to represent a paragraph.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_literate_index.js.html">types/literate/index.js</a>,
+				 <a href="types_literate_index.js.html#sunlight-1-line-47">line 47</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~paragraphs">
+    <h4 id="~paragraphs"><span class="type-signature">&lt;inner, constant> </span>paragraphs<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to represent paragraphs seprated by <code>'\n'</code>.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_literate_index.js.html">types/literate/index.js</a>,
+				 <a href="types_literate_index.js.html#sunlight-1-line-53">line 53</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~sentence">
+    <h4 id="~sentence"><span class="type-signature">&lt;inner, constant> </span>sentence<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to represent a sentence.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_literate_index.js.html">types/literate/index.js</a>,
+				 <a href="types_literate_index.js.html#sunlight-1-line-28">line 28</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~sentences">
+    <h4 id="~sentences"><span class="type-signature">&lt;inner, constant> </span>sentences<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to represent a sentences.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_literate_index.js.html">types/literate/index.js</a>,
+				 <a href="types_literate_index.js.html#sunlight-1-line-36">line 36</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~text">
+    <h4 id="~text"><span class="type-signature">&lt;inner, constant> </span>text<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to represent any text based string.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_literate_index.js.html">types/literate/index.js</a>,
+				 <a href="types_literate_index.js.html#sunlight-1-line-70">line 70</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~word">
+    <h4 id="~word"><span class="type-signature">&lt;inner, constant> </span>word<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to represent a word.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_literate_index.js.html">types/literate/index.js</a>,
+				 <a href="types_literate_index.js.html#sunlight-1-line-14">line 14</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~words">
+    <h4 id="~words"><span class="type-signature">&lt;inner, constant> </span>words<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to represent a space seperated list of words.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_literate_index.js.html">types/literate/index.js</a>,
+				 <a href="types_literate_index.js.html#sunlight-1-line-20">line 20</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
 
 
     
