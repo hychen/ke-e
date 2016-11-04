@@ -62,6 +62,7 @@ const person = object({
   brithDay: date
 }).name('Person');
 
+person.name = name;
 person.firstName = firstName;
 person.lastName = lastName;
 person.gender = gender;
