@@ -21318,6 +21318,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _combinators = __webpack_require__(12);
 
+	var _constants = __webpack_require__(11);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21332,6 +21334,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _classCallCheck(this, ChaosMonkey);
 
 	    this._seed = opts.seed || _number.pint.generate();
+	    this._engine = _constants.stdOpts.engine.seed(this._seed);
 	    this.actions = {};
 	    this._preconds = {};
 	    this._postconds = {};
@@ -21366,10 +21369,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function doRandomBehaviour() {
 	      var _this = this;
 
-	      var randomActName = (0, _combinators.elements)(Object.keys(this.actions)).seed(this._seed).generate();
+	      var randomActName = (0, _combinators.elements)(Object.keys(this.actions)).engine(this._engine).generate();
 	      var precond = this._preconds[randomActName];
 	      var postcond = this._postconds[randomActName];
-	      var randomAction = this.actions[randomActName].locale(this._locale).seed(this._seed);
+	      var randomAction = this.actions[randomActName].locale(this._locale).engine(this._engine);
 	      // hook helpers
 	      var preDo = function preDo() {
 	        _this._preDo.apply(_this);
