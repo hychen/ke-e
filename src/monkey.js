@@ -4,6 +4,7 @@
 import _ from 'lodash';
 import {pint} from './types/number';
 import {elements} from './combinators';
+import {stdOpts} from './constants';
 
 /**
  * Something to do monkey testing.
@@ -11,6 +12,7 @@ import {elements} from './combinators';
 class ChaosMonkey {
   constructor(opts = {}) {
     this._seed = opts.seed || pint.generate();
+    this._engine = stdOpts.engine.seed(this._seed);
     this.actions = {};
     this._preconds = {};
     this._postconds = {};
@@ -35,13 +37,13 @@ class ChaosMonkey {
    */
   doRandomBehaviour() {
     let randomActName = elements(Object.keys(this.actions))
-          .seed(this._seed)
+          .engine(this._engine)
           .generate();
     let precond = this._preconds[randomActName];
     let postcond = this._postconds[randomActName];
     let randomAction = this.actions[randomActName]
                          .locale(this._locale)
-                         .seed(this._seed);
+                         .engine(this._engine);
     // hook helpers
     let preDo = () => {
       this._preDo.apply(this);
