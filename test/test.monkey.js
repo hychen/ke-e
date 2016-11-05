@@ -6,8 +6,8 @@ describe('Monkey Testing', () => {
     let m = new ke.monkey.Monkey();
     let insert = fromGenMaker(function() {
       return function(engine, locale) {
-        return function(done) {
-          return done(1);
+        return function(end) {
+          return end(1);
         };
       };
     });
@@ -16,7 +16,7 @@ describe('Monkey Testing', () => {
     });
     m.start();
 
-    setInterval(function() {
+    setTimeout(function() {
       m.stop();
       done();
     }, 500);
