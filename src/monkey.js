@@ -8,7 +8,7 @@ import {elements} from './combinators';
 /**
  * Something to do monkey testing.
  */
-class Monkey {
+class ChaosMonkey {
   constructor(opts = {}) {
     this._seed = opts.seed || pint.generate();
     this.actions = {};
@@ -74,5 +74,5 @@ class Monkey {
 }
 
 export {
-  Monkey
+  ChaosMonkey
 };

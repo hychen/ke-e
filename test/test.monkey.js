@@ -2,8 +2,8 @@ import {fromGenMaker} from '../src/arbitrary';
 
 describe('Monkey Testing', () => {
 
-  it('behaviour', (done) => {
-    let m = new ke.monkey.Monkey();
+  it('ChaosMonkey', (done) => {
+    let m = new ke.monkey.ChaosMonkey();
     let insert = fromGenMaker(function() {
       return function(engine, locale) {
         return function(end) {
