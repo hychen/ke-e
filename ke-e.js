@@ -21411,6 +21411,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function start() {
 	      var _this2 = this;
 
+	      this.stop();
 	      console.log('seed: ' + this._seed);
 	      var task = function task() {
 	        return _this2.doRandomBehaviour();
@@ -21425,6 +21426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'stop',
 	    value: function stop() {
 	      clearInterval(this.timeId);
+	      this.timeId = null;
 	    }
 	  }]);
 
