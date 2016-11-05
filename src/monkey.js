@@ -73,6 +73,7 @@ class ChaosMonkey {
    * @return {number} interval id.
    */
   start() {
+    this.stop();
     console.log(`seed: ${this._seed}`);
     let task = () => this.doRandomBehaviour();
     return this.timeId = setInterval(task, this._speed);
@@ -82,6 +83,7 @@ class ChaosMonkey {
    */
   stop() {
     clearInterval(this.timeId);
+    this.timeId = null;
   }
 }
 
