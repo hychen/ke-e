@@ -16,6 +16,8 @@ class ChaosMonkey {
     this._postconds = {};
     this._speed = opts.speed || 50;
     this._locale = 'en';
+    this._preDo = opts.preDo || _.noop;
+    this._postDo = opts.postDo || _.noop;
   }
   /**
    * Add a behaviour.
@@ -40,10 +42,20 @@ class ChaosMonkey {
     let randomAction = this.actions[randomActName]
                          .locale(this._locale)
                          .seed(this._seed);
+    // hook helpers
+    let preDo = () => {
+      this._preDo.apply(this);
+      precond.apply(this);
+    };
 
-    precond(this, randomActName); // check pre conditin.
-    randomAction.promise()        // do the action.
-      .then(postcond)             // check post condition.
+    let postDo = (...args) => {
+      this._postDo.apply(this, args);
+      postcond.apply(this, args);
+    };
+
+    preDo();
+    randomAction.promise()
+      .then(postDo)
       .catch(console.error);
   }
   /**
