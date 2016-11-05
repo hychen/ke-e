@@ -79,6 +79,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var testable = _interopRequireWildcard(_testable);
 
+	var _monkey = __webpack_require__(38);
+
+	var monkey = _interopRequireWildcard(_monkey);
+
 	var _arbitrary = __webpack_require__(4);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -88,7 +92,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  fromGenMaker: _arbitrary.fromGenMaker,
 	  types: types,
 	  combinators: combinators,
-	  testable: testable
+	  testable: testable,
+	  monkey: monkey
 	};
 
 	(0, _utils.liftExport)(__all__, 'types');
@@ -17456,6 +17461,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function generate() {
 	      return this.makeGen()(this._engine, this._locale);
 	    }
+	  }, {
+	    key: 'promise',
+	    value: function promise() {
+	      var _this2 = this;
+
+	      return new Promise(function (resolve, reject) {
+	        try {
+	          var v = _this2.generate();
+	          if (_lodash2.default.isFunction(v)) {
+	            // async callback.
+	            v(resolve);
+	          } else {
+	            // pure value.
+	            resolve(v);
+	          }
+	        } catch (e) {
+	          reject(e);
+	        }
+	      });
+	    }
 	    /**
 	     * Generate some example values.
 	     *
@@ -17466,7 +17491,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'sample',
 	    value: function sample() {
-	      var _this2 = this;
+	      var _this3 = this;
 
 	      var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 30;
 
@@ -17474,7 +17499,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        (0, _assert2.default)(_lodash2.default.isInteger(size) && size >= 0, 'size must be a postive integer.');
 	      }
 	      return _lodash2.default.range(0, size).map(function () {
-	        return _this2.generate();
+	        return _this3.generate();
 	      });
 	    }
 	  }]);
@@ -21268,6 +21293,145 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.hold = hold;
 	exports.forall = forall;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)))
+
+/***/ },
+/* 38 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.ChaosMonkey = undefined;
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @module
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
+
+
+	var _lodash = __webpack_require__(2);
+
+	var _lodash2 = _interopRequireDefault(_lodash);
+
+	var _number = __webpack_require__(17);
+
+	var _combinators = __webpack_require__(12);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * Something to do monkey testing.
+	 */
+	var ChaosMonkey = function () {
+	  function ChaosMonkey() {
+	    var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	    _classCallCheck(this, ChaosMonkey);
+
+	    this._seed = opts.seed || _number.pint.generate();
+	    this.actions = {};
+	    this._preconds = {};
+	    this._postconds = {};
+	    this._speed = opts.speed || 50;
+	    this._locale = 'en';
+	    this._preDo = opts.preDo || _lodash2.default.noop;
+	    this._postDo = opts.postDo || _lodash2.default.noop;
+	  }
+	  /**
+	   * Add a behaviour.
+	   *
+	   * @param {string} name
+	   * @param {Arbitrary} action
+	   */
+
+
+	  _createClass(ChaosMonkey, [{
+	    key: 'behaviour',
+	    value: function behaviour(name, action) {
+	      var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+	      this.actions[name] = action;
+	      this._preconds[name] = opts.precond || _lodash2.default.noop;
+	      this._postconds[name] = opts.postcond || _lodash2.default.noop;
+	    }
+	    /**
+	     * Do random behaviour.
+	     */
+
+	  }, {
+	    key: 'doRandomBehaviour',
+	    value: function doRandomBehaviour() {
+	      var _this = this;
+
+	      var randomActName = (0, _combinators.elements)(Object.keys(this.actions)).seed(this._seed).generate();
+	      var precond = this._preconds[randomActName];
+	      var postcond = this._postconds[randomActName];
+	      var randomAction = this.actions[randomActName].locale(this._locale).seed(this._seed);
+	      // hook helpers
+	      var preDo = function preDo() {
+	        _this._preDo.apply(_this);
+	        precond.apply(_this);
+	      };
+
+	      var postDo = function postDo() {
+	        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	          args[_key] = arguments[_key];
+	        }
+
+	        _this._postDo.apply(_this, args);
+	        postcond.apply(_this, args);
+	      };
+
+	      preDo();
+	      randomAction.promise().then(postDo).catch(console.error);
+	    }
+	    /**
+	     * Replay monkey testing by given seed.
+	     *
+	     * @return {number} seed 32-bit integer.
+	     */
+
+	  }, {
+	    key: 'replay',
+	    value: function replay(seed) {
+	      this._seed = seed;
+	      this.start();
+	    }
+	    /**
+	     * Start running monkey testing.
+	     *
+	     * @return {number} interval id.
+	     */
+
+	  }, {
+	    key: 'start',
+	    value: function start() {
+	      var _this2 = this;
+
+	      console.log('seed: ' + this._seed);
+	      var task = function task() {
+	        return _this2.doRandomBehaviour();
+	      };
+	      return this.timeId = setInterval(task, this._speed);
+	    }
+	    /**
+	     * Stop running monkey testing.
+	     */
+
+	  }, {
+	    key: 'stop',
+	    value: function stop() {
+	      clearInterval(this.timeId);
+	    }
+	  }]);
+
+	  return ChaosMonkey;
+	}();
+
+	exports.ChaosMonkey = ChaosMonkey;
 
 /***/ }
 /******/ ])
