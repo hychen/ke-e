@@ -2,8 +2,11 @@
  * @module
  */
 import _ from 'lodash';
+import assert from 'assert';
 import Random from 'random-js';
-import {fromGenMaker, Arbitrary} from './arbitrary';
+import {fromGenMaker,
+        isArbitrary,
+        Arbitrary} from './arbitrary';
 
 /**
  * Generates a contant value.
@@ -71,6 +74,7 @@ export function suchThat(arb, predicate) {
  * ke.oneOf(ke.bool, ke.int).generate();
  */
 export function oneOf(arbs) {
+  assert(_.every(arbs, isArbitrary), 'arbs must be an array of Arbitrary.');
   return new Arbitrary({
     name: 'OneOf',
     gen: function (pool) {
@@ -98,6 +102,8 @@ export function oneOf(arbs) {
  * ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();
  */
 export function pair(arb1, arb2) {
+  assert(isArbitrary(arb1), 'arb1 is a arbitrary.');
+  assert(isArbitrary(arb2), 'arb2 is a arbitrary.');
   return new Arbitrary({
     name: 'Pair',
     gen: function(a1, a2) {
@@ -121,6 +127,7 @@ export function pair(arb1, arb2) {
  * ke.array(ke.int).choose(1, 3).generate();
  */
 export function array(arb) {
+  assert(isArbitrary(arb), 'arb must be a Arbitrary.');
   return new Arbitrary({
     name: 'Array',
     gen: function (min, max) {
@@ -155,6 +162,7 @@ export function nearray(arb) {
  * ke.sequence(ke.int, ke.bool, ke.number).generate();
  */
 export function sequence(...arbs) {
+  assert(_.every(arbs, isArbitrary), 'arguments must be array of Arbitrary');
   return fromGenMaker(function(pool) {
     return function(engine, locale) {
       return pool.map(arb => arb.makeGen()(engine, locale));
@@ -176,6 +184,7 @@ export function sequence(...arbs) {
  * ke.object({k: ke.int}).generate();
  */
 export function object(spec) {
+  assert(_.isObject(spec), 'spec must be an object');
   return new Arbitrary({
     name: 'Object',
     gen: function(spec) {
@@ -228,6 +237,7 @@ export function objectOf(...args) {
  * ke.elements([1, 'a']).generates();
  */
 export function elements(pool) {
+  assert(_.isArray(pool), 'pool must be an array.');
   return new Arbitrary({
     name: 'Elements',
     gen: function() {

@@ -2,6 +2,8 @@
  * @module
  */
 import _ from 'lodash';
+import assert from 'assert';
+import {isArbitrary} from './arbitrary';
 import {pint} from './types/number';
 import {elements} from './combinators';
 import {stdOpts} from './constants';
@@ -28,6 +30,8 @@ class ChaosMonkey {
    * @param {Arbitrary} action
    */
   behaviour(name, action, opts = {}) {
+    assert(_.isString(name), 'name must be a string.');
+    assert(isArbitrary(action), 'action must be a Arbitrary.');
     this.actions[name] = action;
     this._preconds[name] = opts.precond || _.noop;
     this._postconds[name] = opts.postcond || _.noop;
@@ -66,6 +70,7 @@ class ChaosMonkey {
    * @return {number} seed 32-bit integer.
    */
   replay(seed) {
+    assert(_.isInteger(seed), 'seed must be a integer');
     this._seed = seed;
     this.start();
   }

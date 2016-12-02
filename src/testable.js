@@ -44,6 +44,7 @@ class ForAll {
    * new ForAll([ke.int, ke.int])
    */
   constructor(arbs) {
+    assert(_.every(arbs, isArbitrary), 'arbs must be an array of Arbitrary.');
     this.arbs = arbs;
   }
   /**
@@ -106,6 +107,8 @@ class Property {
    * @return {Property}
    */
   constructor(name, predicate) {
+    assert(_.isString(name), 'name must be a string.');
+    assert(_.isFunction(predicate), 'predicate must be a function.');
     this.name = name;
     this.predicate = predicate;
   }

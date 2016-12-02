@@ -134,6 +134,7 @@ class Arbitrary {
    * @param {!number} seed 32-bit integer.
    */
   seed(seed) {
+    assert(_.isInteger(seed), 'seed must be a 32-bit integer.');
     this._engine.seed(seed);
     return this;
   }
