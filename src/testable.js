@@ -72,14 +72,14 @@ class ForAll {
    */
   makeFormula(predicate) {
     return (engine) => {
-      let samples = this.arbs.map(arb => {
+      const samples = this.arbs.map(arb => {
         if (engine) {
           arb.engine(engine);
         }
         return arb.generate();
       });
       try {
-        let success = !!predicate.apply(null, samples);
+        const success = !!predicate.apply(null, samples);
         return {
           success: success,
           counterExample: samples
@@ -117,12 +117,12 @@ class Property {
    * @return {Property}
    */
   over(...args) {
-    let isOpts = e => _.isObject(e) && !isArbitrary(e);
-    let arbs = isOpts(args[args.length - 1]) ? args.slice(0, -1) : args;
-    let quantifilers = _.every(arbs, isArbitrary) ? arbs : arbs.map(constant);
-    let testName = this.name;
+    const isOpts = e => _.isObject(e) && !isArbitrary(e);
+    const arbs = isOpts(args[args.length - 1]) ? args.slice(0, -1) : args;
+    const quantifilers = _.every(arbs, isArbitrary) ? arbs : arbs.map(constant);
+    const testName = this.name;
     it(testName, (done) => {
-      let result = this.check(new ForAll(quantifilers));
+      const result = this.check(new ForAll(quantifilers));
       assert(result.pass,
         `${testName} doesn't hold, ${result.reason}` +
              `, tried: ${result.numTests}/${result.totalTests}`);
@@ -145,7 +145,7 @@ class Property {
     assert(opts.tests > 0, 'tests must more than 0.');
     assert(opts.engine, 'engine is required');
     assert(opts.seed, 'seed is required');
-    let result = {
+    const result = {
       numTests: 1,
       totalTests: opts.tests,
       pass: false
@@ -155,7 +155,7 @@ class Property {
     }
     opts.engine.seed(opts.seed);
     for (let i = result.numTests; i <= opts.tests; i++) {
-      let r = quantifiler.makeFormula(this.predicate)(opts.engine);
+      const r = quantifiler.makeFormula(this.predicate)(opts.engine);
       result.numTests = i;
       if (r.success) {
         result.pass = true;
@@ -172,7 +172,7 @@ class Property {
 }
 
 function formatFalure(seed, result) {
-  let rngStateMsg= `seed: ${seed}`;
+  const rngStateMsg= `seed: ${seed}`;
   let msg = `${rngStateMsg}, counter example: ${result.counterExample}`;
   if (result.exception) {
     msg += `, exception: ${result.exception}`;

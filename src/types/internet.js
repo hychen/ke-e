@@ -25,12 +25,12 @@ const userNameSuffix = oneOf([nat.choose(1, 99), constant('')]);
  */
 const userName = fromGenMaker(function(firstName, lastName, sepArb) {
   return function(engine) {
-    let a = firstName.makeGen()(engine);
-    let b = lastName.makeGen()(engine);
-    let sep = sepArb.makeGen()(engine);
-    let suffix = userNameSuffix.makeGen()(engine);
-    let n = nat.choose(0, 1).makeGen()(engine);
-    let result = n === 0 ? `${a}` : `${a}${sep}${b}${suffix}`;
+    const a = firstName.makeGen()(engine);
+    const b = lastName.makeGen()(engine);
+    const sep = sepArb.makeGen()(engine);
+    const suffix = userNameSuffix.makeGen()(engine);
+    const n = nat.choose(0, 1).makeGen()(engine);
+    const result = n === 0 ? `${a}` : `${a}${sep}${b}${suffix}`;
     return result;
   };
 }, [person.firstName, person.lastName, userNameSep]).name('Internet User Name');
@@ -51,8 +51,8 @@ const freeEmailProvider = elements([
  */
 const email = fromGenMaker(function(userName, provider) {
   return function(engine) {
-    let a = userName.makeGen()(engine);
-    let b = provider.makeGen()(engine);
+    const a = userName.makeGen()(engine);
+    const b = provider.makeGen()(engine);
     return `${a}@${b}`;
   };
 }, [userName, freeEmailProvider]).name('Email');

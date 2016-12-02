@@ -36,21 +36,21 @@ class ChaosMonkey {
    * Do random behaviour.
    */
   doRandomBehaviour() {
-    let randomActName = elements(Object.keys(this.actions))
+    const randomActName = elements(Object.keys(this.actions))
           .engine(this._engine)
           .generate();
-    let precond = this._preconds[randomActName];
-    let postcond = this._postconds[randomActName];
-    let randomAction = this.actions[randomActName]
+    const precond = this._preconds[randomActName];
+    const postcond = this._postconds[randomActName];
+    const randomAction = this.actions[randomActName]
                          .locale(this._locale)
                          .engine(this._engine);
     // hook helpers
-    let preDo = () => {
+    const preDo = () => {
       this._preDo.apply(this);
       precond.apply(this);
     };
 
-    let postDo = (...args) => {
+    const postDo = (...args) => {
       this._postDo.apply(this, args);
       postcond.apply(this, args);
     };
@@ -77,7 +77,7 @@ class ChaosMonkey {
   start() {
     this.stop();
     console.log(`seed: ${this._seed}`);
-    let task = () => this.doRandomBehaviour();
+    const task = () => this.doRandomBehaviour();
     return this.timeId = setInterval(task, this._speed);
   }
   /**

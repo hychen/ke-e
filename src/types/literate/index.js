@@ -35,7 +35,7 @@ const sentence = words.transform(s => {
  */
 const sentences = fromGenMaker(function(min = 2, max = 6, sep = ' ') {
   return function(engine, locale) {
-    let ss = array(sentence).choose(min, max).makeGen()(engine, locale);
+    const ss = array(sentence).choose(min, max).makeGen()(engine, locale);
     return ss.join(sep);
   };
 }).name('Sentences');
@@ -52,7 +52,7 @@ const paragraph = sentences.choose(3, 3).name('Paragraph');
  */
 const paragraphs = fromGenMaker(function(count = 3, sep = '\n \r') {
   return function(engine, locale) {
-    let ps = array(paragraph).choose(3, 3).makeGen()(engine, locale);
+    const ps = array(paragraph).choose(3, 3).makeGen()(engine, locale);
     return ps.join(sep);
   };
 }).name('Paragraphs');

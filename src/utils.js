@@ -32,8 +32,8 @@ export function getDef(defs, locale, key) {
   if (avaliableLocaleIds.indexOf(locale) < 0) {
     throw new Error(`Locale ${locale} is not supported`);
   }
-  let _locale = locale.replace(/-/g, '_');
-  let _def = defs[_locale];
+  const _locale = locale.replace(/-/g, '_');
+  const _def = defs[_locale];
   if (_def) {
     return _def[key];
   }
@@ -52,7 +52,7 @@ export function getDef(defs, locale, key) {
 export function fromDefinition(definitions, name) {
   return fromGenMaker(function() {
     return function(engine, locale) {
-      let pool = getDef(definitions, locale, name);
+      const pool = getDef(definitions, locale, name);
       return elements(pool).engine(engine).generate();
     };
   });

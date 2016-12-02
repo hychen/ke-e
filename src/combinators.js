@@ -34,9 +34,9 @@ export function constant(value) {
  * ke.suchThat(ke.int, (n) => n / 2 === 0).generate();
  */
 export function suchThat(arb, predicate) {
-  let oriGen = arb.makeGen();
-  let clone = arb.clone();
-  let newGenerator = function (...genOpts) {
+  const oriGen = arb.makeGen();
+  const clone = arb.clone();
+  const newGenerator = function (...genOpts) {
     return function (engine, locale) {
       let x;
       let j = 0;
@@ -75,7 +75,7 @@ export function oneOf(arbs) {
     name: 'OneOf',
     gen: function (pool) {
       return function (engine, locale) {
-        let arb = pool[Random.integer(0, arbs.length - 1)(engine)];
+        const arb = pool[Random.integer(0, arbs.length - 1)(engine)];
         return arb.makeGen()(engine, locale);
       };
     },
@@ -180,7 +180,7 @@ export function object(spec) {
     name: 'Object',
     gen: function(spec) {
       return function(engine, locale) {
-        let o = {};
+        const o = {};
         Object.keys(spec).forEach((k) => {
           o[k] = spec[k].makeGen()(engine, locale);
         });
@@ -204,13 +204,13 @@ export function object(spec) {
  * ke.objectOf(Person).choose(ke.person.name).generate();
  */
 export function objectOf(...args) {
-  let cls = args[0];
-  let clsarbargs1 = args.slice(1, args.length);
+  const cls = args[0];
+  const clsarbargs1 = args.slice(1, args.length);
   return fromGenMaker(function(...clsarbargs2) {
     return function(engine, locale) {
-      let clsarbargs = clsarbargs2.length > 0 ? clsarbargs2 : clsarbargs1;
-      let impl = Object.create(cls.prototype);
-      let clsargs = clsarbargs.map(arb => arb.makeGen()(engine, locale));
+      const clsarbargs = clsarbargs2.length > 0 ? clsarbargs2 : clsarbargs1;
+      const impl = Object.create(cls.prototype);
+      const clsargs = clsarbargs.map(arb => arb.makeGen()(engine, locale));
       cls.apply(impl, clsargs);
       return impl;
     };
@@ -232,7 +232,7 @@ export function elements(pool) {
     name: 'Elements',
     gen: function() {
       return function (engine) {
-        let e = pool[Random.integer(0, pool.length - 1)(engine)];
+        const e = pool[Random.integer(0, pool.length - 1)(engine)];
         return constant(e).makeGen()(engine);
       };
     }

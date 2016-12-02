@@ -74,7 +74,7 @@ class Arbitrary {
    * @return {Arbitrary}
    */
   choose(...args) {
-    let clone = this.clone();
+    const clone = this.clone();
     clone._genOpts = args;
     return clone;
   }
@@ -85,7 +85,7 @@ class Arbitrary {
    * @return {Arbitrary}
    */
   locale(locale) {
-    let clone = this.clone();
+    const clone = this.clone();
     clone._locale = locale;
     return clone;
   }
@@ -96,7 +96,7 @@ class Arbitrary {
    * @return {Arbitrary}
    */
   transform(f) {
-    let clone = this.clone();
+    const clone = this.clone();
     clone._transforms.push(f);
     return clone;
   }
@@ -175,7 +175,7 @@ class Arbitrary {
   promise() {
     return new Promise((resolve, reject) => {
       try {
-        let v = this.generate();
+        const v = this.generate();
         if (_.isFunction(v)) {
           // async callback.
           v(resolve);
