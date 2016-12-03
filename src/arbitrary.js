@@ -91,15 +91,20 @@ class Arbitrary {
     }
   }
   /**
-   * Set a random engine.
+   * Get/Set a random engine.
    *
    * @param {!Engine} engine
    * @return {Arbitrary}
    */
   engine(engine) {
-    assert(engine, 'engine is required.');
-    this._engine = engine;
-    return this;
+    if (engine) {
+      assert(engine, 'engine is required.');
+      this._engine = engine;
+      return this;
+    }
+    else {
+      return this._engine;
+    }
   }
   /**
    * Set a seed number.
