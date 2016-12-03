@@ -155,7 +155,7 @@ class Arbitrary {
    * @return {Arbitrary|GeneratorMakerOptions}
    */
   genOpts(genOpts) {
-    if (typeof genOpts != undefined) {
+    if (genOpts !== undefined) {
       assert(_.isArray(genOpts), 'opts must be an object.');
       this._genOpts = genOpts;
       return this;
