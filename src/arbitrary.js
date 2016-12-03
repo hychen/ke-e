@@ -24,8 +24,12 @@ import {stdOpts} from './constants';
 /**
  * Arbitrary Options.
  * @typedef {Object} ArbitraryOptions
- * @property {GeneratorMaker} gen
- * @property {GeneratorMakerOptions} opts
+ * @property {!GeneratorMaker} gen the generator maker.
+ * @property {?GeneratorMakerOptions} genOts the options of the generator maker.
+ * @property {?string} name the name of a arbitrary.
+ * @property {?string} locale the locale tag. default is en.
+ * @property {?Engine} engine the random engine.
+ * @property {?number} seed the seed number.
  */
 
 /**
