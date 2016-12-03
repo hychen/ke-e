@@ -145,7 +145,7 @@ some of difinitions of arbitraries took from
 - object — produce an object.
 - objectOf - transform a class to an object arbitrary.
 - small - produce smaller version of a arbitrary.
-- recusive - produce a recusive value.
+- recursive - produce a recursive value.
 
 ### Locale
 
