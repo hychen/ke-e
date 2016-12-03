@@ -218,7 +218,6 @@ class Arbitrary {
    * Create a promise.
    *
    * @return {Promise}
-   * @example
    */
   promise() {
     return new Promise((resolve, reject) => {
