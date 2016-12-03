@@ -17276,8 +17276,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Arbitrary Options.
 	 * @typedef {Object} ArbitraryOptions
-	 * @property {GeneratorMaker} gen
-	 * @property {GeneratorMakerOptions} opts
+	 * @property {!GeneratorMaker} gen the generator maker.
+	 * @property {?GeneratorMakerOptions} genOts the options of the generator maker.
+	 * @property {?string} name the name of a arbitrary.
+	 * @property {?string} locale the locale tag. default is en.
+	 * @property {?Engine} engine the random engine.
+	 * @property {?number} seed the seed number.
 	 */
 
 	/**
@@ -17293,7 +17297,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var Arbitrary = function () {
 	  /**
-	   * Create a arbitrary.
+	   * Create an arbitrary.
 	   *
 	   * @param {!ArbitraryOptions} opts the options of arbitrary creation.
 	   * @return {Arbitrary}
@@ -17302,24 +17306,137 @@ return /******/ (function(modules) { // webpackBootstrap
 	    _classCallCheck(this, Arbitrary);
 
 	    (0, _assert2.default)(_lodash2.default.isObject(opts), 'opts must be an object.');
-	    this._locale = 'en';
-	    this._engine = null;
+	    // private attributes initialization.
 	    this._gen = null;
 	    this._genOpts = null;
+	    this._name = null;
+	    this._locale = null;
+	    this._engine = null;
+	    this._seed = null;
 	    this._transforms = [_lodash2.default.identity];
 
+	    this.locale(opts.locale || 'en');
 	    this.engine(opts.engine || _constants.stdOpts.engine);
 	    this.name(opts.name || 'Arbitrary-' + _randomJs2.default.uuid4(this._engine));
-	    this.generator(opts.gen, opts.genOpts);
+	    this.gen(opts.gen);
+	    this.genOpts(opts.genOpts || []);
 	  }
 	  /**
-	   * Clone this arbitrary.
+	   * Get/Set the name of this arbitrary.
 	   *
-	   * @return {Arbitrary}
+	   * @param {string} name arbitrary name.
+	   * @return {Arbitrary|string}
 	   */
 
 
 	  _createClass(Arbitrary, [{
+	    key: 'name',
+	    value: function name(_name) {
+	      if (_name !== undefined) {
+	        (0, _assert2.default)(_lodash2.default.isString(_name) && _name.length >= 3, 'name must be a sring of length >= 3.');
+	        this._name = _name;
+	        return this;
+	      } else {
+	        return this._name;
+	      }
+	    }
+	    /**
+	     * Get/Set locale.
+	     *
+	     * @param {!string} locale locale tag.
+	     * @return {Arbitrary|string}
+	     */
+
+	  }, {
+	    key: 'locale',
+	    value: function locale(_locale) {
+	      if (_locale !== undefined) {
+	        this._locale = _locale;
+	        return this;
+	      } else {
+	        return this._locale;
+	      }
+	    }
+	    /**
+	     * Get/Set a random engine.
+	     *
+	     * @param {!Engine} engine
+	     * @return {Arbitrary|Engine}
+	     */
+
+	  }, {
+	    key: 'engine',
+	    value: function engine(_engine) {
+	      if (_engine !== undefined) {
+	        (0, _assert2.default)(_engine, 'engine is required.');
+	        this._engine = _engine;
+	        return this;
+	      } else {
+	        return this._engine;
+	      }
+	    }
+	    /**
+	     * Get/Set a seed number.
+	     *
+	     * @param {!number} seed 32-bit integer.
+	     * @return {Arbitrary|number}
+	     */
+
+	  }, {
+	    key: 'seed',
+	    value: function seed(_seed) {
+	      if (_seed !== undefined) {
+	        (0, _assert2.default)(_lodash2.default.isInteger(_seed), 'seed must be a 32-bit integer.');
+	        this._seed = _seed;
+	        this._engine.seed(_seed);
+	        return this;
+	      } else {
+	        return this._seed;
+	      }
+	    }
+	    /**
+	     * Get/Set a generator maker.
+	     *
+	     * @param {!GeneratorMaker} gen
+	     * @return {Arbitrary|GeneratorMaker}
+	     */
+
+	  }, {
+	    key: 'gen',
+	    value: function gen(_gen) {
+	      if (_gen !== undefined) {
+	        (0, _assert2.default)(_lodash2.default.isFunction(_gen), 'gen must be a function.');
+	        this._gen = _gen.bind(this);
+	        return this;
+	      } else {
+	        return this._gen;
+	      }
+	    }
+	    /**
+	     * Get/Set the options of a generator maker.
+	     *
+	     * @param {?GeneratorMakerOptions} opts
+	     * @return {Arbitrary|GeneratorMakerOptions}
+	     */
+
+	  }, {
+	    key: 'genOpts',
+	    value: function genOpts(_genOpts) {
+	      if (_genOpts !== undefined) {
+	        (0, _assert2.default)(_lodash2.default.isArray(_genOpts), 'opts must be an object.');
+	        this._genOpts = _genOpts;
+	        return this;
+	      } else {
+	        return this._genOpts;
+	      }
+	    }
+	    /**
+	     * Clone this arbitrary.
+	     *
+	     * @return {Arbitrary}
+	     */
+
+	  }, {
 	    key: 'clone',
 	    value: function clone() {
 	      return _lodash2.default.cloneDeep(this);
@@ -17345,20 +17462,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return clone;
 	    }
 	    /**
-	     * Create a new arbitrary with new locale.
-	     *
-	     * @param {!string} locale locale tag.
-	     * @return {Arbitrary}
-	     */
-
-	  }, {
-	    key: 'locale',
-	    value: function locale(_locale) {
-	      var clone = this.clone();
-	      clone._locale = _locale;
-	      return clone;
-	    }
-	    /**
 	     * Transform arbitrary A to arbitrary B.
 	     *
 	     * @param {function} transform function.
@@ -17371,69 +17474,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var clone = this.clone();
 	      clone._transforms.push(f);
 	      return clone;
-	    }
-	    /**
-	     * Name this arbitrary.
-	     *
-	     * @param {string} name arbitrary name.
-	     * @return {Arbitrary}
-	     */
-
-	  }, {
-	    key: 'name',
-	    value: function name(_name) {
-	      if (_name) {
-	        (0, _assert2.default)(_lodash2.default.isString(_name) && _name.length >= 3, 'name must be a sring of length >= 3.');
-	        this._name = _name;
-	        return this;
-	      } else {
-	        return this._name;
-	      }
-	    }
-	    /**
-	     * Set a random engine.
-	     *
-	     * @param {!Engine} engine
-	     * @return {Arbitrary}
-	     */
-
-	  }, {
-	    key: 'engine',
-	    value: function engine(_engine) {
-	      (0, _assert2.default)(_engine, 'engine is required.');
-	      this._engine = _engine;
-	      return this;
-	    }
-	    /**
-	     * Set a seed number.
-	     *
-	     * @param {!number} seed 32-bit integer.
-	     */
-
-	  }, {
-	    key: 'seed',
-	    value: function seed(_seed) {
-	      this._engine.seed(_seed);
-	      return this;
-	    }
-	    /**
-	     * Set a random value generator.
-	     *
-	     * @param {!GeneratorMaker} gen
-	     * @param {?GeneratorMakerOptions} opts
-	     * @return {Arbitrary}
-	     */
-
-	  }, {
-	    key: 'generator',
-	    value: function generator(gen, opts) {
-	      (0, _assert2.default)(_lodash2.default.isFunction(gen), 'gen must be a function.');
-	      this._gen = gen.bind(this);
-	      if (opts) {
-	        (0, _assert2.default)(_lodash2.default.isArray(opts), 'opts must be an object.');
-	        this._genOpts = opts;
-	      }
-	      return this;
 	    }
 	    /**
 	     * Make a generator.
@@ -17461,6 +17501,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function generate() {
 	      return this.makeGen()(this._engine, this._locale);
 	    }
+	    /**
+	     * Create a promise.
+	     *
+	     * @return {Promise}
+	     */
+
 	  }, {
 	    key: 'promise',
 	    value: function promise() {
@@ -17506,6 +17552,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return Arbitrary;
 	}();
+
+	/**
+	 * Check if it is Arbitrary.
+	 *
+	 * @param {*} arb any value.
+	 * @return {boolean} True if arb is a Arbitrary.
+	 */
+
 
 	function isArbitrary(arb) {
 	  return arb instanceof Arbitrary;
@@ -19617,6 +19671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.constant = constant;
 	exports.suchThat = suchThat;
 	exports.oneOf = oneOf;
+	exports.maybe = maybe;
 	exports.pair = pair;
 	exports.array = array;
 	exports.nearray = nearray;
@@ -19628,6 +19683,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _lodash = __webpack_require__(2);
 
 	var _lodash2 = _interopRequireDefault(_lodash);
+
+	var _assert = __webpack_require__(6);
+
+	var _assert2 = _interopRequireDefault(_assert);
 
 	var _randomJs = __webpack_require__(5);
 
@@ -19646,6 +19705,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @example
 	 * // returns 1.
 	 * ke.constant(1).generate();
+	 */
+	/**
+	 * @module
 	 */
 	function constant(value) {
 	  return new _arbitrary.Arbitrary({
@@ -19668,9 +19730,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @example
 	 * // returns even number.
 	 * ke.suchThat(ke.int, (n) => n / 2 === 0).generate();
-	 */
-	/**
-	 * @module
 	 */
 	function suchThat(arb, predicate) {
 	  var oriGen = arb.makeGen();
@@ -19695,7 +19754,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return x;
 	    };
 	  };
-	  clone.generator(newGenerator);
+	  clone.gen(newGenerator);
 	  return clone;
 	}
 
@@ -19710,6 +19769,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * ke.oneOf(ke.bool, ke.int).generate();
 	 */
 	function oneOf(arbs) {
+	  (0, _assert2.default)(_lodash2.default.every(arbs, _arbitrary.isArbitrary), 'arbs must be an array of Arbitrary.');
 	  return new _arbitrary.Arbitrary({
 	    name: 'OneOf',
 	    gen: function gen(pool) {
@@ -19720,6 +19780,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	    },
 	    genOpts: [arbs]
 	  });
+	}
+
+	/**
+	 * An arbitrary returns a value or null.
+	 *
+	 * @param {!Arbitrary} arb
+	 * @return {Arbitrary}
+	 */
+	function maybe(arb) {
+	  return oneOf([arb, constant(null)]).name('Maybe');
 	}
 
 	/**
@@ -19737,6 +19807,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();
 	 */
 	function pair(arb1, arb2) {
+	  (0, _assert2.default)((0, _arbitrary.isArbitrary)(arb1), 'arb1 is a arbitrary.');
+	  (0, _assert2.default)((0, _arbitrary.isArbitrary)(arb2), 'arb2 is a arbitrary.');
 	  return new _arbitrary.Arbitrary({
 	    name: 'Pair',
 	    gen: function gen(a1, a2) {
@@ -19759,6 +19831,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * ke.array(ke.int).choose(1, 3).generate();
 	 */
 	function array(arb) {
+	  (0, _assert2.default)((0, _arbitrary.isArbitrary)(arb), 'arb must be a Arbitrary.');
 	  return new _arbitrary.Arbitrary({
 	    name: 'Array',
 	    gen: function gen(min, max) {
@@ -19797,6 +19870,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    arbs[_key] = arguments[_key];
 	  }
 
+	  (0, _assert2.default)(_lodash2.default.every(arbs, _arbitrary.isArbitrary), 'arguments must be array of Arbitrary');
 	  return (0, _arbitrary.fromGenMaker)(function (pool) {
 	    return function (engine, locale) {
 	      return pool.map(function (arb) {
@@ -19820,6 +19894,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * ke.object({k: ke.int}).generate();
 	 */
 	function object(spec) {
+	  (0, _assert2.default)(_lodash2.default.isObject(spec), 'spec must be an object');
 	  return new _arbitrary.Arbitrary({
 	    name: 'Object',
 	    gen: function gen(spec) {
@@ -19882,6 +19957,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * ke.elements([1, 'a']).generates();
 	 */
 	function elements(pool) {
+	  (0, _assert2.default)(_lodash2.default.isArray(pool), 'pool must be an array.');
 	  return new _arbitrary.Arbitrary({
 	    name: 'Elements',
 	    gen: function gen() {
@@ -21090,6 +21166,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function ForAll(arbs) {
 	    _classCallCheck(this, ForAll);
 
+	    (0, _assert2.default)(_lodash2.default.every(arbs, _arbitrary.isArbitrary), 'arbs must be an array of Arbitrary.');
 	    this.arbs = arbs;
 	  }
 	  /**
@@ -21167,6 +21244,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Property(name, predicate) {
 	    _classCallCheck(this, Property);
 
+	    (0, _assert2.default)(_lodash2.default.isString(name), 'name must be a string.');
+	    (0, _assert2.default)(_lodash2.default.isFunction(predicate), 'predicate must be a function.');
 	    this.name = name;
 	    this.predicate = predicate;
 	  }
@@ -21314,6 +21393,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _lodash2 = _interopRequireDefault(_lodash);
 
+	var _assert = __webpack_require__(6);
+
+	var _assert2 = _interopRequireDefault(_assert);
+
+	var _arbitrary = __webpack_require__(4);
+
 	var _number = __webpack_require__(17);
 
 	var _combinators = __webpack_require__(12);
@@ -21356,6 +21441,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    value: function behaviour(name, action) {
 	      var opts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
+	      (0, _assert2.default)(_lodash2.default.isString(name), 'name must be a string.');
+	      (0, _assert2.default)((0, _arbitrary.isArbitrary)(action), 'action must be a Arbitrary.');
 	      this.actions[name] = action;
 	      this._preconds[name] = opts.precond || _lodash2.default.noop;
 	      this._postconds[name] = opts.postcond || _lodash2.default.noop;
@@ -21400,6 +21487,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'replay',
 	    value: function replay(seed) {
+	      (0, _assert2.default)(_lodash2.default.isInteger(seed), 'seed must be a integer');
 	      this._seed = seed;
 	      this.start();
 	    }

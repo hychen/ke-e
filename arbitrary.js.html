@@ -103,8 +103,12 @@ import {stdOpts} from './constants';
 /**
  * Arbitrary Options.
  * @typedef {Object} ArbitraryOptions
- * @property {GeneratorMaker} gen
- * @property {GeneratorMakerOptions} opts
+ * @property {!GeneratorMaker} gen the generator maker.
+ * @property {?GeneratorMakerOptions} genOts the options of the generator maker.
+ * @property {?string} name the name of a arbitrary.
+ * @property {?string} locale the locale tag. default is en.
+ * @property {?Engine} engine the random engine.
+ * @property {?number} seed the seed number.
  */
 
 /**
@@ -120,22 +124,124 @@ import {stdOpts} from './constants';
  */
 class Arbitrary {
   /**
-   * Create a arbitrary.
+   * Create an arbitrary.
    *
    * @param {!ArbitraryOptions} opts the options of arbitrary creation.
    * @return {Arbitrary}
    */
   constructor(opts) {
     assert(_.isObject(opts), 'opts must be an object.');
-    this._locale = 'en';
-    this._engine = null;
+    // private attributes initialization.
     this._gen = null;
     this._genOpts = null;
+    this._name = null;
+    this._locale = null;
+    this._engine = null;
+    this._seed = null;
     this._transforms = [_.identity];
 
+    this.locale(opts.locale || 'en');
     this.engine(opts.engine || stdOpts.engine);
     this.name(opts.name || 'Arbitrary-' + Random.uuid4(this._engine));
-    this.generator(opts.gen, opts.genOpts);
+    this.gen(opts.gen);
+    this.genOpts(opts.genOpts || []);
+  }
+  /**
+   * Get/Set the name of this arbitrary.
+   *
+   * @param {string} name arbitrary name.
+   * @return {Arbitrary|string}
+   */
+  name(name) {
+    if (name !== undefined) {
+      assert(_.isString(name) &amp;&amp; name.length >= 3,
+             'name must be a sring of length >= 3.');
+      this._name = name;
+      return this;
+    }
+    else {
+      return this._name;
+    }
+  }
+  /**
+   * Get/Set locale.
+   *
+   * @param {!string} locale locale tag.
+   * @return {Arbitrary|string}
+   */
+  locale(locale) {
+    if (locale !== undefined) {
+      this._locale = locale;
+      return this;
+    }
+    else {
+      return this._locale;
+    }
+  }
+  /**
+   * Get/Set a random engine.
+   *
+   * @param {!Engine} engine
+   * @return {Arbitrary|Engine}
+   */
+  engine(engine) {
+    if (engine !== undefined) {
+      assert(engine, 'engine is required.');
+      this._engine = engine;
+      return this;
+    }
+    else {
+      return this._engine;
+    }
+  }
+  /**
+   * Get/Set a seed number.
+   *
+   * @param {!number} seed 32-bit integer.
+   * @return {Arbitrary|number}
+   */
+  seed(seed) {
+    if (seed !== undefined) {
+      assert(_.isInteger(seed), 'seed must be a 32-bit integer.');
+      this._seed = seed;
+      this._engine.seed(seed);
+      return this;
+    }
+    else {
+      return this._seed;
+    }
+  }
+  /**
+   * Get/Set a generator maker.
+   *
+   * @param {!GeneratorMaker} gen
+   * @return {Arbitrary|GeneratorMaker}
+   */
+  gen(gen) {
+    if (gen !== undefined) {
+      assert(_.isFunction(gen), 'gen must be a function.');
+      this._gen = gen.bind(this);
+      return this;
+    }
+    else {
+      return this._gen;
+    }
+  }
+  /**
+   * Get/Set the options of a generator maker.
+   *
+   * @param {?GeneratorMakerOptions} opts
+   * @return {Arbitrary|GeneratorMakerOptions}
+   */
+  genOpts(genOpts) {
+    if (genOpts !== undefined) {
+      assert(_.isArray(genOpts), 'opts must be an object.');
+      this._genOpts = genOpts;
+      return this;
+    }
+    else {
+      return this._genOpts;
+    }
   }
   /**
    * Clone this arbitrary.
@@ -153,19 +259,8 @@ class Arbitrary {
    * @return {Arbitrary}
    */
   choose(...args) {
-    let clone = this.clone();
+    const clone = this.clone();
     clone._genOpts = args;
-    return clone;
-  }
-  /**
-   * Create a new arbitrary with new locale.
-   *
-   * @param {!string} locale locale tag.
-   * @return {Arbitrary}
-   */
-  locale(locale) {
-    let clone = this.clone();
-    clone._locale = locale;
     return clone;
   }
   /**
@@ -175,62 +270,9 @@ class Arbitrary {
    * @return {Arbitrary}
    */
   transform(f) {
-    let clone = this.clone();
+    const clone = this.clone();
     clone._transforms.push(f);
     return clone;
-  }
-  /**
-   * Name this arbitrary.
-   *
-   * @param {string} name arbitrary name.
-   * @return {Arbitrary}
-   */
-  name(name) {
-    if (name) {
-      assert(_.isString(name) &amp;&amp; name.length >= 3,
-             'name must be a sring of length >= 3.');
-      this._name = name;
-      return this;
-    }
-    else {
-      return this._name;
-    }
-  }
-  /**
-   * Set a random engine.
-   *
-   * @param {!Engine} engine
-   * @return {Arbitrary}
-   */
-  engine(engine) {
-    assert(engine, 'engine is required.');
-    this._engine = engine;
-    return this;
-  }
-  /**
-   * Set a seed number.
-   *
-   * @param {!number} seed 32-bit integer.
-   */
-  seed(seed) {
-    this._engine.seed(seed);
-    return this;
-  }
-  /**
-   * Set a random value generator.
-   *
-   * @param {!GeneratorMaker} gen
-   * @param {?GeneratorMakerOptions} opts
-   * @return {Arbitrary}
-   */
-  generator(gen, opts) {
-    assert(_.isFunction(gen), 'gen must be a function.');
-    this._gen = gen.bind(this);
-    if (opts) {
-      assert(_.isArray(opts), 'opts must be an object.');
-      this._genOpts = opts;
-    }
-    return this;
   }
   /**
    * Make a generator.
@@ -251,10 +293,15 @@ class Arbitrary {
   generate() {
     return this.makeGen()(this._engine, this._locale);
   }
+  /**
+   * Create a promise.
+   *
+   * @return {Promise}
+   */
   promise() {
     return new Promise((resolve, reject) => {
       try {
-        let v = this.generate();
+        const v = this.generate();
         if (_.isFunction(v)) {
           // async callback.
           v(resolve);
@@ -286,6 +333,12 @@ class Arbitrary {
   }
 }
 
+/**
+ * Check if it is Arbitrary.
+ *
+ * @param {*} arb any value.
+ * @return {boolean} True if arb is a Arbitrary.
+ */
 function isArbitrary(arb) {
   return arb instanceof Arbitrary;
 }
@@ -353,7 +406,7 @@ export {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
 	
-		on 2016-11-05T17:14:33+08:00
+		on 2016-12-03T20:58:02+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
