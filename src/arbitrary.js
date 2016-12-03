@@ -79,15 +79,19 @@ class Arbitrary {
     return clone;
   }
   /**
-   * Create a new arbitrary with new locale.
+   * Get/Set locale.
    *
    * @param {!string} locale locale tag.
    * @return {Arbitrary}
    */
   locale(locale) {
-    const clone = this.clone();
-    clone._locale = locale;
-    return clone;
+    if (locale) {
+      this._locale = locale;
+      return this;
+    }
+    else {
+      return this._locale;
+    }
   }
   /**
    * Transform arbitrary A to arbitrary B.
