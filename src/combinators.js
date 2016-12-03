@@ -88,6 +88,16 @@ export function oneOf(arbs) {
 }
 
 /**
+ * An arbitrary returns a value or null.
+ *
+ * @param {!Arbitrary} arb
+ * @return {Arbitrary}
+ */
+export function maybe(arb) {
+  return oneOf([arb, constant(null)]).name('Maybe');
+}
+
+/**
  * Generates a pair of two arbitraries.
  *
  * @param {!Arbitrary} arb1

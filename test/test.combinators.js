@@ -69,6 +69,20 @@ describe('Combinators', () => {
       });
   });
 
+  describe('maybe', () => {
+
+    jsc.property(
+      'generate a value or null.',
+      'nat',
+      () => {
+        const arb = ke.maybe(ke.int);
+        const x = arb.generate();
+        return x === null || _.isInteger(x);
+      }
+    );
+
+  })
+
   describe('pair', () => {
 
     jsc.property(

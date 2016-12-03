@@ -137,6 +137,7 @@ some of difinitions of arbitraries took from
 - elements — produce one of the given values. 
 - suchThat — produce a value that satisfies a predicate.
 - oneOf — randomly uses one of the given generators. 
+- maybe - produce a value or null.
 - pair — produce a pair of two arbitraries.
 - array — produce an array.
 - nearray — produce a non-empty array.
