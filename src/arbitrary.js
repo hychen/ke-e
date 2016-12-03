@@ -210,6 +210,12 @@ class Arbitrary {
   generate() {
     return this.makeGen()(this._engine, this._locale);
   }
+  /**
+   * Create a promise.
+   *
+   * @return {Promise}
+   * @example
+   */
   promise() {
     return new Promise((resolve, reject) => {
       try {
