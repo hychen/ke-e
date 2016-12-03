@@ -251,6 +251,12 @@ class Arbitrary {
   }
 }
 
+/**
+ * Check if it is Arbitrary.
+ *
+ * @param {*} arb any value.
+ * @return {boolean} True if arb is a Arbitrary.
+ */
 function isArbitrary(arb) {
   return arb instanceof Arbitrary;
 }
