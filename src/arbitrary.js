@@ -50,6 +50,7 @@ class Arbitrary {
     assert(_.isObject(opts), 'opts must be an object.');
     this._locale = 'en';
     this._engine = null;
+    this._seed = null;
     this._gen = null;
     this._genOpts = null;
     this._transforms = [_.identity];
@@ -107,14 +108,20 @@ class Arbitrary {
     }
   }
   /**
-   * Set a seed number.
+   * Get/Set a seed number.
    *
    * @param {!number} seed 32-bit integer.
    */
   seed(seed) {
-    assert(_.isInteger(seed), 'seed must be a 32-bit integer.');
-    this._engine.seed(seed);
-    return this;
+    if (typeof seed !== undefined) {
+      assert(_.isInteger(seed), 'seed must be a 32-bit integer.');
+      this._seed = seed;
+      this._engine.seed(seed);
+      return this;
+    }
+    else {
+      return this._seed;
+    }
   }
   /**
    * Set a random value generator.
