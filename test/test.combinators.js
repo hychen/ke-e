@@ -81,7 +81,7 @@ describe('Combinators', () => {
       }
     );
 
-  })
+  });
 
   describe('pair', () => {
 
