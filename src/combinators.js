@@ -4,7 +4,8 @@
 import _ from 'lodash';
 import assert from 'assert';
 import Random from 'random-js';
-import {smallerRange} from './utils';
+import {smallerRange,
+        ulog2} from './utils';
 import {fromGenMaker,
         isArbitrary,
         Arbitrary} from './arbitrary';
@@ -273,4 +274,37 @@ export function small(arb) {
   assert(_.isFunction(smaller), `${arb.name()} does not have smaller version.`);
   const smallGenOpts = smaller(arb.genOpts());
   return clone.genOpts(smallGenOpts).name(`Small ${arb.name()}`);
+}
+
+/**
+ * Produce a nested values.
+ *
+ * @param {function} combinator a function to return an arbitrary.
+ * @param {Arbitrary} arb the base arbitrary.
+ * @return {*}
+ * @example
+ * ke.recursive(ke.array, ke.any);
+ */
+export function recursive(combinator, arb, depth = 4) {
+  return new Arbitrary({
+    name: 'Recursive',
+    gen: function(combinator, arb, depth) {
+      return function(engine, locale) {
+        function rec(n) {
+          const chance = Random.integer(0, 3);
+          if (n <= 0 || chance === 0 ) {
+            return n == depth ? combinator(arb) : arb;
+          }
+          else {
+            return combinator(rec(n - 1));
+          }
+        }
+        return rec(depth).makeGen()(engine, locale);
+      };
+    },
+    genOpts: [combinator, arb, depth],
+    smaller: function([combinator, arb, depth]) {
+      return [combinator, arb, ulog2(depth)];
+    }
+  });
 }

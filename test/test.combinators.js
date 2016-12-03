@@ -192,3 +192,19 @@ describe('Combinators', () => {
   });
 
 });
+
+describe('recursive', () => {
+
+  it('default depth is 3', () => {
+    const x = ke.recursive(ke.array, ke.any).generate();
+    expect(_.isArray(x)).eq(true);
+  });
+
+  it('small', () => {
+    const x = ke.small(ke.recursive(ke.array, ke.any));
+    expect(x.genOpts()[2]).eq(2);
+    const r = x.generate();
+    expect(_.isArray(r)).eq(true);
+  });
+
+});

@@ -68,7 +68,7 @@ class Arbitrary {
     this.name(opts.name || 'Arbitrary-' + Random.uuid4(this._engine));
     this.gen(opts.gen);
     this.genOpts(opts.genOpts || []);
-    this.smaller(opts.smaller || null);
+    this.smaller(opts.smaller || _.identity);
   }
   /**
    * Get/Set the name of this arbitrary.
