@@ -59,52 +59,6 @@ class Arbitrary {
     this.generator(opts.gen, opts.genOpts);
   }
   /**
-   * Clone this arbitrary.
-   *
-   * @return {Arbitrary}
-   */
-  clone() {
-    return _.cloneDeep(this);
-  }
-  /**
-   * Create a new arbitrary with new
-   * inclusive range of its generator maker.
-   *
-   * @param {...*}
-   * @return {Arbitrary}
-   */
-  choose(...args) {
-    const clone = this.clone();
-    clone._genOpts = args;
-    return clone;
-  }
-  /**
-   * Get/Set locale.
-   *
-   * @param {!string} locale locale tag.
-   * @return {Arbitrary}
-   */
-  locale(locale) {
-    if (locale) {
-      this._locale = locale;
-      return this;
-    }
-    else {
-      return this._locale;
-    }
-  }
-  /**
-   * Transform arbitrary A to arbitrary B.
-   *
-   * @param {function} transform function.
-   * @return {Arbitrary}
-   */
-  transform(f) {
-    const clone = this.clone();
-    clone._transforms.push(f);
-    return clone;
-  }
-  /**
    * Name this arbitrary.
    *
    * @param {string} name arbitrary name.
@@ -119,6 +73,21 @@ class Arbitrary {
     }
     else {
       return this._name;
+    }
+  }
+  /**
+   * Get/Set locale.
+   *
+   * @param {!string} locale locale tag.
+   * @return {Arbitrary}
+   */
+  locale(locale) {
+    if (locale) {
+      this._locale = locale;
+      return this;
+    }
+    else {
+      return this._locale;
     }
   }
   /**
@@ -157,6 +126,37 @@ class Arbitrary {
       this._genOpts = opts;
     }
     return this;
+  }
+  /**
+   * Clone this arbitrary.
+   *
+   * @return {Arbitrary}
+   */
+  clone() {
+    return _.cloneDeep(this);
+  }
+  /**
+   * Create a new arbitrary with new
+   * inclusive range of its generator maker.
+   *
+   * @param {...*}
+   * @return {Arbitrary}
+   */
+  choose(...args) {
+    const clone = this.clone();
+    clone._genOpts = args;
+    return clone;
+  }
+  /**
+   * Transform arbitrary A to arbitrary B.
+   *
+   * @param {function} transform function.
+   * @return {Arbitrary}
+   */
+  transform(f) {
+    const clone = this.clone();
+    clone._transforms.push(f);
+    return clone;
   }
   /**
    * Make a generator.
