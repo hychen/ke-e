@@ -172,4 +172,23 @@ describe('Combinators', () => {
 
   });
 
+  describe('small', () => {
+
+    it('small(int)', () => {
+      const x = ke.small(ke.int).generate();
+      expect(-53 <= x  <= 53).eq(true);
+    });
+
+    it('small(array(int))', () => {
+      const x = ke.small(ke.array(ke.int)).generate();
+      expect(0 <= x.length <= 4).eq(true);
+    });
+
+    it('small(string)', () => {
+      const x = ke.small(ke.string).generate();
+      expect(0 <= x.length <= 4 ).eq(true);
+    });
+
+  });
+
 });

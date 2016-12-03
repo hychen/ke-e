@@ -4,6 +4,7 @@
 import _ from 'lodash';
 import assert from 'assert';
 import Random from 'random-js';
+import {smallerRange} from './utils';
 import {fromGenMaker,
         isArbitrary,
         Arbitrary} from './arbitrary';
@@ -147,7 +148,8 @@ export function array(arb) {
         });
       };
     },
-    genOpts: [0, 30]
+    genOpts: [0, 30],
+    smaller: smallerRange
   });
 }
 
@@ -257,4 +259,18 @@ export function elements(pool) {
       };
     }
   });
+}
+
+/**
+ * Produce a smaller version of a arbitrary.
+ *
+ * @param {Arbitrary} arb
+ * @return {Arbitrary}
+ */
+export function small(arb) {
+  const clone = arb.clone();
+  const smaller = arb.smaller();
+  assert(_.isFunction(smaller), `${arb.name()} does not have smaller version.`);
+  const smallGenOpts = smaller(arb.genOpts());
+  return clone.genOpts(smallGenOpts).name(`Small ${arb.name()}`);
 }

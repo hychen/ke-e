@@ -144,6 +144,7 @@ some of difinitions of arbitraries took from
 - sequence — produce an array of given arbitraries in order.
 - object — produce an object.
 - objectOf - transform a class to an object arbitrary.
+- small - produce smaller version of a arbitrary.
 
 ### Locale
 

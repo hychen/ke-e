@@ -3,6 +3,7 @@
  */
 import Random from 'random-js';
 import {fromGenMaker} from '../arbitrary';
+import {smallerRange} from '../utils';
 
 /**
  * Integer Arbitrary
@@ -13,9 +14,12 @@ import {fromGenMaker} from '../arbitrary';
  * // Produce an integer within inclusive range [-5, 5].
  * ke.int.choose(-5, 5).generate();
  */
-export const int = fromGenMaker(Random.integer,
-                                [-Number.MAX_SAFE_INTEGER,
-                                 Number.MAX_SAFE_INTEGER]).name('Integer');
+export const int = fromGenMaker(
+  Random.integer,
+  [-Number.MAX_SAFE_INTEGER,
+   Number.MAX_SAFE_INTEGER])
+  .name('Integer')
+  .smaller(smallerRange);
 
 /**
  * Positive Integer Arbitrary

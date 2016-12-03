@@ -26,6 +26,7 @@ import {stdOpts} from './constants';
  * @typedef {Object} ArbitraryOptions
  * @property {!GeneratorMaker} gen the generator maker.
  * @property {?GeneratorMakerOptions} genOts the options of the generator maker.
+ * @property {?function} smaller a function to return small size of genOts.
  * @property {?string} name the name of a arbitrary.
  * @property {?string} locale the locale tag. default is en.
  * @property {?Engine} engine the random engine.
@@ -55,6 +56,7 @@ class Arbitrary {
     // private attributes initialization.
     this._gen = null;
     this._genOpts = null;
+    this._smaller = null;
     this._name = null;
     this._locale = null;
     this._engine = null;
@@ -66,6 +68,7 @@ class Arbitrary {
     this.name(opts.name || 'Arbitrary-' + Random.uuid4(this._engine));
     this.gen(opts.gen);
     this.genOpts(opts.genOpts || []);
+    this.smaller(opts.smaller || null);
   }
   /**
    * Get/Set the name of this arbitrary.
@@ -164,6 +167,15 @@ class Arbitrary {
       return this._genOpts;
     }
   }
+  smaller(smaller) {
+    if (smaller !== undefined) {
+      this._smaller = smaller;
+      return this;
+    }
+    else {
+      return this._smaller;
+    }
+  }
   /**
    * Clone this arbitrary.
    *
@@ -181,7 +193,7 @@ class Arbitrary {
    */
   choose(...args) {
     const clone = this.clone();
-    clone._genOpts = args;
+    clone.genOpts(args);
     return clone;
   }
   /**
