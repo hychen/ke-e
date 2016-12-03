@@ -7,7 +7,7 @@ describe('Arbitrary Boolean', () => {
   jsc.property(
     'generate either true or false.',
     () => {
-      let x = ke.bool.generate();
+      const x = ke.bool.generate();
       return _.isBoolean(x);
     });
 

@@ -5,12 +5,12 @@ describe('Arbitrary Function', () => {
   });
 
   it('generate a function returns any value.', () => {
-    let f = ke.func.generate();
+    const f = ke.func.generate();
     expect(_.isFunction(f)).eq(true);
   });
 
   it('generate a function returns a sepcified value.', () => {
-    let f = ke.func.choose(ke.bool).generate();
+    const f = ke.func.choose(ke.bool).generate();
     expect(_.isBoolean(f())).eq(true);
   });
 

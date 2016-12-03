@@ -3,8 +3,8 @@ import {fromGenMaker} from '../src/arbitrary';
 describe('Monkey Testing', () => {
 
   it('ChaosMonkey', (done) => {
-    let m = new ke.monkey.ChaosMonkey();
-    let insert = fromGenMaker(function() {
+    const m = new ke.monkey.ChaosMonkey();
+    const insert = fromGenMaker(function() {
       return function(engine, locale) {
         return function(end) {
           return end(1);

@@ -8,7 +8,7 @@ describe('Arbitrary Char', () => {
     'generate string of length 1.',
     'nat',
     () => {
-      let c = ke.char.generate();
+      const c = ke.char.generate();
       return _.isString(c) && c.length === 1;
     });
 
@@ -16,10 +16,10 @@ describe('Arbitrary Char', () => {
     'with inclusive char code ranges.',
     'nat(127)', 'nat(127)',
     (min, max) => {
-      let s = min < max ? min : max;
-      let e = min > max ? max : min;
-      let c = ke.char.choose(s, e).generate();
-      let charCode = c.charCodeAt(0);
+      const s = min < max ? min : max;
+      const e = min > max ? max : min;
+      const c = ke.char.choose(s, e).generate();
+      const charCode = c.charCodeAt(0);
       return _.isString(c) &&
         c.length === 1 &&
         0 <= charCode &&
@@ -45,9 +45,9 @@ describe('Arbitrary String', () => {
     'with inclusive length ranges.',
     'nat', 'nat',
     (min, max) => {
-      let s = min < max ? min : max;
-      let e = min > max ? max : min;
-      let str = ke.string.choose(s, e).generate();
+      const s = min < max ? min : max;
+      const e = min > max ? max : min;
+      const str = ke.string.choose(s, e).generate();
       return _.isString(str) && s <= str.length && str.length <= e;
     });
 
@@ -74,8 +74,8 @@ describe('Arbitrary ASCII Char', () => {
     'generate with only ascii characters.',
     'nat',
     () => {
-      let c= ke.asciichar.generate();
-      let charCode = c.charCodeAt(0);
+      const c= ke.asciichar.generate();
+      const charCode = c.charCodeAt(0);
       return _.isString(c) &&
         c.length === 1 &&
         24 <= charCode &&
@@ -94,7 +94,7 @@ describe('Arbitrary ASCII String', () => {
     'generate ascii strings.',
     'nat',
     () => {
-      let str = ke.asciistring.generate();
+      const str = ke.asciistring.generate();
       return str
         .split('')
         .map(c => c.charCodeAt(0))
@@ -105,9 +105,9 @@ describe('Arbitrary ASCII String', () => {
     'with inclusive length ranges.',
     'nat', 'nat',
     (min, max) => {
-      let s = min < max ? min : max;
-      let e = min > max ? max : min;
-      let str = ke.asciistring.choose(s, e).generate();
+      const s = min < max ? min : max;
+      const e = min > max ? max : min;
+      const str = ke.asciistring.choose(s, e).generate();
       return _.isString(str) && s <= str.length && str.length <= e;
     });
 

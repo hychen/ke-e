@@ -2,7 +2,7 @@ import Random from 'random-js';
 import {stdOpts} from '../src/constants';
 import {Property} from '../src/testable';
 
-let randomArb = ke.oneOf([
+const randomArb = ke.oneOf([
   ke.any,
   ke.bool,
   ke.falsy,
@@ -21,9 +21,9 @@ describe('Testable', () => {
       'evaluating a test.',
       'nat',
       (n) => {
-        let f = (x, y) => (n+x) + y === y + (n+x);
-        let r1 = ke.forall(ke.int, ke.int).eval(f);
-        let r2 = f(ke.int.generate(), ke.int.generate());
+        const f = (x, y) => (n+x) + y === y + (n+x);
+        const r1 = ke.forall(ke.int, ke.int).eval(f);
+        const r2 = f(ke.int.generate(), ke.int.generate());
         return r1 === r2;
       });
 
@@ -31,8 +31,8 @@ describe('Testable', () => {
       'evaluating tests should be repeatable',
       'int32',
       (seed) => {
-        let engine = Random.engines.mt19937();
-        let rep = (seed) => {
+        const engine = Random.engines.mt19937();
+        const rep = (seed) => {
           engine.seed(seed);
           return _.range(0, 30).map(() => {
             return ke.forall(randomArb).eval(_.identity, engine);
@@ -46,9 +46,9 @@ describe('Testable', () => {
   describe('Property', () => {
 
     it('checks a predicate over quantifilers.', () => {
-      let p = new Property('id', _.isInteger);
-      let r1 = p.check(ke.forall(ke.int, ke.int));
-      let r2 = p.check(ke.forall(ke.constant(1), ke.constant(2)));
+      const p = new Property('id', _.isInteger);
+      const r1 = p.check(ke.forall(ke.int, ke.int));
+      const r2 = p.check(ke.forall(ke.constant(1), ke.constant(2)));
       expect(r1.pass).eq(r2.pass);
     });
 

@@ -1,8 +1,8 @@
 describe('Person', () => {
 
   it('localizable.', () => {
-    let enFirstName = ke.person.firstName;
-    let zhTwFirstName = ke.person.firstName.locale('zh-Hant-TW');
+    const enFirstName = ke.person.firstName;
+    const zhTwFirstName = ke.person.firstName.locale('zh-Hant-TW');
     expect(enFirstName.generate() !== zhTwFirstName.generate()).eq(true);
   });
 

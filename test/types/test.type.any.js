@@ -5,7 +5,7 @@ describe('Arbitrary Any', () => {
   });
 
   it('generate one of boolean, falsy, integer, number.', () => {
-    let xs = ke.any.sample(100);
+    const xs = ke.any.sample(100);
     xs.forEach((x) => {
       expect(_.isNumber(x) ||
              _.isBoolean(x) ||

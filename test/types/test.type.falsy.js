@@ -7,7 +7,7 @@ describe('Arbitrary Falsy', () => {
   jsc.property(
     'generate falsy values.',
     () => {
-      let x = ke.falsy.generate();
+      const x = ke.falsy.generate();
       return !x;
     });
 

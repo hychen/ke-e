@@ -8,7 +8,7 @@ describe('Arbitrary Date', () => {
     'should return date.',
     'nat',
     () => {
-      let d = ke.date.generate();
+      const d = ke.date.generate();
       return _.isDate(d);
     });
 
@@ -17,11 +17,11 @@ describe('Arbitrary Date', () => {
     'datetime',
     'datetime',
     (d1, d2) => {
-      let d3 = ke.date.choose(d1, d2).generate();
-      let inRange = () => {
-        let t1 = d1.getTime();
-        let t2 = d2.getTime();
-        let t3 = d3.getTime();
+      const d3 = ke.date.choose(d1, d2).generate();
+      const inRange = () => {
+        const t1 = d1.getTime();
+        const t2 = d2.getTime();
+        const t3 = d3.getTime();
         if (t1 < t2) {
           return t1 <= t3 && t3 <= t2;
         }

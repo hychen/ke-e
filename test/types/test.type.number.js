@@ -8,7 +8,7 @@ describe('Arbitrary Nat', () => {
     'generate non-negative integers.',
     'nat',
     () => {
-      let n = ke.nat.generate();
+      const n = ke.nat.generate();
       return _.isInteger(n) && n > 0;
     });
 
@@ -16,8 +16,8 @@ describe('Arbitrary Nat', () => {
     'with inclusive ranges.',
     'nat', 'nat',
     (s, d) => {
-      let sprime = s == 0 ? s + 1 : s;
-      let n = ke.nat.choose(sprime, sprime + d).generate();
+      const sprime = s == 0 ? s + 1 : s;
+      const n = ke.nat.choose(sprime, sprime + d).generate();
       return _.isInteger(n) && n > 0 && sprime <= n && n <= sprime + d;
     });
 
@@ -40,9 +40,9 @@ describe('Arbitrary Integer', () => {
     'with inclusive ranges.',
     'integer', 'integer',
     (min, max) => {
-      let s = min < max ? min : max;
-      let e = min > max ? max : min;
-      let n = ke.int.choose(s, e).generate();
+      const s = min < max ? min : max;
+      const e = min > max ? max : min;
+      const n = ke.int.choose(s, e).generate();
       return _.isInteger(n) && s <= n && n <= e;
     });
 
@@ -58,7 +58,7 @@ describe('Arbitrary Number', () => {
     'generate numbers.',
     'number',
     () => {
-      let n = ke.number.generate();
+      const n = ke.number.generate();
       return _.isNumber(n);
     });
 
@@ -66,9 +66,9 @@ describe('Arbitrary Number', () => {
     'with inclusive ranges.',
     'number', 'number',
     (min, max) => {
-      let s = min < max ? min : max;
-      let e = min > max ? max : min;
-      let n = ke.number.choose(s, e).generate();
+      const s = min < max ? min : max;
+      const e = min > max ? max : min;
+      const n = ke.number.choose(s, e).generate();
       return _.isNumber(n) && s <= n && n <= e;
     });
 
