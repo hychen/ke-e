@@ -41,32 +41,36 @@ import {stdOpts} from './constants';
  */
 class Arbitrary {
   /**
-   * Create a arbitrary.
+   * Create an arbitrary.
    *
    * @param {!ArbitraryOptions} opts the options of arbitrary creation.
    * @return {Arbitrary}
    */
   constructor(opts) {
     assert(_.isObject(opts), 'opts must be an object.');
-    this._locale = 'en';
-    this._engine = null;
-    this._seed = null;
+    // private attributes initialization.
     this._gen = null;
     this._genOpts = null;
+    this._name = null;
+    this._locale = null;
+    this._engine = null;
+    this._seed = null;
     this._transforms = [_.identity];
 
+    this.locale(opts.locale || 'en');
     this.engine(opts.engine || stdOpts.engine);
     this.name(opts.name || 'Arbitrary-' + Random.uuid4(this._engine));
-    this.generator(opts.gen, opts.genOpts);
+    this.gen(opts.gen);
+    this.genOpts(opts.genOpts || []);
   }
   /**
-   * Name this arbitrary.
+   * Get/Set the name of this arbitrary.
    *
    * @param {string} name arbitrary name.
-   * @return {Arbitrary}
+   * @return {Arbitrary|string}
    */
   name(name) {
-    if (name) {
+    if (name !== undefined) {
       assert(_.isString(name) && name.length >= 3,
              'name must be a sring of length >= 3.');
       this._name = name;
@@ -80,10 +84,10 @@ class Arbitrary {
    * Get/Set locale.
    *
    * @param {!string} locale locale tag.
-   * @return {Arbitrary}
+   * @return {Arbitrary|string}
    */
   locale(locale) {
-    if (locale) {
+    if (locale !== undefined) {
       this._locale = locale;
       return this;
     }
@@ -95,10 +99,10 @@ class Arbitrary {
    * Get/Set a random engine.
    *
    * @param {!Engine} engine
-   * @return {Arbitrary}
+   * @return {Arbitrary|Engine}
    */
   engine(engine) {
-    if (engine) {
+    if (engine !== undefined) {
       assert(engine, 'engine is required.');
       this._engine = engine;
       return this;
@@ -111,9 +115,10 @@ class Arbitrary {
    * Get/Set a seed number.
    *
    * @param {!number} seed 32-bit integer.
+   * @return {Arbitrary|number}
    */
   seed(seed) {
-    if (typeof seed !== undefined) {
+    if (seed !== undefined) {
       assert(_.isInteger(seed), 'seed must be a 32-bit integer.');
       this._seed = seed;
       this._engine.seed(seed);
@@ -124,20 +129,36 @@ class Arbitrary {
     }
   }
   /**
-   * Set a random value generator.
+   * Get/Set a generator maker.
    *
    * @param {!GeneratorMaker} gen
-   * @param {?GeneratorMakerOptions} opts
-   * @return {Arbitrary}
+   * @return {Arbitrary|GeneratorMaker}
    */
-  generator(gen, opts) {
-    assert(_.isFunction(gen), 'gen must be a function.');
-    this._gen = gen.bind(this);
-    if (opts) {
-      assert(_.isArray(opts), 'opts must be an object.');
-      this._genOpts = opts;
+  gen(gen) {
+    if (gen !== undefined) {
+      assert(_.isFunction(gen), 'gen must be a function.');
+      this._gen = gen.bind(this);
+      return this;
     }
-    return this;
+    else {
+      return this._gen;
+    }
+  }
+  /**
+   * Get/Set the options of a generator maker.
+   *
+   * @param {?GeneratorMakerOptions} opts
+   * @return {Arbitrary|GeneratorMakerOptions}
+   */
+  genOpts(genOpts) {
+    if (typeof genOpts != undefined) {
+      assert(_.isArray(genOpts), 'opts must be an object.');
+      this._genOpts = genOpts;
+      return this;
+    }
+    else {
+      return this._genOpts;
+    }
   }
   /**
    * Clone this arbitrary.

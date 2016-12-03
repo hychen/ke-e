@@ -3,14 +3,22 @@ import {Arbitrary, fromGenMaker} from '../src/arbitrary';
 
 describe('Arbitrary', () => {
 
-  let engine = Random.engines.mt19937();
+  const engine = Random.engines.mt19937();
 
-  it('nameable', () => {
-    let name = 'Integer';
-    let arb1 = fromGenMaker(_.identity).name(name);
-    let arb2 = new Arbitrary({gen: _.identity,
-                               name: name});
-    return arb1.name() === arb2.name() === name;
+  it('set/get name.', () => {
+    const name = 'Integer';
+    const arb1= new Arbitrary({gen: _.identity});
+    expect(arb1.name('XXX').name()).eq('XXX');
+  });
+
+  it('set/get locale', () => {
+    const arb1= new Arbitrary({gen: _.identity});
+    expect(arb1.locale('zh-Hant-TW').locale()).eq('zh-Hant-TW');
+  });
+
+  it('set/get seed', () => {
+    const arb1= new Arbitrary({gen: _.identity});
+    expect(arb1.seed(1234).seed()).eq(1234);
   });
 
   jsc.property(

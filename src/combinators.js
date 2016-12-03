@@ -59,7 +59,7 @@ export function suchThat(arb, predicate) {
       return x;
     };
   };
-  clone.generator(newGenerator);
+  clone.gen(newGenerator);
   return clone;
 }
 
