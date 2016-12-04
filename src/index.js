@@ -11,11 +11,12 @@ const __all__ = {
   types: types,
   combinators: combinators,
   testable: testable,
-  monkey: monkey
+  monkey: monkey,
+  hold: testable.hold,
+  forall: testable.forall
 };
 
 liftExport(__all__, 'types');
 liftExport(__all__, 'combinators');
-liftExport(__all__, 'testable');
 
 export default __all__;
