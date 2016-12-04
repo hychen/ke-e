@@ -9,6 +9,7 @@ import {smallerRange,
 import {fromGenMaker,
         isArbitrary,
         Arbitrary} from './arbitrary';
+import {any} from './types/any';
 
 /**
  * Generates a contant value.
@@ -131,21 +132,34 @@ export function pair(arb1, arb2) {
 /**
  * Generates an array of random length.
  *
- * @param {Arbitrary} arb
+ * @param {Arbitrary} arb a arbitrary.
  * @return {Arbitrary}
  *
  * @example
  * // Produces an array of integer that the length between 1 and 3.
  * ke.array(ke.int).choose(1, 3).generate();
+ *
+ * // more complicate case.
+ * ke.array(ke.oneOf([ke.int, ke.falsy, ke.array(ke.int)]));
+ *
+ * // Produces an nested array with random values.
+ * ke.array().generate();
  */
 export function array(arb) {
-  assert(isArbitrary(arb), 'arb must be a Arbitrary.');
   return new Arbitrary({
     name: 'Array',
     gen: function (min, max) {
+      assert(min >= 0 || max >= 0, 'min or max must be larger than 0.');
+      assert(max >= min, 'max must be larger than min.');
       return function(engine, locale) {
         return _.range(0, Random.integer(min, max)(engine)).map(() => {
-          return arb.makeGen()(engine, locale);
+          if (arb !== undefined) {
+            assert(isArbitrary(arb), 'arb must be a Arbitrary.');
+            return arb.makeGen()(engine, locale);
+          }
+          else {
+            return recursive(array, any, 2).makeGen()(engine, locale);
+          }
         });
       };
     },
