@@ -29,41 +29,26 @@ export function constant(value) {
 }
 
 /**
- * Generates a value that satisfies a predicate.
+ * Generates one of the given values. The input list must be non-empty.
  *
- * @param {!Arbitrary} arb - an arbitrary.
- * @param {!function} predicate - a predicate function.
- * @returns {Arbitrary}
+ * @param {Array} pool
+ * @return {Arbitrary}
  *
  * @example
- * // returns even number.
- * ke.suchThat(ke.int, (n) => n / 2 === 0).generate();
+ * // returns 1 or 'a';
+ * ke.elements([1, 'a']).generates();
  */
-export function suchThat(arb, predicate) {
-  const oriGen = arb.makeGen();
-  const clone = arb.clone();
-  const newGenerator = function (...genOpts) {
-    return function (engine, locale) {
-      let x;
-      let j = 0;
-      for (let i=0;;i++) {
-        j++;
-        if (i > 5) {
-          i = 0;
-        }
-        x = oriGen(engine, locale);
-        if (j > 5000) {
-          throw new Error('can not find value in this range.');
-        }
-        if (predicate(x)) {
-          break;
-        }
-      }
-      return x;
-    };
-  };
-  clone.gen(newGenerator);
-  return clone;
+export function elements(pool) {
+  assert(_.isArray(pool), 'pool must be an array.');
+  return new Arbitrary({
+    name: 'Elements',
+    gen: function() {
+      return function (engine) {
+        const e = pool[Random.integer(0, pool.length - 1)(engine)];
+        return constant(e).makeGen()(engine);
+      };
+    }
+  });
 }
 
 /**
@@ -245,29 +230,6 @@ export function objectOf(...args) {
 }
 
 /**
- * Generates one of the given values. The input list must be non-empty.
- *
- * @param {Array} pool
- * @return {Arbitrary}
- *
- * @example
- * // returns 1 or 'a';
- * ke.elements([1, 'a']).generates();
- */
-export function elements(pool) {
-  assert(_.isArray(pool), 'pool must be an array.');
-  return new Arbitrary({
-    name: 'Elements',
-    gen: function() {
-      return function (engine) {
-        const e = pool[Random.integer(0, pool.length - 1)(engine)];
-        return constant(e).makeGen()(engine);
-      };
-    }
-  });
-}
-
-/**
  * Produce a smaller version of a arbitrary.
  *
  * @param {Arbitrary} arb
@@ -286,6 +248,7 @@ export function small(arb) {
  *
  * @param {function} combinator a function to return an arbitrary.
  * @param {Arbitrary} arb the base arbitrary.
+ * @param {number} depth the depth of recursively stacks. default is 4.
  * @return {*}
  * @example
  * ke.recursive(ke.array, ke.any);
@@ -312,4 +275,42 @@ export function recursive(combinator, arb, depth = 4) {
       return [combinator, arb, ulog2(depth)];
     }
   });
+}
+
+/**
+ * Generates a value that satisfies a predicate.
+ *
+ * @param {!Arbitrary} arb - an arbitrary.
+ * @param {!function} predicate - a predicate function.
+ * @returns {Arbitrary}
+ *
+ * @example
+ * // returns even number.
+ * ke.suchThat(ke.int, (n) => n / 2 === 0).generate();
+ */
+export function suchThat(arb, predicate) {
+  const oriGen = arb.makeGen();
+  const clone = arb.clone();
+  const newGenerator = function (...genOpts) {
+    return function (engine, locale) {
+      let x;
+      let j = 0;
+      for (let i=0;;i++) {
+        j++;
+        if (i > 5) {
+          i = 0;
+        }
+        x = oriGen(engine, locale);
+        if (j > 5000) {
+          throw new Error('can not find value in this range.');
+        }
+        if (predicate(x)) {
+          break;
+        }
+      }
+      return x;
+    };
+  };
+  clone.gen(newGenerator);
+  return clone;
 }
