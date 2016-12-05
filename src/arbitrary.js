@@ -62,7 +62,7 @@ class Arbitrary {
     this._locale = null;
     this._engine = null;
     this._seed = null;
-    this._transforms = [_.identity];
+    this._transforms = [];
 
     this.locale(opts.locale || 'en');
     this.engine(opts.engine || stdOpts.engine);
