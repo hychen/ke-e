@@ -115,7 +115,7 @@ export function recursive(combinator, arb, depth = 4) {
     gen: function(combinator, arb, depth) {
       return function(engine, locale) {
         function rec(n) {
-          const chance = Random.integer(0, 3);
+          const chance = Random.integer(0, 3)(engine);
           if (n <= 0 || chance === 0 ) {
             return n == depth ? combinator(arb) : arb;
           }
