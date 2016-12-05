@@ -6,6 +6,7 @@ import Random from 'random-js';
 import assert from 'assert';
 import {stdOpts} from './constants';
 
+
 /**
  * A function to generate a function to take a random engine in random-js.
  * to generate a random value.
@@ -167,6 +168,14 @@ class Arbitrary {
       return this._genOpts;
     }
   }
+  /**
+   * Get/set a function to tweak the options of a
+   * generator maker.
+   *
+   * @param {function} smaller a function to return tewaked
+   *                           generator maker options.
+   * @return {Arbitrary|function}
+   */
   smaller(smaller) {
     if (smaller !== undefined) {
       this._smaller = smaller;
