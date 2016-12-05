@@ -263,7 +263,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-229">line 229</a>
+				 <a href="combinators.js.html#sunlight-1-line-262">line 262</a>
 			</li>
 		</ul>
 	</dd>
@@ -659,6 +659,171 @@ ke.elements([1, &#x27;a&#x27;]).generates();</pre>
             
 <hr>
 <dt>
+    <h4 class="name" id=".frequency"><span class="type-signature">&lt;static> </span>frequency(pool)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Choose one of the given arbitraries, with a weighted random distribution.
+The input list must be non-empty.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>pool</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Array.&lt;Array.&lt;*>></span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="combinators.js.html">combinators.js</a>,
+				 <a href="combinators.js.html#sunlight-1-line-63">line 63</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">ke.frequency([ [4, ke.int], [6, ke.bool] ]).generate();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
     <h4 class="name" id=".maybe"><span class="type-signature">&lt;static> </span>maybe(arb)</h4>
     
     
@@ -764,7 +929,7 @@ ke.elements([1, &#x27;a&#x27;]).generates();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-171">line 171</a>
+				 <a href="combinators.js.html#sunlight-1-line-204">line 204</a>
 			</li>
 		</ul>
 	</dd>
@@ -922,7 +1087,7 @@ ke.elements([1, &#x27;a&#x27;]).generates();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-259">line 259</a>
+				 <a href="combinators.js.html#sunlight-1-line-292">line 292</a>
 			</li>
 		</ul>
 	</dd>
@@ -1082,7 +1247,7 @@ properties of object and expanding.</p>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-276">line 276</a>
+				 <a href="combinators.js.html#sunlight-1-line-309">line 309</a>
 			</li>
 		</ul>
 	</dd>
@@ -1247,7 +1412,7 @@ ke.object({k: ke.int}).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-305">line 305</a>
+				 <a href="combinators.js.html#sunlight-1-line-338">line 338</a>
 			</li>
 		</ul>
 	</dd>
@@ -1405,7 +1570,7 @@ ke.object({k: ke.int}).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-151">line 151</a>
+				 <a href="combinators.js.html#sunlight-1-line-184">line 184</a>
 			</li>
 		</ul>
 	</dd>
@@ -1594,7 +1759,7 @@ ke.oneOf(ke.bool, ke.int).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-207">line 207</a>
+				 <a href="combinators.js.html#sunlight-1-line-240">line 240</a>
 			</li>
 		</ul>
 	</dd>
@@ -1809,7 +1974,7 @@ ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-79">line 79</a>
+				 <a href="combinators.js.html#sunlight-1-line-112">line 112</a>
 			</li>
 		</ul>
 	</dd>
@@ -1985,7 +2150,7 @@ ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-184">line 184</a>
+				 <a href="combinators.js.html#sunlight-1-line-217">line 217</a>
 			</li>
 		</ul>
 	</dd>
@@ -2150,7 +2315,7 @@ ke.sequence(ke.int, ke.bool, ke.number).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-61">line 61</a>
+				 <a href="combinators.js.html#sunlight-1-line-94">line 94</a>
 			</li>
 		</ul>
 	</dd>
@@ -2332,7 +2497,7 @@ ke.sequence(ke.int, ke.bool, ke.number).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-114">line 114</a>
+				 <a href="combinators.js.html#sunlight-1-line-147">line 147</a>
 			</li>
 		</ul>
 	</dd>
@@ -2442,7 +2607,7 @@ ke.suchThat(ke.int, (n) =&gt; n / 2 === 0).generate();</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
 	
-		on 2016-12-05T12:51:51+08:00
+		on 2016-12-05T13:25:22+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

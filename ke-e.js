@@ -19717,13 +19717,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }(); /**
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * @module
-	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          */
-
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 	exports.constant = constant;
 	exports.elements = elements;
+	exports.frequency = frequency;
 	exports.small = small;
 	exports.recursive = recursive;
 	exports.suchThat = suchThat;
@@ -19755,6 +19753,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _any = __webpack_require__(13);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); } /**
+	                                                                               * @module
+	                                                                               */
+
 
 	/**
 	 * Generates a contant value.
@@ -19801,6 +19804,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	/**
+	 * Choose one of the given arbitraries, with a weighted random distribution.
+	 * The input list must be non-empty.
+	 *
+	 * @param {Array<Array<*>>} pool
+	 * @return {*}
+	 * @example
+	 * ke.frequency([ [4, ke.int], [6, ke.bool] ]).generate();
+	 */
+	function frequency(pool) {
+	  (0, _assert2.default)(_lodash2.default.isArray(pool) && pool.length > 0, 'pool must be an non-empty array.');
+	  return new _arbitrary.Arbitrary({
+	    name: 'Frequency',
+	    gen: function gen(pool) {
+	      return function (engine, locale) {
+	        function pick(n, _ref) {
+	          var _ref2 = _toArray(_ref),
+	              _ref2$ = _slicedToArray(_ref2[0], 2),
+	              k = _ref2$[0],
+	              x = _ref2$[1],
+	              xs = _ref2.slice(1);
+
+	          return n <= k ? x : pick(n - k, xs);
+	        }
+	        var total = _lodash2.default.sum(pool.map(function (e) {
+	          return e[0];
+	        }));
+	        var head = _randomJs2.default.integer(1, total)(engine);
+	        var result = pick(head, pool);
+	        if ((0, _arbitrary.isArbitrary)(result)) {
+	          return result.makeGen()(engine, locale);
+	        } else {
+	          return result;
+	        };
+	      };
+	    },
+	    genOpts: [pool]
+	  });
+	}
+
+	/**
 	 * Produce a smaller version of a arbitrary.
 	 *
 	 * @param {Arbitrary} arb
@@ -19843,11 +19886,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      };
 	    },
 	    genOpts: [combinator, arb, depth],
-	    smaller: function smaller(_ref) {
-	      var _ref2 = _slicedToArray(_ref, 3),
-	          combinator = _ref2[0],
-	          arb = _ref2[1],
-	          depth = _ref2[2];
+	    smaller: function smaller(_ref3) {
+	      var _ref4 = _slicedToArray(_ref3, 3),
+	          combinator = _ref4[0],
+	          arb = _ref4[1],
+	          depth = _ref4[2];
 
 	      return [combinator, arb, (0, _utils.ulog2)(depth)];
 	    }
