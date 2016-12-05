@@ -44,7 +44,7 @@ export function elements(pool) {
     name: 'Elements',
     gen: function() {
       return function (engine) {
-        const e = pool[Random.integer(0, pool.length - 1)(engine)];
+        const e = Random.picker(pool)(engine);
         return constant(e).makeGen()(engine);
       };
     }
@@ -154,7 +154,7 @@ export function oneOf(arbs) {
     name: 'OneOf',
     gen: function (pool) {
       return function (engine, locale) {
-        const arb = pool[Random.integer(0, arbs.length - 1)(engine)];
+        const arb = Random.picker(pool)(engine);
         return arb.makeGen()(engine, locale);
       };
     },
