@@ -67,7 +67,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _utils = __webpack_require__(1);
 
-	var _types = __webpack_require__(14);
+	var _types = __webpack_require__(19);
 
 	var types = _interopRequireWildcard(_types);
 
@@ -93,12 +93,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  types: types,
 	  combinators: combinators,
 	  testable: testable,
-	  monkey: monkey
+	  monkey: monkey,
+	  hold: testable.hold,
+	  forall: testable.forall
 	};
 
 	(0, _utils.liftExport)(__all__, 'types');
 	(0, _utils.liftExport)(__all__, 'combinators');
-	(0, _utils.liftExport)(__all__, 'testable');
 
 	exports.default = __all__;
 
@@ -114,6 +115,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.liftExport = liftExport;
 	exports.getDef = getDef;
 	exports.fromDefinition = fromDefinition;
+	exports.ulog2 = ulog2;
+	exports.smallerRange = smallerRange;
 
 	var _lodash = __webpack_require__(2);
 
@@ -123,7 +126,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _combinators = __webpack_require__(12);
 
-	var _avaliableLocaleids = __webpack_require__(13);
+	var _avaliableLocaleids = __webpack_require__(18);
 
 	var _avaliableLocaleids2 = _interopRequireDefault(_avaliableLocaleids);
 
@@ -181,6 +184,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return (0, _combinators.elements)(pool).engine(engine).generate();
 	    };
 	  });
+	}
+
+	/**
+	 * @param {!number} n
+	 * @return {number}
+	 */
+	function ulog2(n) {
+	  if (n === 0) return 0;
+	  var x = n < 0 ? Math.abs(n) : n;
+	  var xprime = Math.log2(x);
+	  var xprimeprime = _lodash2.default.isInteger(n) ? Math.floor(xprime) : xprime;
+	  return n < 0 ? -xprimeprime : xprimeprime;
+	}
+
+	/**
+	 * Take a pair of numbers and returns
+	 * theire smaller size.
+	 *
+	 * @param {!Array<number, number>} range
+	 * @return {Array<number, number>}
+	 */
+	function smallerRange(range) {
+	  return [ulog2(range[0]), ulog2(range[1])];
 	}
 
 /***/ },
@@ -17278,6 +17304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @typedef {Object} ArbitraryOptions
 	 * @property {!GeneratorMaker} gen the generator maker.
 	 * @property {?GeneratorMakerOptions} genOts the options of the generator maker.
+	 * @property {?function} smaller a function to return small size of genOts.
 	 * @property {?string} name the name of a arbitrary.
 	 * @property {?string} locale the locale tag. default is en.
 	 * @property {?Engine} engine the random engine.
@@ -17309,17 +17336,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // private attributes initialization.
 	    this._gen = null;
 	    this._genOpts = null;
+	    this._smaller = null;
 	    this._name = null;
 	    this._locale = null;
 	    this._engine = null;
 	    this._seed = null;
-	    this._transforms = [_lodash2.default.identity];
+	    this._transforms = [];
 
 	    this.locale(opts.locale || 'en');
 	    this.engine(opts.engine || _constants.stdOpts.engine);
 	    this.name(opts.name || 'Arbitrary-' + _randomJs2.default.uuid4(this._engine));
 	    this.gen(opts.gen);
 	    this.genOpts(opts.genOpts || []);
+	    this.smaller(opts.smaller || _lodash2.default.identity);
 	  }
 	  /**
 	   * Get/Set the name of this arbitrary.
@@ -17431,6 +17460,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	    }
 	    /**
+	     * Get/set a function to tweak the options of a
+	     * generator maker.
+	     *
+	     * @param {function} smaller a function to return tewaked
+	     *                           generator maker options.
+	     * @return {Arbitrary|function}
+	     */
+
+	  }, {
+	    key: 'smaller',
+	    value: function smaller(_smaller) {
+	      if (_smaller !== undefined) {
+	        this._smaller = _smaller;
+	        return this;
+	      } else {
+	        return this._smaller;
+	      }
+	    }
+	    /**
 	     * Clone this arbitrary.
 	     *
 	     * @return {Arbitrary}
@@ -17458,7 +17506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        args[_key] = arguments[_key];
 	      }
 
-	      clone._genOpts = args;
+	      clone.genOpts(args);
 	      return clone;
 	    }
 	    /**
@@ -19668,17 +19716,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }(); /**
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          * @module
+	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          */
+
+
 	exports.constant = constant;
+	exports.elements = elements;
+	exports.small = small;
+	exports.recursive = recursive;
 	exports.suchThat = suchThat;
 	exports.oneOf = oneOf;
 	exports.maybe = maybe;
+	exports.sequence = sequence;
 	exports.pair = pair;
 	exports.array = array;
 	exports.nearray = nearray;
-	exports.sequence = sequence;
 	exports.object = object;
 	exports.objectOf = objectOf;
-	exports.elements = elements;
 
 	var _lodash = __webpack_require__(2);
 
@@ -19692,7 +19748,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _randomJs2 = _interopRequireDefault(_randomJs);
 
+	var _utils = __webpack_require__(1);
+
 	var _arbitrary = __webpack_require__(4);
+
+	var _any = __webpack_require__(13);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19706,9 +19766,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // returns 1.
 	 * ke.constant(1).generate();
 	 */
-	/**
-	 * @module
-	 */
 	function constant(value) {
 	  return new _arbitrary.Arbitrary({
 	    name: 'Constant',
@@ -19716,6 +19773,83 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return function () {
 	        return value;
 	      };
+	    }
+	  });
+	}
+
+	/**
+	 * Generates one of the given values. The input list must be non-empty.
+	 *
+	 * @param {Array} pool
+	 * @return {Arbitrary}
+	 *
+	 * @example
+	 * // returns 1 or 'a';
+	 * ke.elements([1, 'a']).generates();
+	 */
+	function elements(pool) {
+	  (0, _assert2.default)(_lodash2.default.isArray(pool), 'pool must be an array.');
+	  return new _arbitrary.Arbitrary({
+	    name: 'Elements',
+	    gen: function gen() {
+	      return function (engine) {
+	        var e = _randomJs2.default.picker(pool)(engine);
+	        return constant(e).makeGen()(engine);
+	      };
+	    }
+	  });
+	}
+
+	/**
+	 * Produce a smaller version of a arbitrary.
+	 *
+	 * @param {Arbitrary} arb
+	 * @return {Arbitrary}
+	 */
+	function small(arb) {
+	  var clone = arb.clone();
+	  var smaller = arb.smaller();
+	  (0, _assert2.default)(_lodash2.default.isFunction(smaller), arb.name() + ' does not have smaller version.');
+	  var smallGenOpts = smaller(arb.genOpts());
+	  return clone.genOpts(smallGenOpts).name('Small ' + arb.name());
+	}
+
+	/**
+	 * Produce a nested values.
+	 *
+	 * @param {function} combinator a function to return an arbitrary.
+	 * @param {Arbitrary} arb the base arbitrary.
+	 * @param {number} depth the depth of recursively stacks. default is 4.
+	 * @return {*}
+	 * @example
+	 * ke.recursive(ke.array, ke.any);
+	 */
+	function recursive(combinator, arb) {
+	  var depth = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 4;
+
+	  return new _arbitrary.Arbitrary({
+	    name: 'Recursive',
+	    gen: function gen(combinator, arb, depth) {
+	      return function (engine, locale) {
+	        function rec(n) {
+	          var chance = _randomJs2.default.integer(0, 3);
+	          if (n <= 0 || chance === 0) {
+	            return n == depth ? combinator(arb) : arb;
+	          } else {
+	            return combinator(rec(n - 1));
+	          }
+	        }
+	        return rec(depth).makeGen()(engine, locale);
+	      };
+	    },
+	    genOpts: [combinator, arb, depth],
+	    smaller: function smaller(_ref) {
+	      var _ref2 = _slicedToArray(_ref, 3),
+	          combinator = _ref2[0],
+	          arb = _ref2[1],
+	          depth = _ref2[2];
+
+	      return [combinator, arb, (0, _utils.ulog2)(depth)];
 	    }
 	  });
 	}
@@ -19774,7 +19908,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    name: 'OneOf',
 	    gen: function gen(pool) {
 	      return function (engine, locale) {
-	        var arb = pool[_randomJs2.default.integer(0, arbs.length - 1)(engine)];
+	        var arb = _randomJs2.default.picker(pool)(engine);
 	        return arb.makeGen()(engine, locale);
 	      };
 	    },
@@ -19793,70 +19927,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	/**
-	 * Generates a pair of two arbitraries.
-	 *
-	 * @param {!Arbitrary} arb1
-	 * @param {!Arbitrary} arb2
-	 * @return {Arbitrary}
-	 *
-	 * @example
-	 * ke.pair(ke.int, ke.int).generate();
-	 *
-	 * @example
-	 * // choose different arbitraries.
-	 * ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();
-	 */
-	function pair(arb1, arb2) {
-	  (0, _assert2.default)((0, _arbitrary.isArbitrary)(arb1), 'arb1 is a arbitrary.');
-	  (0, _assert2.default)((0, _arbitrary.isArbitrary)(arb2), 'arb2 is a arbitrary.');
-	  return new _arbitrary.Arbitrary({
-	    name: 'Pair',
-	    gen: function gen(a1, a2) {
-	      return function (engine, locale) {
-	        return [a1.makeGen()(engine, locale), a2.makeGen()(engine, locale)];
-	      };
-	    },
-	    genOpts: [arb1, arb2]
-	  });
-	}
-
-	/**
-	 * Generates an array of random length.
-	 *
-	 * @param {Arbitrary} arb
-	 * @return {Arbitrary}
-	 *
-	 * @example
-	 * // Produces an array of integer that the length between 1 and 3.
-	 * ke.array(ke.int).choose(1, 3).generate();
-	 */
-	function array(arb) {
-	  (0, _assert2.default)((0, _arbitrary.isArbitrary)(arb), 'arb must be a Arbitrary.');
-	  return new _arbitrary.Arbitrary({
-	    name: 'Array',
-	    gen: function gen(min, max) {
-	      return function (engine, locale) {
-	        return _lodash2.default.range(0, _randomJs2.default.integer(min, max)(engine)).map(function () {
-	          return arb.makeGen()(engine, locale);
-	        });
-	      };
-	    },
-	    genOpts: [0, 30]
-	  });
-	}
-
-	/**
-	 *
-	 * Generates an non-empty array.
-	 *
-	 * @param {Arbitrary}
-	 * @return {Arbitrary}
-	 */
-	function nearray(arb) {
-	  return array(arb).choose(1, 30).name('Non-Empty Array');
-	};
-
-	/**
 	 * Generate a orderd array.
 	 *
 	 * @param {...Arbitrary}
@@ -19871,14 +19941,87 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  (0, _assert2.default)(_lodash2.default.every(arbs, _arbitrary.isArbitrary), 'arguments must be array of Arbitrary');
-	  return (0, _arbitrary.fromGenMaker)(function (pool) {
+	  return (0, _arbitrary.fromGenMaker)(function () {
+	    for (var _len2 = arguments.length, pool = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+	      pool[_key2] = arguments[_key2];
+	    }
+
 	    return function (engine, locale) {
 	      return pool.map(function (arb) {
 	        return arb.makeGen()(engine, locale);
 	      });
 	    };
-	  }, [arbs]).name('Sequence');
+	  }, arbs).name('Sequence');
 	}
+
+	/**
+	 * Generates a pair of two arbitraries.
+	 *
+	 * @param {!Arbitrary} arb1 first arbitrary.
+	 * @param {!Arbitrary} arb2 second arbitrary.
+	 * @return {Arbitrary}
+	 *
+	 * @example
+	 * ke.pair(ke.int, ke.int).generate();
+	 *
+	 * @example
+	 * // choose different arbitraries.
+	 * ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();
+	 */
+	function pair(arb1, arb2) {
+	  (0, _assert2.default)((0, _arbitrary.isArbitrary)(arb1), 'arb1 must be an arbitrary.');
+	  (0, _assert2.default)((0, _arbitrary.isArbitrary)(arb2), 'arb2 must be an arbitrary.');
+	  return sequence(arb1, arb2).name('Pair');
+	}
+
+	/**
+	 * Generates an array of random length.
+	 *
+	 * @param {Arbitrary} arb a arbitrary.
+	 * @return {Arbitrary}
+	 *
+	 * @example
+	 * // Produces an array of integer that the length between 1 and 3.
+	 * ke.array(ke.int).choose(1, 3).generate();
+	 *
+	 * // more complicate case.
+	 * ke.array(ke.oneOf([ke.int, ke.falsy, ke.array(ke.int)]));
+	 *
+	 * // Produces an nested array with random values.
+	 * ke.array().generate();
+	 */
+	function array(arb) {
+	  return new _arbitrary.Arbitrary({
+	    name: 'Array',
+	    gen: function gen(min, max) {
+	      (0, _assert2.default)(min >= 0 || max >= 0, 'min or max must be larger than 0.');
+	      (0, _assert2.default)(max >= min, 'max must be larger than min.');
+	      return function (engine, locale) {
+	        return _lodash2.default.range(0, _randomJs2.default.integer(min, max)(engine)).map(function () {
+	          if (arb !== undefined) {
+	            (0, _assert2.default)((0, _arbitrary.isArbitrary)(arb), 'arb must be a Arbitrary.');
+	            return arb.makeGen()(engine, locale);
+	          } else {
+	            return recursive(array, _any.any, 2).makeGen()(engine, locale);
+	          }
+	        });
+	      };
+	    },
+	    genOpts: [0, 30],
+	    smaller: _utils.smallerRange
+	  });
+	}
+
+	/**
+	 *
+	 * Generates an non-empty array.
+	 *
+	 * @param {Arbitrary}
+	 * @return {Arbitrary}
+	 */
+	function nearray(arb) {
+	  return array(arb).choose(1, 30).name('Non-Empty Array');
+	};
 
 	/**
 	 * Generate a object.
@@ -19923,15 +20066,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * ke.objectOf(Person).choose(ke.person.name).generate();
 	 */
 	function objectOf() {
-	  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-	    args[_key2] = arguments[_key2];
+	  for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+	    args[_key3] = arguments[_key3];
 	  }
 
 	  var cls = args[0];
 	  var clsarbargs1 = args.slice(1, args.length);
 	  return (0, _arbitrary.fromGenMaker)(function () {
-	    for (var _len3 = arguments.length, clsarbargs2 = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-	      clsarbargs2[_key3] = arguments[_key3];
+	    for (var _len4 = arguments.length, clsarbargs2 = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+	      clsarbargs2[_key4] = arguments[_key4];
 	    }
 
 	    return function (engine, locale) {
@@ -19946,53 +20089,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	}
 
-	/**
-	 * Generates one of the given values. The input list must be non-empty.
-	 *
-	 * @param {Array} pool
-	 * @return {Arbitrary}
-	 *
-	 * @example
-	 * // returns 1 or 'a';
-	 * ke.elements([1, 'a']).generates();
-	 */
-	function elements(pool) {
-	  (0, _assert2.default)(_lodash2.default.isArray(pool), 'pool must be an array.');
-	  return new _arbitrary.Arbitrary({
-	    name: 'Elements',
-	    gen: function gen() {
-	      return function (engine) {
-	        var e = pool[_randomJs2.default.integer(0, pool.length - 1)(engine)];
-	        return constant(e).makeGen()(engine);
-	      };
-	    }
-	  });
-	}
-
 /***/ },
 /* 13 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	/**
-	 * @module
-	 */
-
-	/**
-	 * @describe Avaliable Locale Ids definietion.
-	 *
-	 * Took from
-	 * https://github.com/unicode-cldr/cldr-core/blob/master/availableLocales.json.
-	 *
-	 */
-	exports.default = ['af', 'af-NA', 'am', 'ar', 'ar-AE', 'ar-BH', 'ar-DJ', 'ar-DZ', 'ar-EG', 'ar-EH', 'ar-ER', 'ar-IL', 'ar-IQ', 'ar-JO', 'ar-KM', 'ar-KW', 'ar-LB', 'ar-LY', 'ar-MA', 'ar-MR', 'ar-OM', 'ar-PS', 'ar-QA', 'ar-SA', 'ar-SD', 'ar-SO', 'ar-SS', 'ar-SY', 'ar-TD', 'ar-TN', 'ar-YE', 'az', 'az-Latn', 'be', 'bg', 'bn', 'bn-IN', 'bs', 'bs-Latn', 'ca', 'ca-AD', 'ca-ES-VALENCIA', 'ca-FR', 'ca-IT', 'cs', 'cy', 'da', 'da-GL', 'de', 'de-AT', 'de-BE', 'de-CH', 'de-IT', 'de-LI', 'de-LU', 'el', 'el-CY', 'en', 'en-001', 'en-150', 'en-AG', 'en-AI', 'en-AS', 'en-AT', 'en-AU', 'en-BB', 'en-BE', 'en-BI', 'en-BM', 'en-BS', 'en-BW', 'en-BZ', 'en-CA', 'en-CC', 'en-CH', 'en-CK', 'en-CM', 'en-CX', 'en-CY', 'en-DE', 'en-DG', 'en-DK', 'en-DM', 'en-ER', 'en-FI', 'en-FJ', 'en-FK', 'en-FM', 'en-GB', 'en-GD', 'en-GG', 'en-GH', 'en-GI', 'en-GM', 'en-GU', 'en-GY', 'en-HK', 'en-IE', 'en-IL', 'en-IM', 'en-IN', 'en-IO', 'en-JE', 'en-JM', 'en-KE', 'en-KI', 'en-KN', 'en-KY', 'en-LC', 'en-LR', 'en-LS', 'en-MG', 'en-MH', 'en-MO', 'en-MP', 'en-MS', 'en-MT', 'en-MU', 'en-MW', 'en-MY', 'en-NA', 'en-NF', 'en-NG', 'en-NL', 'en-NR', 'en-NU', 'en-NZ', 'en-PG', 'en-PH', 'en-PK', 'en-PN', 'en-PR', 'en-PW', 'en-RW', 'en-SB', 'en-SC', 'en-SD', 'en-SE', 'en-SG', 'en-SH', 'en-SI', 'en-SL', 'en-SS', 'en-SX', 'en-SZ', 'en-TC', 'en-TK', 'en-TO', 'en-TT', 'en-TV', 'en-TZ', 'en-UG', 'en-UM', 'en-US-POSIX', 'en-VC', 'en-VG', 'en-VI', 'en-VU', 'en-WS', 'en-ZA', 'en-ZM', 'en-ZW', 'es', 'es-419', 'es-AR', 'es-BO', 'es-BR', 'es-CL', 'es-CO', 'es-CR', 'es-CU', 'es-DO', 'es-EA', 'es-EC', 'es-GQ', 'es-GT', 'es-HN', 'es-IC', 'es-MX', 'es-NI', 'es-PA', 'es-PE', 'es-PH', 'es-PR', 'es-PY', 'es-SV', 'es-US', 'es-UY', 'es-VE', 'et', 'eu', 'fa', 'fa-AF', 'fi', 'fil', 'fo', 'fo-DK', 'fr', 'fr-BE', 'fr-BF', 'fr-BI', 'fr-BJ', 'fr-BL', 'fr-CA', 'fr-CD', 'fr-CF', 'fr-CG', 'fr-CH', 'fr-CI', 'fr-CM', 'fr-DJ', 'fr-DZ', 'fr-GA', 'fr-GF', 'fr-GN', 'fr-GP', 'fr-GQ', 'fr-HT', 'fr-KM', 'fr-LU', 'fr-MA', 'fr-MC', 'fr-MF', 'fr-MG', 'fr-ML', 'fr-MQ', 'fr-MR', 'fr-MU', 'fr-NC', 'fr-NE', 'fr-PF', 'fr-PM', 'fr-RE', 'fr-RW', 'fr-SC', 'fr-SN', 'fr-SY', 'fr-TD', 'fr-TG', 'fr-TN', 'fr-VU', 'fr-WF', 'fr-YT', 'ga', 'gl', 'gu', 'he', 'hi', 'hr', 'hr-BA', 'hu', 'hy', 'id', 'is', 'it', 'it-CH', 'it-SM', 'ja', 'ka', 'kk', 'km', 'kn', 'ko', 'ko-KP', 'ky', 'lo', 'lt', 'lv', 'mk', 'ml', 'mn', 'mr', 'ms', 'ms-BN', 'ms-SG', 'my', 'nb', 'nb-SJ', 'ne', 'ne-IN', 'nl', 'nl-AW', 'nl-BE', 'nl-BQ', 'nl-CW', 'nl-SR', 'nl-SX', 'pa', 'pa-Guru', 'pl', 'pt', 'pt-AO', 'pt-CH', 'pt-CV', 'pt-GQ', 'pt-GW', 'pt-LU', 'pt-MO', 'pt-MZ', 'pt-PT', 'pt-ST', 'pt-TL', 'ro', 'ro-MD', 'root', 'ru', 'ru-BY', 'ru-KG', 'ru-KZ', 'ru-MD', 'ru-UA', 'si', 'sk', 'sl', 'sq', 'sq-MK', 'sq-XK', 'sr', 'sr-Cyrl', 'sr-Cyrl-BA', 'sr-Cyrl-ME', 'sr-Cyrl-XK', 'sr-Latn', 'sr-Latn-BA', 'sr-Latn-ME', 'sr-Latn-XK', 'sv', 'sv-AX', 'sv-FI', 'sw', 'sw-CD', 'sw-KE', 'sw-UG', 'ta', 'ta-LK', 'ta-MY', 'ta-SG', 'te', 'th', 'to', 'tr', 'tr-CY', 'uk', 'ur', 'ur-IN', 'uz', 'uz-Latn', 'vi', 'yue', 'zh', 'zh-Hans', 'zh-Hans-CN', 'zh-Hans-HK', 'zh-Hans-MO', 'zh-Hans-SG', 'zh-Hant', 'zh-Hant-TW', 'zh-Hant-HK', 'zh-Hant-MO', 'zu'];
-
-/***/ },
-/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20000,131 +20098,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+	exports.any = undefined;
 
-	var _boolean = __webpack_require__(15);
+	var _boolean = __webpack_require__(14);
 
-	Object.keys(_boolean).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _boolean[key];
-	    }
-	  });
-	});
+	var _falsy = __webpack_require__(15);
 
-	var _falsy = __webpack_require__(16);
+	var _number = __webpack_require__(16);
 
-	Object.keys(_falsy).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _falsy[key];
-	    }
-	  });
-	});
+	var _string = __webpack_require__(17);
 
-	var _number = __webpack_require__(17);
+	var _combinators = __webpack_require__(12);
 
-	Object.keys(_number).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _number[key];
-	    }
-	  });
-	});
-
-	var _string = __webpack_require__(18);
-
-	Object.keys(_string).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _string[key];
-	    }
-	  });
-	});
-
-	var _any = __webpack_require__(19);
-
-	Object.keys(_any).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _any[key];
-	    }
-	  });
-	});
-
-	var _function = __webpack_require__(20);
-
-	Object.keys(_function).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _function[key];
-	    }
-	  });
-	});
-
-	var _datetime = __webpack_require__(21);
-
-	Object.keys(_datetime).forEach(function (key) {
-	  if (key === "default" || key === "__esModule") return;
-	  Object.defineProperty(exports, key, {
-	    enumerable: true,
-	    get: function get() {
-	      return _datetime[key];
-	    }
-	  });
-	});
-
-	var _person = __webpack_require__(22);
-
-	Object.defineProperty(exports, 'person', {
-	  enumerable: true,
-	  get: function get() {
-	    return _interopRequireDefault(_person).default;
-	  }
-	});
-
-	var _locale = __webpack_require__(31);
-
-	Object.defineProperty(exports, 'locale', {
-	  enumerable: true,
-	  get: function get() {
-	    return _interopRequireDefault(_locale).default;
-	  }
-	});
-
-	var _internet = __webpack_require__(32);
-
-	Object.defineProperty(exports, 'internet', {
-	  enumerable: true,
-	  get: function get() {
-	    return _interopRequireDefault(_internet).default;
-	  }
-	});
-
-	var _literate = __webpack_require__(33);
-
-	Object.defineProperty(exports, 'literate', {
-	  enumerable: true,
-	  get: function get() {
-	    return _interopRequireDefault(_literate).default;
-	  }
-	});
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	/**
+	 * Any Primitive Type Arbitrary.
+	 *
+	 * @type {Arbitrary}
+	 */
+	var any = exports.any = (0, _combinators.oneOf)([_boolean.bool, _falsy.falsy, _number.int, _number.number, _string.string]).name('Any'); /**
+	                                                                                                                                          * @module
+	                                                                                                                                          */
 
 /***/ },
-/* 15 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20164,7 +20160,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var bool = exports.bool = (0, _arbitrary.fromGenMaker)(_randomJs2.default.bool).name('Boolean');
 
 /***/ },
-/* 16 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20200,7 +20196,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var falsy = exports.falsy = (0, _combinators.elements)(FALSY_VALUES).name('Falsy');
 
 /***/ },
-/* 17 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20216,6 +20212,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _arbitrary = __webpack_require__(4);
 
+	var _utils = __webpack_require__(1);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	/**
@@ -20227,15 +20225,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // Produce an integer within inclusive range [-5, 5].
 	 * ke.int.choose(-5, 5).generate();
 	 */
-	/**
-	 * @module
-	 */
-	var int = exports.int = (0, _arbitrary.fromGenMaker)(_randomJs2.default.integer, [-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]).name('Integer');
+	var int = exports.int = (0, _arbitrary.fromGenMaker)(_randomJs2.default.integer, [-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER]).name('Integer').smaller(_utils.smallerRange);
 
 	/**
 	 * Positive Integer Arbitrary
 	 *
 	 * @type {Arbitrary}
+	 */
+	/**
+	 * @module
 	 */
 	var pint = exports.pint = int.choose(0, Number.MAX_SAFE_INTEGER).name('Positive Integer');
 
@@ -20275,7 +20273,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var nnumber = exports.nnumber = number.choose(-Number.MAX_SAFE_INTEGER, -0.0000000001).name('Negative Number');
 
 /***/ },
-/* 18 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -20295,7 +20293,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _randomJs2 = _interopRequireDefault(_randomJs);
 
-	var _number = __webpack_require__(17);
+	var _number = __webpack_require__(16);
 
 	var _arbitrary = __webpack_require__(4);
 
@@ -20424,6 +20422,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 /***/ },
+/* 18 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 * @module
+	 */
+
+	/**
+	 * @describe Avaliable Locale Ids definietion.
+	 *
+	 * Took from
+	 * https://github.com/unicode-cldr/cldr-core/blob/master/availableLocales.json.
+	 *
+	 */
+	exports.default = ['af', 'af-NA', 'am', 'ar', 'ar-AE', 'ar-BH', 'ar-DJ', 'ar-DZ', 'ar-EG', 'ar-EH', 'ar-ER', 'ar-IL', 'ar-IQ', 'ar-JO', 'ar-KM', 'ar-KW', 'ar-LB', 'ar-LY', 'ar-MA', 'ar-MR', 'ar-OM', 'ar-PS', 'ar-QA', 'ar-SA', 'ar-SD', 'ar-SO', 'ar-SS', 'ar-SY', 'ar-TD', 'ar-TN', 'ar-YE', 'az', 'az-Latn', 'be', 'bg', 'bn', 'bn-IN', 'bs', 'bs-Latn', 'ca', 'ca-AD', 'ca-ES-VALENCIA', 'ca-FR', 'ca-IT', 'cs', 'cy', 'da', 'da-GL', 'de', 'de-AT', 'de-BE', 'de-CH', 'de-IT', 'de-LI', 'de-LU', 'el', 'el-CY', 'en', 'en-001', 'en-150', 'en-AG', 'en-AI', 'en-AS', 'en-AT', 'en-AU', 'en-BB', 'en-BE', 'en-BI', 'en-BM', 'en-BS', 'en-BW', 'en-BZ', 'en-CA', 'en-CC', 'en-CH', 'en-CK', 'en-CM', 'en-CX', 'en-CY', 'en-DE', 'en-DG', 'en-DK', 'en-DM', 'en-ER', 'en-FI', 'en-FJ', 'en-FK', 'en-FM', 'en-GB', 'en-GD', 'en-GG', 'en-GH', 'en-GI', 'en-GM', 'en-GU', 'en-GY', 'en-HK', 'en-IE', 'en-IL', 'en-IM', 'en-IN', 'en-IO', 'en-JE', 'en-JM', 'en-KE', 'en-KI', 'en-KN', 'en-KY', 'en-LC', 'en-LR', 'en-LS', 'en-MG', 'en-MH', 'en-MO', 'en-MP', 'en-MS', 'en-MT', 'en-MU', 'en-MW', 'en-MY', 'en-NA', 'en-NF', 'en-NG', 'en-NL', 'en-NR', 'en-NU', 'en-NZ', 'en-PG', 'en-PH', 'en-PK', 'en-PN', 'en-PR', 'en-PW', 'en-RW', 'en-SB', 'en-SC', 'en-SD', 'en-SE', 'en-SG', 'en-SH', 'en-SI', 'en-SL', 'en-SS', 'en-SX', 'en-SZ', 'en-TC', 'en-TK', 'en-TO', 'en-TT', 'en-TV', 'en-TZ', 'en-UG', 'en-UM', 'en-US-POSIX', 'en-VC', 'en-VG', 'en-VI', 'en-VU', 'en-WS', 'en-ZA', 'en-ZM', 'en-ZW', 'es', 'es-419', 'es-AR', 'es-BO', 'es-BR', 'es-CL', 'es-CO', 'es-CR', 'es-CU', 'es-DO', 'es-EA', 'es-EC', 'es-GQ', 'es-GT', 'es-HN', 'es-IC', 'es-MX', 'es-NI', 'es-PA', 'es-PE', 'es-PH', 'es-PR', 'es-PY', 'es-SV', 'es-US', 'es-UY', 'es-VE', 'et', 'eu', 'fa', 'fa-AF', 'fi', 'fil', 'fo', 'fo-DK', 'fr', 'fr-BE', 'fr-BF', 'fr-BI', 'fr-BJ', 'fr-BL', 'fr-CA', 'fr-CD', 'fr-CF', 'fr-CG', 'fr-CH', 'fr-CI', 'fr-CM', 'fr-DJ', 'fr-DZ', 'fr-GA', 'fr-GF', 'fr-GN', 'fr-GP', 'fr-GQ', 'fr-HT', 'fr-KM', 'fr-LU', 'fr-MA', 'fr-MC', 'fr-MF', 'fr-MG', 'fr-ML', 'fr-MQ', 'fr-MR', 'fr-MU', 'fr-NC', 'fr-NE', 'fr-PF', 'fr-PM', 'fr-RE', 'fr-RW', 'fr-SC', 'fr-SN', 'fr-SY', 'fr-TD', 'fr-TG', 'fr-TN', 'fr-VU', 'fr-WF', 'fr-YT', 'ga', 'gl', 'gu', 'he', 'hi', 'hr', 'hr-BA', 'hu', 'hy', 'id', 'is', 'it', 'it-CH', 'it-SM', 'ja', 'ka', 'kk', 'km', 'kn', 'ko', 'ko-KP', 'ky', 'lo', 'lt', 'lv', 'mk', 'ml', 'mn', 'mr', 'ms', 'ms-BN', 'ms-SG', 'my', 'nb', 'nb-SJ', 'ne', 'ne-IN', 'nl', 'nl-AW', 'nl-BE', 'nl-BQ', 'nl-CW', 'nl-SR', 'nl-SX', 'pa', 'pa-Guru', 'pl', 'pt', 'pt-AO', 'pt-CH', 'pt-CV', 'pt-GQ', 'pt-GW', 'pt-LU', 'pt-MO', 'pt-MZ', 'pt-PT', 'pt-ST', 'pt-TL', 'ro', 'ro-MD', 'root', 'ru', 'ru-BY', 'ru-KG', 'ru-KZ', 'ru-MD', 'ru-UA', 'si', 'sk', 'sl', 'sq', 'sq-MK', 'sq-XK', 'sr', 'sr-Cyrl', 'sr-Cyrl-BA', 'sr-Cyrl-ME', 'sr-Cyrl-XK', 'sr-Latn', 'sr-Latn-BA', 'sr-Latn-ME', 'sr-Latn-XK', 'sv', 'sv-AX', 'sv-FI', 'sw', 'sw-CD', 'sw-KE', 'sw-UG', 'ta', 'ta-LK', 'ta-MY', 'ta-SG', 'te', 'th', 'to', 'tr', 'tr-CY', 'uk', 'ur', 'ur-IN', 'uz', 'uz-Latn', 'vi', 'yue', 'zh', 'zh-Hans', 'zh-Hans-CN', 'zh-Hans-HK', 'zh-Hans-MO', 'zh-Hans-SG', 'zh-Hant', 'zh-Hant-TW', 'zh-Hant-HK', 'zh-Hant-MO', 'zu'];
+
+/***/ },
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -20432,26 +20452,128 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.any = undefined;
 
-	var _boolean = __webpack_require__(15);
+	var _boolean = __webpack_require__(14);
 
-	var _falsy = __webpack_require__(16);
+	Object.keys(_boolean).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _boolean[key];
+	    }
+	  });
+	});
 
-	var _number = __webpack_require__(17);
+	var _falsy = __webpack_require__(15);
 
-	var _string = __webpack_require__(18);
+	Object.keys(_falsy).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _falsy[key];
+	    }
+	  });
+	});
 
-	var _combinators = __webpack_require__(12);
+	var _number = __webpack_require__(16);
 
-	/**
-	 * Any Primitive Type Arbitrary.
-	 *
-	 * @type {Arbitrary}
-	 */
-	var any = exports.any = (0, _combinators.oneOf)([_boolean.bool, _falsy.falsy, _number.int, _number.number, _string.string]).name('Any'); /**
-	                                                                                                                                          * @module
-	                                                                                                                                          */
+	Object.keys(_number).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _number[key];
+	    }
+	  });
+	});
+
+	var _string = __webpack_require__(17);
+
+	Object.keys(_string).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _string[key];
+	    }
+	  });
+	});
+
+	var _any = __webpack_require__(13);
+
+	Object.keys(_any).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _any[key];
+	    }
+	  });
+	});
+
+	var _function = __webpack_require__(20);
+
+	Object.keys(_function).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _function[key];
+	    }
+	  });
+	});
+
+	var _datetime = __webpack_require__(21);
+
+	Object.keys(_datetime).forEach(function (key) {
+	  if (key === "default" || key === "__esModule") return;
+	  Object.defineProperty(exports, key, {
+	    enumerable: true,
+	    get: function get() {
+	      return _datetime[key];
+	    }
+	  });
+	});
+
+	var _person = __webpack_require__(22);
+
+	Object.defineProperty(exports, 'person', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_person).default;
+	  }
+	});
+
+	var _locale = __webpack_require__(31);
+
+	Object.defineProperty(exports, 'locale', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_locale).default;
+	  }
+	});
+
+	var _internet = __webpack_require__(32);
+
+	Object.defineProperty(exports, 'internet', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_internet).default;
+	  }
+	});
+
+	var _literate = __webpack_require__(33);
+
+	Object.defineProperty(exports, 'literate', {
+	  enumerable: true,
+	  get: function get() {
+	    return _interopRequireDefault(_literate).default;
+	  }
+	});
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 /***/ },
 /* 20 */
@@ -20468,7 +20590,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _combinators = __webpack_require__(12);
 
-	var _any = __webpack_require__(19);
+	var _any = __webpack_require__(13);
 
 	/**
 	 * Function Arbitrary
@@ -20781,7 +20903,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _combinators = __webpack_require__(12);
 
-	var _avaliableLocaleids = __webpack_require__(13);
+	var _avaliableLocaleids = __webpack_require__(18);
 
 	var _avaliableLocaleids2 = _interopRequireDefault(_avaliableLocaleids);
 
@@ -20822,7 +20944,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _person2 = _interopRequireDefault(_person);
 
-	var _number = __webpack_require__(17);
+	var _number = __webpack_require__(16);
 
 	var _combinators = __webpack_require__(12);
 
@@ -20947,7 +21069,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _combinators = __webpack_require__(12);
 
-	var _number = __webpack_require__(17);
+	var _number = __webpack_require__(16);
 
 	var _definitions = __webpack_require__(34);
 
@@ -21399,7 +21521,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _arbitrary = __webpack_require__(4);
 
-	var _number = __webpack_require__(17);
+	var _number = __webpack_require__(16);
 
 	var _combinators = __webpack_require__(12);
 

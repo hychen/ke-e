@@ -218,7 +218,7 @@
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>a arbitrary.</p></td>
         </tr>
 
     
@@ -263,7 +263,7 @@
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-139">line 139</a>
+				 <a href="combinators.js.html#sunlight-1-line-229">line 229</a>
 			</li>
 		</ul>
 	</dd>
@@ -313,7 +313,13 @@
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">// Produces an array of integer that the length between 1 and 3.
-ke.array(ke.int).choose(1, 3).generate();</pre>
+ke.array(ke.int).choose(1, 3).generate();
+
+// more complicate case.
+ke.array(ke.oneOf([ke.int, ke.falsy, ke.array(ke.int)]));
+
+// Produces an nested array with random values.
+ke.array().generate();</pre>
 
 
     
@@ -428,7 +434,7 @@ ke.array(ke.int).choose(1, 3).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-21">line 21</a>
+				 <a href="combinators.js.html#sunlight-1-line-24">line 24</a>
 			</li>
 		</ul>
 	</dd>
@@ -593,7 +599,7 @@ ke.constant(1).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-249">line 249</a>
+				 <a href="combinators.js.html#sunlight-1-line-41">line 41</a>
 			</li>
 		</ul>
 	</dd>
@@ -758,7 +764,7 @@ ke.elements([1, &#x27;a&#x27;]).generates();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-96">line 96</a>
+				 <a href="combinators.js.html#sunlight-1-line-171">line 171</a>
 			</li>
 		</ul>
 	</dd>
@@ -916,7 +922,7 @@ ke.elements([1, &#x27;a&#x27;]).generates();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-161">line 161</a>
+				 <a href="combinators.js.html#sunlight-1-line-259">line 259</a>
 			</li>
 		</ul>
 	</dd>
@@ -1076,7 +1082,7 @@ properties of object and expanding.</p>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-196">line 196</a>
+				 <a href="combinators.js.html#sunlight-1-line-276">line 276</a>
 			</li>
 		</ul>
 	</dd>
@@ -1241,7 +1247,7 @@ ke.object({k: ke.int}).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-225">line 225</a>
+				 <a href="combinators.js.html#sunlight-1-line-305">line 305</a>
 			</li>
 		</ul>
 	</dd>
@@ -1399,7 +1405,7 @@ ke.object({k: ke.int}).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-76">line 76</a>
+				 <a href="combinators.js.html#sunlight-1-line-151">line 151</a>
 			</li>
 		</ul>
 	</dd>
@@ -1519,7 +1525,7 @@ ke.oneOf(ke.bool, ke.int).generate();</pre>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>first arbitrary.</p></td>
         </tr>
 
     
@@ -1543,7 +1549,7 @@ ke.oneOf(ke.bool, ke.int).generate();</pre>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>second arbitrary.</p></td>
         </tr>
 
     
@@ -1588,7 +1594,7 @@ ke.oneOf(ke.bool, ke.int).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-114">line 114</a>
+				 <a href="combinators.js.html#sunlight-1-line-207">line 207</a>
 			</li>
 		</ul>
 	</dd>
@@ -1641,6 +1647,218 @@ ke.oneOf(ke.bool, ke.int).generate();</pre>
 
     <pre class="sunlight-highlight-javascript">// choose different arbitraries.
 ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".recursive"><span class="type-signature">&lt;static> </span>recursive(combinator, arb, depth)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Produce a nested values.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>combinator</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>a function to return an arbitrary.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>arb</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the base arbitrary.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>depth</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the depth of recursively stacks. default is 4.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="combinators.js.html">combinators.js</a>,
+				 <a href="combinators.js.html#sunlight-1-line-79">line 79</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">*</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">ke.recursive(ke.array, ke.any);</pre>
 
 
     
@@ -1767,7 +1985,7 @@ ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-174">line 174</a>
+				 <a href="combinators.js.html#sunlight-1-line-184">line 184</a>
 			</li>
 		</ul>
 	</dd>
@@ -1819,6 +2037,164 @@ ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();</pre>
     <pre class="sunlight-highlight-javascript">// returns [1, true, 143.321]
 ke.sequence(ke.int, ke.bool, ke.number).generate();</pre>
 
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".small"><span class="type-signature">&lt;static> </span>small(arb)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Produce a smaller version of a arbitrary.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>arb</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="combinators.js.html">combinators.js</a>,
+				 <a href="combinators.js.html#sunlight-1-line-61">line 61</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Arbitrary</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
 </dd>
@@ -1956,7 +2332,7 @@ ke.sequence(ke.int, ke.bool, ke.number).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-39">line 39</a>
+				 <a href="combinators.js.html#sunlight-1-line-114">line 114</a>
 			</li>
 		</ul>
 	</dd>
@@ -2066,7 +2442,7 @@ ke.suchThat(ke.int, (n) =&gt; n / 2 === 0).generate();</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.2</a>
 	
-		on 2016-12-03T20:58:02+08:00
+		on 2016-12-05T12:51:51+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
