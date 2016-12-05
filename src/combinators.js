@@ -101,6 +101,24 @@ export function maybe(arb) {
 }
 
 /**
+ * Generate a orderd array.
+ *
+ * @param {...Arbitrary}
+ * @return {Arbitrary}
+ * @example
+ * // returns [1, true, 143.321]
+ * ke.sequence(ke.int, ke.bool, ke.number).generate();
+ */
+export function sequence(...arbs) {
+  assert(_.every(arbs, isArbitrary), 'arguments must be array of Arbitrary');
+  return fromGenMaker(function(...pool) {
+    return function(engine, locale) {
+      return pool.map(arb => arb.makeGen()(engine, locale));
+    };
+  }, arbs).name('Sequence');
+}
+
+/**
  * Generates a pair of two arbitraries.
  *
  * @param {!Arbitrary} arb1 first arbitrary.
@@ -117,16 +135,7 @@ export function maybe(arb) {
 export function pair(arb1, arb2) {
   assert(isArbitrary(arb1), 'arb1 must be an arbitrary.');
   assert(isArbitrary(arb2), 'arb2 must be an arbitrary.');
-  return new Arbitrary({
-    name: 'Pair',
-    gen: function(a1, a2) {
-      return function(engine, locale) {
-        return [a1.makeGen()(engine, locale),
-                a2.makeGen()(engine, locale)];
-      };
-    },
-    genOpts: [arb1, arb2]
-  });
+  return sequence(arb1, arb2).name('Pair');
 }
 
 /**
@@ -178,24 +187,6 @@ export function array(arb) {
 export function nearray(arb) {
   return array(arb).choose(1, 30).name('Non-Empty Array');
 };
-
-/**
- * Generate a orderd array.
- *
- * @param {...Arbitrary}
- * @return {Arbitrary}
- * @example
- * // returns [1, true, 143.321]
- * ke.sequence(ke.int, ke.bool, ke.number).generate();
- */
-export function sequence(...arbs) {
-  assert(_.every(arbs, isArbitrary), 'arguments must be array of Arbitrary');
-  return fromGenMaker(function(pool) {
-    return function(engine, locale) {
-      return pool.map(arb => arb.makeGen()(engine, locale));
-    };
-  }, [arbs]).name('Sequence');
-}
 
 /**
  * Generate a object.
