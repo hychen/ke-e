@@ -103,8 +103,8 @@ export function maybe(arb) {
 /**
  * Generates a pair of two arbitraries.
  *
- * @param {!Arbitrary} arb1
- * @param {!Arbitrary} arb2
+ * @param {!Arbitrary} arb1 first arbitrary.
+ * @param {!Arbitrary} arb2 second arbitrary.
  * @return {Arbitrary}
  *
  * @example
@@ -115,8 +115,8 @@ export function maybe(arb) {
  * ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();
  */
 export function pair(arb1, arb2) {
-  assert(isArbitrary(arb1), 'arb1 is a arbitrary.');
-  assert(isArbitrary(arb2), 'arb2 is a arbitrary.');
+  assert(isArbitrary(arb1), 'arb1 must be an arbitrary.');
+  assert(isArbitrary(arb2), 'arb2 must be an arbitrary.');
   return new Arbitrary({
     name: 'Pair',
     gen: function(a1, a2) {
