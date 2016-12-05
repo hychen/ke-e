@@ -208,3 +208,12 @@ describe('recursive', () => {
   });
 
 });
+
+describe('frequency', () => {
+
+  it('works', () => {
+    const x = ke.frequency([[4, 5], [9, ke.int]]).generate();
+    expect(_.isInteger(x)).eq(true);
+  });
+
+});

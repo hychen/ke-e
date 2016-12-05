@@ -51,6 +51,39 @@ export function elements(pool) {
   });
 }
 
+/**
+ * Choose one of the given arbitraries, with a weighted random distribution.
+ * The input list must be non-empty.
+ *
+ * @param {Array<Array<*>>} pool
+ * @return {*}
+ * @example
+ * ke.frequency([ [4, ke.int], [6, ke.bool] ]).generate();
+ */
+export function frequency(pool) {
+  assert(_.isArray(pool) && pool.length > 0,
+         'pool must be an non-empty array.');
+  return new Arbitrary({
+    name: 'Frequency',
+    gen: function(pool) {
+      return function(engine, locale) {
+        function pick(n, [[k,x], ...xs]) {
+          return (n <= k) ? x : pick(n -k, xs);
+        }
+        const total = _.sum(pool.map(e => e[0]));
+        const head = Random.integer(1, total)(engine);
+        const result = pick(head, pool);
+        if (isArbitrary(result)) {
+          return result.makeGen()(engine, locale);
+        }
+        else {
+          return result;
+        };
+      };
+    },
+    genOpts: [pool]
+  });
+}
 
 /**
  * Produce a smaller version of a arbitrary.
