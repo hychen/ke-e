@@ -17,10 +17,10 @@ import {any} from './any';
  */
 export const func = new Arbitrary({
   name: 'Function',
-  gen: function(outputArb = oneOf([any, array(any)])) {
-    return function(engine) {
+  gen: function(outputArb = oneOf([any, array()])) {
+    return function(engine, locale) {
       return function() {
-        return outputArb.engine(engine).generate();
+        return outputArb.makeGen()(engine, locale);
       };
     };
   }
