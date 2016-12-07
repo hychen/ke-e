@@ -8,18 +8,24 @@ import {stdOpts} from './constants';
 
 
 /**
- * A function to generate a function to take a random engine in random-js.
- * to generate a random value.
- *
- * @callback GeneratorMaker
- * @param {Engine} engine - engines provided in random-js.
- *                          The default is mt19937 with auto seeds.
+ * A function to generate a random value.
+ * @callback Generator
+ * @param {function} engine Random-js engine.
+ * @param {?string} locale locale tag.
  * @return {*}
  */
 
 /**
+ * A function to generate a function to take a random engine in random-js.
+ * to generate a random value.
+ *
+ * @callback GeneratorMaker
+ * @return {Generator}
+ */
+
+/**
  * Arguments of a GeneratorMaker.
- * @typedef {Array} GeneratorMakerOptions
+ * @typedef {Array} GeneratorMakerOptions the options of a generator maker.
  */
 
 /**
@@ -30,16 +36,8 @@ import {stdOpts} from './constants';
  * @property {?function} smaller a function to return small size of genOts.
  * @property {?string} name the name of a arbitrary.
  * @property {?string} locale the locale tag. default is en.
- * @property {?Engine} engine the random engine.
+ * @property {?function} engine the random engine.
  * @property {?number} seed the seed number.
- */
-
-/**
- * A function to generate a random value.
- * @callback Generator
- * @param {Engine} engine
- * @param {string} locale
- * @return {*}
  */
 
 /**
@@ -74,7 +72,7 @@ class Arbitrary {
   /**
    * Get/Set the name of this arbitrary.
    *
-   * @param {string} name arbitrary name.
+   * @param {?string} name the name of a arbitrary.
    * @return {Arbitrary|string}
    */
   name(name) {
@@ -91,7 +89,7 @@ class Arbitrary {
   /**
    * Get/Set locale.
    *
-   * @param {!string} locale locale tag.
+   * @param {?string} locale locale tag.
    * @return {Arbitrary|string}
    */
   locale(locale) {
@@ -106,7 +104,7 @@ class Arbitrary {
   /**
    * Get/Set a random engine.
    *
-   * @param {!Engine} engine
+   * @param {?funciton} engine random-js engine.
    * @return {Arbitrary|Engine}
    */
   engine(engine) {
@@ -122,7 +120,7 @@ class Arbitrary {
   /**
    * Get/Set a seed number.
    *
-   * @param {!number} seed 32-bit integer.
+   * @param {?number} seed 32-bit integer.
    * @return {Arbitrary|number}
    */
   seed(seed) {
@@ -139,7 +137,7 @@ class Arbitrary {
   /**
    * Get/Set a generator maker.
    *
-   * @param {!GeneratorMaker} gen
+   * @param {?GeneratorMaker} gen 
    * @return {Arbitrary|GeneratorMaker}
    */
   gen(gen) {
@@ -172,7 +170,7 @@ class Arbitrary {
    * Get/set a function to tweak the options of a
    * generator maker.
    *
-   * @param {function} smaller a function to return tewaked
+   * @param {?function} smaller a function to return tewaked
    *                           generator maker options.
    * @return {Arbitrary|function}
    */
@@ -208,10 +206,12 @@ class Arbitrary {
   /**
    * Transform arbitrary A to arbitrary B.
    *
-   * @param {function} transform function.
+   * @param {function} transform a function takes the
+   *                             generated values of this arbitrary.
    * @return {Arbitrary}
    */
   transform(f) {
+    assert(_.isFunction(f), 'f must be a function.');
     const clone = this.clone();
     clone._transforms.push(f);
     return clone;
@@ -261,7 +261,7 @@ class Arbitrary {
   /**
    * Generate some example values.
    *
-   * @param {number} size
+   * @param {number} size the size of values.
    * @return {Array<*>}
    */
   sample(size = 30) {
