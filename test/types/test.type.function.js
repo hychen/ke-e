@@ -8,7 +8,7 @@ describe('Arbitrary Function', () => {
     const f = ke.func.generate();
     expect(_.isFunction(f)).eq(true);
     const v = f();
-    expect(_.isArray(v) || v || !v).eq(true);
+    expect(_.isArray(v) || v !== undefined || v === undefined).eq(true);
   });
 
   it('generate a function returns a sepcified value.', () => {
