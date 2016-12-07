@@ -34,6 +34,7 @@ import {stdOpts} from './constants';
  * @property {!GeneratorMaker} gen the generator maker.
  * @property {?GeneratorMakerOptions} genOts the options of the generator maker.
  * @property {?function} smaller a function to return small size of genOts.
+ * @property {?function} show a function to stringify the generated values.
  * @property {?string} name the name of a arbitrary.
  * @property {?string} locale the locale tag. default is en.
  * @property {?function} engine the random engine.
@@ -56,6 +57,7 @@ class Arbitrary {
     this._gen = null;
     this._genOpts = null;
     this._smaller = null;
+    this._show = null;
     this._name = null;
     this._locale = null;
     this._engine = null;
@@ -68,6 +70,7 @@ class Arbitrary {
     this.gen(opts.gen);
     this.genOpts(opts.genOpts || []);
     this.smaller(opts.smaller || _.identity);
+    this.show(opts.show || JSON.stringify);
   }
   /**
    * Get/Set the name of this arbitrary.
@@ -181,6 +184,21 @@ class Arbitrary {
     }
     else {
       return this._smaller;
+    }
+  }
+  /**
+   * Get/set a function to stringify the generated value.
+   *
+   * @param {?function} show a function stringify the generated value.
+   * @return {Arbitrary|function}
+   */
+  show(show) {
+    if (show !== undefined) {
+      this._show = show;
+      return this;
+    }
+    else {
+      return this._show;
     }
   }
   /**

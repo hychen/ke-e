@@ -21,6 +21,11 @@ describe('Arbitrary', () => {
     expect(arb1.seed(1234).seed()).eq(1234);
   });
 
+  it('set/show', () => {
+    const arb1= new Arbitrary({gen: _.identity});
+    expect(arb1.show(() => 1).show()()).eq(1);
+  });
+
   jsc.property(
     'value generation is repeatable.',
     'integer',
