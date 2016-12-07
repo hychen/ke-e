@@ -39,7 +39,8 @@ export function constant(value) {
  * ke.elements([1, 'a']).generates();
  */
 export function elements(pool) {
-  assert(_.isArray(pool), 'pool must be an array.');
+  assert(_.isArray(pool) && pool.length > 0,
+        'pool must be a non-empty array.');
   return new Arbitrary({
     name: 'Elements',
     gen: function() {
