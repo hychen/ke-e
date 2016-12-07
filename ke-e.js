@@ -17285,18 +17285,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	/**
-	 * A function to generate a function to take a random engine in random-js.
-	 * to generate a random value.
-	 *
-	 * @callback GeneratorMaker
-	 * @param {Engine} engine - engines provided in random-js.
-	 *                          The default is mt19937 with auto seeds.
+	 * A function to generate a random value.
+	 * @callback Generator
+	 * @param {function} engine Random-js engine.
+	 * @param {?string} locale locale tag.
 	 * @return {*}
 	 */
 
 	/**
+	 * A function to generate a function to take a random engine in random-js.
+	 * to generate a random value.
+	 *
+	 * @callback GeneratorMaker
+	 * @return {Generator}
+	 */
+
+	/**
 	 * Arguments of a GeneratorMaker.
-	 * @typedef {Array} GeneratorMakerOptions
+	 * @typedef {Array} GeneratorMakerOptions the options of a generator maker.
 	 */
 
 	/**
@@ -17305,18 +17311,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @property {!GeneratorMaker} gen the generator maker.
 	 * @property {?GeneratorMakerOptions} genOts the options of the generator maker.
 	 * @property {?function} smaller a function to return small size of genOts.
+	 * @property {?function} show a function to stringify the generated values.
 	 * @property {?string} name the name of a arbitrary.
 	 * @property {?string} locale the locale tag. default is en.
-	 * @property {?Engine} engine the random engine.
+	 * @property {?function} engine the random engine.
 	 * @property {?number} seed the seed number.
-	 */
-
-	/**
-	 * A function to generate a random value.
-	 * @callback Generator
-	 * @param {Engine} engine
-	 * @param {string} locale
-	 * @return {*}
 	 */
 
 	/**
@@ -17337,6 +17336,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._gen = null;
 	    this._genOpts = null;
 	    this._smaller = null;
+	    this._show = null;
 	    this._name = null;
 	    this._locale = null;
 	    this._engine = null;
@@ -17349,11 +17349,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.gen(opts.gen);
 	    this.genOpts(opts.genOpts || []);
 	    this.smaller(opts.smaller || _lodash2.default.identity);
+	    this.show(opts.show || JSON.stringify);
 	  }
 	  /**
 	   * Get/Set the name of this arbitrary.
 	   *
-	   * @param {string} name arbitrary name.
+	   * @param {?string} name the name of a arbitrary.
 	   * @return {Arbitrary|string}
 	   */
 
@@ -17372,7 +17373,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Get/Set locale.
 	     *
-	     * @param {!string} locale locale tag.
+	     * @param {?string} locale locale tag.
 	     * @return {Arbitrary|string}
 	     */
 
@@ -17389,7 +17390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Get/Set a random engine.
 	     *
-	     * @param {!Engine} engine
+	     * @param {?funciton} engine random-js engine.
 	     * @return {Arbitrary|Engine}
 	     */
 
@@ -17407,7 +17408,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Get/Set a seed number.
 	     *
-	     * @param {!number} seed 32-bit integer.
+	     * @param {?number} seed 32-bit integer.
 	     * @return {Arbitrary|number}
 	     */
 
@@ -17426,7 +17427,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Get/Set a generator maker.
 	     *
-	     * @param {!GeneratorMaker} gen
+	     * @param {?GeneratorMaker} gen 
 	     * @return {Arbitrary|GeneratorMaker}
 	     */
 
@@ -17463,7 +17464,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Get/set a function to tweak the options of a
 	     * generator maker.
 	     *
-	     * @param {function} smaller a function to return tewaked
+	     * @param {?function} smaller a function to return tewaked
 	     *                           generator maker options.
 	     * @return {Arbitrary|function}
 	     */
@@ -17476,6 +17477,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this;
 	      } else {
 	        return this._smaller;
+	      }
+	    }
+	    /**
+	     * Get/set a function to stringify the generated value.
+	     *
+	     * @param {?function} show a function stringify the generated value.
+	     * @return {Arbitrary|function}
+	     */
+
+	  }, {
+	    key: 'show',
+	    value: function show(_show) {
+	      if (_show !== undefined) {
+	        this._show = _show;
+	        return this;
+	      } else {
+	        return this._show;
 	      }
 	    }
 	    /**
@@ -17512,13 +17530,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Transform arbitrary A to arbitrary B.
 	     *
-	     * @param {function} transform function.
+	     * @param {function} transform a function takes the
+	     *                             generated values of this arbitrary.
 	     * @return {Arbitrary}
 	     */
 
 	  }, {
 	    key: 'transform',
 	    value: function transform(f) {
+	      (0, _assert2.default)(_lodash2.default.isFunction(f), 'f must be a function.');
 	      var clone = this.clone();
 	      clone._transforms.push(f);
 	      return clone;
@@ -17578,7 +17598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    /**
 	     * Generate some example values.
 	     *
-	     * @param {number} size
+	     * @param {number} size the size of values.
 	     * @return {Array<*>}
 	     */
 
@@ -19791,7 +19811,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * ke.elements([1, 'a']).generates();
 	 */
 	function elements(pool) {
-	  (0, _assert2.default)(_lodash2.default.isArray(pool), 'pool must be an array.');
+	  (0, _assert2.default)(_lodash2.default.isArray(pool) && pool.length > 0, 'pool must be a non-empty array.');
 	  return new _arbitrary.Arbitrary({
 	    name: 'Elements',
 	    gen: function gen() {
@@ -19875,7 +19895,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    gen: function gen(combinator, arb, depth) {
 	      return function (engine, locale) {
 	        function rec(n) {
-	          var chance = _randomJs2.default.integer(0, 3);
+	          var chance = _randomJs2.default.integer(0, 3)(engine);
 	          if (n <= 0 || chance === 0) {
 	            return n == depth ? combinator(arb) : arb;
 	          } else {
@@ -20648,11 +20668,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var func = exports.func = new _arbitrary.Arbitrary({
 	  name: 'Function',
 	  gen: function gen() {
-	    var outputArb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _combinators.oneOf)([_any.any, (0, _combinators.array)(_any.any)]);
+	    var outputArb = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : (0, _combinators.oneOf)([_any.any, (0, _combinators.array)()]);
 
-	    return function (engine) {
+	    return function (engine, locale) {
 	      return function () {
-	        return outputArb.engine(engine).generate();
+	        return outputArb.makeGen()(engine, locale);
 	      };
 	    };
 	  }
@@ -21266,6 +21286,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 	exports.forall = exports.hold = exports.Property = undefined;
 
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /**
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      * @module
 	                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      */
@@ -21369,22 +21391,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var _this = this;
 
 	      return function (engine) {
-	        var samples = _this.arbs.map(function (arb) {
+	        var _arbs$map = _this.arbs.map(function (arb) {
 	          if (engine) {
 	            arb.engine(engine);
 	          }
-	          return arb.generate();
-	        });
+	          var v = arb.generate();
+	          return [v, arb.show()(v)];
+	        }),
+	            _arbs$map2 = _slicedToArray(_arbs$map, 2),
+	            samples = _arbs$map2[0],
+	            showExamples = _arbs$map2[1];
+
 	        try {
 	          var success = !!predicate.apply(null, samples);
 	          return {
 	            success: success,
-	            counterExample: samples
+	            counterExample: showExamples
 	          };
 	        } catch (e) {
 	          return {
 	            success: false,
-	            counterExample: samples,
+	            counterExample: showExamples,
 	            exception: e
 	          };
 	        }
