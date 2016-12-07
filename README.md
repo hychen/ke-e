@@ -102,6 +102,14 @@ ke.person.firstName.generate();
 ke.person.firstName.locale('zh-Hant-TW').generate();
 ```
 
+### Node.js REPL
+
+```
+$ ke
+> ke.int.generate();
+123124343
+```
+
 ## Arbitraries
 
 The pupose of a arbitraries is random generation and shrinking of values 
