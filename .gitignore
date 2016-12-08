@@ -7,3 +7,4 @@ lib
 .nyc_output/*
 dist
 docs
+yarn.lock
