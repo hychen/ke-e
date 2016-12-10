@@ -137,15 +137,15 @@ export function recursive(combinator, arb, depth = 4) {
 /**
  * Generates a value that satisfies a predicate.
  *
- * @param {!Arbitrary} arb - an arbitrary.
  * @param {!function} predicate - a predicate function.
+ * @param {!Arbitrary} arb - an arbitrary.
  * @returns {Arbitrary}
  *
  * @example
  * // returns even number.
  * ke.suchThat(ke.int, (n) => n / 2 === 0).generate();
  */
-export function suchThat(arb, predicate) {
+export function suchThat(predicate, arb) {
   const oriGen = arb.makeGen();
   const clone = arb.clone();
   const newGenerator = function (...genOpts) {

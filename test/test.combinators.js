@@ -38,7 +38,7 @@ describe('Combinators', () => {
       'generate a value passs predicates',
       'nat',
       () => {
-        const x = ke.suchThat(ke.bool, (b) => b === true).generate();
+        const x = ke.suchThat((b) => b === true, ke.bool).generate();
         return x === true;
       }
     );
@@ -48,7 +48,7 @@ describe('Combinators', () => {
       'nat',
       () => {
         try {
-          ke.suchThat(ke.bool, (b) => false ).generate();
+          ke.suchThat((b) => false, ke.bool).generate();
         }
         catch (e) {
           return true;

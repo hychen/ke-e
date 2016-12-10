@@ -9,7 +9,7 @@ const randomArb = ke.oneOf([
   ke.elements([1,2,3,4]),
   ke.pair(ke.any, ke.any),
   ke.array(ke.any),
-  ke.suchThat(ke.any, _.identity),
+  ke.suchThat(_.identity, ke.any),
   ke.object({k1: ke.any}),
 ]);
 
