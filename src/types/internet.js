@@ -13,11 +13,12 @@ import {oneOf,
 
 const userNameSep = elements(['.', '_', '']);
 const userNameSuffix = oneOf([nat.choose(1, 99), constant('')]);
-const userNameOpts = {
+const userNameSpec = {
   firstName: person.firstName,
   lastName: person.lastName,
   sep: userNameSep,
-  suffix: userNameSuffix
+  suffix: userNameSuffix,
+  chance: nat.choose(0, 1)
 };
 
 /**
@@ -30,25 +31,26 @@ const userNameOpts = {
  * ke.internet.userName.generate();
  *
  */
-const userName = fromGenMaker(function(opts) {
-  return function(engine) {
-    const gen = object(_.defaults(opts, userNameOpts)).makeGen();
-    const {firstName, lastName, sep, suffix} = gen(engine, 'en');
-    const n = nat.choose(0, 1).makeGen()(engine);
-    if (n === 0) {
-      return `${firstName}`;
+const userName = object(userNameSpec)
+  .transform(r => {
+    if (r.chance === 0) {
+      return `${r.firstName}`;
     }
     else {
-      return `${firstName}${sep}${lastName}${suffix}`;
+      return `${r.firstName}${r.sep}${r.lastName}${r.suffix}`;
     }
-  };
-}).name('Internet User Name');
+  }).name('Internet User Name');
 
 const freeEmailProvider = elements([
   'gmail.com',
   'yahoo.com',
   'hotmail.com'
 ]).name('Free Email Provider');
+
+const emailSpec = {
+  userName: userName,
+  provider: freeEmailProvider
+};
 
 /**
  * Arbitrary to produce an email.
@@ -58,13 +60,9 @@ const freeEmailProvider = elements([
  * // returns jack.hand@gmail.com
  * ke.internet.email.generate();
  */
-const email = fromGenMaker(function(userName, provider) {
-  return function(engine) {
-    const a = userName.makeGen()(engine);
-    const b = provider.makeGen()(engine);
-    return `${a}@${b}`;
-  };
-}, [userName, freeEmailProvider]).name('Email');
+const email = object(emailSpec)
+  .transform(r => `${r.userName}@${r.provider}`)
+  .name('Email');
 
 const proto = elements(['http', 'https']).name('Internet Protocol');
 
@@ -80,16 +78,28 @@ const domainSuffix = elements([
   'today'
 ]).name('Domain Suffix');
 
-const domainName = pair(domainWord, domainSuffix)
-        .transform((arr) => `${arr[0]}.${arr[1]}`).name('Domain Name');
+const domainNameSpec = {
+  domainWord,
+  domainSuffix
+};
+
+const domainName = object(domainNameSpec)
+  .transform(r => `${r.domainWord}.${r.domainSuffix}`)
+  .name('Domain Name');
+
+const urlSpec = {
+  proto,
+  domainName
+};
 
 /**
  * Arbitrary to produce an url.
  *
  * @type {Arbitrary}
  */
-const url = pair(proto, domainName).
-        transform((arr) => `${arr[0]}://${arr[1]}`).name('URL');
+const url = object(urlSpec)
+        .transform(r => `${r.proto}://${r.domainName}`)
+        .name('URL');
 
 const ipRange = nat.choose(0, 255).name('IP Range');
 
@@ -124,6 +134,7 @@ const ipv6 = nearray(ipv6Block)
 export default {
   userName,
   email,
+  domainName,
   url,
   ip,
   ipv6

@@ -311,11 +311,12 @@ export function object(spec) {
   assert(_.isObject(spec), 'spec must be an object');
   return new Arbitrary({
     name: 'Object',
-    gen: function(spec) {
+    gen: function(opts) {
+      const _spec = _.defaults(opts, spec);
       return function(engine, locale) {
         const o = {};
-        Object.keys(spec).forEach((k) => {
-          o[k] = spec[k].makeGen()(engine, locale);
+        Object.keys(_spec).forEach((k) => {
+          o[k] = _spec[k].makeGen()(engine, locale);
         });
         return o;
       };
