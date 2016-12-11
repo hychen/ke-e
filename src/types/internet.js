@@ -8,10 +8,17 @@ import {oneOf,
         pair,
         nearray,
         elements,
+        object,
         constant} from '../combinators';
 
 const userNameSep = elements(['.', '_', '']);
 const userNameSuffix = oneOf([nat.choose(1, 99), constant('')]);
+const userNameOpts = {
+  firstName: person.firstName,
+  lastName: person.lastName,
+  sep: userNameSep,
+  suffix: userNameSuffix
+};
 
 /**
  * Arbitrary to produce internet user name.
@@ -23,17 +30,19 @@ const userNameSuffix = oneOf([nat.choose(1, 99), constant('')]);
  * ke.internet.userName.generate();
  *
  */
-const userName = fromGenMaker(function(firstName, lastName, sepArb) {
+const userName = fromGenMaker(function(opts) {
   return function(engine) {
-    const a = firstName.makeGen()(engine);
-    const b = lastName.makeGen()(engine);
-    const sep = sepArb.makeGen()(engine);
-    const suffix = userNameSuffix.makeGen()(engine);
+    const gen = object(_.defaults(opts, userNameOpts)).makeGen();
+    const {firstName, lastName, sep, suffix} = gen(engine, 'en');
     const n = nat.choose(0, 1).makeGen()(engine);
-    const result = n === 0 ? `${a}` : `${a}${sep}${b}${suffix}`;
-    return result;
+    if (n === 0) {
+      return `${firstName}`;
+    }
+    else {
+      return `${firstName}${sep}${lastName}${suffix}`;
+    }
   };
-}, [person.firstName, person.lastName, userNameSep]).name('Internet User Name');
+}).name('Internet User Name');
 
 const freeEmailProvider = elements([
   'gmail.com',
