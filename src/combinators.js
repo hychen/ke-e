@@ -316,7 +316,13 @@ export function object(spec) {
       return function(engine, locale) {
         const o = {};
         Object.keys(_spec).forEach((k) => {
-          o[k] = _spec[k].makeGen()(engine, locale);
+          const arbOrValue = _spec[k];
+          if (arbOrValue instanceof Arbitrary) {
+            o[k] = arbOrValue.makeGen()(engine, locale);
+          }
+          else {
+            o[k] = arbOrValue;
+          }
         });
         return o;
       };
