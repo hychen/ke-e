@@ -5,6 +5,11 @@ describe('Arbitrary', () => {
 
   const engine = Random.engines.mt19937();
 
+  it('random', () => {
+    const arb1 = new Arbitrary({gen: Random.integer, genOpts: [-2, 2]});
+    expect(_.isInteger(arb1.random)).eq(true);
+  });
+
   it('set/get name.', () => {
     const name = 'Integer';
     const arb1= new Arbitrary({gen: _.identity});

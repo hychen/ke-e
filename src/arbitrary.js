@@ -73,6 +73,16 @@ class Arbitrary {
     this.show(opts.show || JSON.stringify);
   }
   /**
+   * A random example value of this arbitrary.
+   *
+   * @return {*}
+   * @example
+   * ke.int.random
+   */
+  get random() {
+    return this.generate();
+  }
+  /**
    * Get/Set the name of this arbitrary.
    *
    * @param {?string} name the name of a arbitrary.
