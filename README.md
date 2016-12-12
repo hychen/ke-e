@@ -96,17 +96,17 @@ This project follows unicode CLDR specification. `en` is default locale id.
 
 ```
 // Generate English first name.
-ke.person.firstName.generate();
+ke.person.firstName.random.
 
 // Generate Tranditional Chinese first name.
-ke.person.firstName.locale('zh-Hant-TW').generate();
+ke.person.firstName.locale('zh-Hant-TW').random.
 ```
 
 ### Node.js REPL
 
 ```
 $ ke
-> ke.int.generate();
+> ke.int.random.
 123124343
 ```
 
