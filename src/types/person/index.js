@@ -4,8 +4,10 @@
 import {object, oneOf, constant} from '../../combinators';
 import {fromDefinition, formater} from '../../utils';
 import {date} from '../datetime.js';
+import {Definitions} from '../../definition';
 
 import definitions from './definitions';
+const defs = new Definitions(definitions);
 
 /**
  * Arbitrary to generate the first name of a person.
@@ -15,7 +17,7 @@ import definitions from './definitions';
  * // returns Jack.
  * ke.person.firstName.generate();
  */
-const firstName = fromDefinition(definitions, 'firstName').name('First Name');
+const firstName = defs.arbitrary('firstName').name('First Name');
 
 /**
  * Arbitrary to generate the last name of a person.
@@ -25,7 +27,7 @@ const firstName = fromDefinition(definitions, 'firstName').name('First Name');
  * // returns Hand.
  * ke.person.lastName.generate();
  */
-const lastName = fromDefinition(definitions, 'lastName').name('Last Name');
+const lastName = defs.arbitrary('lastName').name('Last Name');
 
 /**
  * Aribitrary to generate the name of a person.
@@ -37,7 +39,7 @@ const lastName = fromDefinition(definitions, 'lastName').name('Last Name');
 const name = object({
   firstName: firstName,
   lastName: lastName
-}).transform(formater(definitions, 'name'))
+}).transform(defs.formater('name'))
 .name('Name');
 
 /**
@@ -47,7 +49,7 @@ const name = object({
  * @example
  * ke.person.gender.generate;
  */
-const gender = fromDefinition(definitions, 'gender').name('Gender');
+const gender = defs.arbitrary('gender').name('Gender');
 
 /**
  * Arbitrary to generate a person (alive, dead, undead, or fictional).

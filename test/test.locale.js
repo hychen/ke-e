@@ -1,15 +1,15 @@
-import {fromDefinition} from '../src/utils';
+import {Definitions} from '../src/definition';
 
 describe('Locale', () =>{
 
-  const arb = fromDefinition({
+  const arb = new Definitions({
     en: {
       'hi': ['hi']
     },
     zh_Hant_TW: {
       'hi': ['嗨']
     }
-  }, 'hi');
+  }).arbitrary('hi');
 
   it('pair', () => {
     const a = ke.pair(arb, arb).generate();

@@ -21,52 +21,6 @@ export function liftExport(namespace, name) {
 }
 
 /**
- * Get a definietion.
- *
- * @param {Object} definietions
- * @param {string} locale
- * @param {string} key
- * @return {Object}
- */
-export function getDef(defs, locale, key) {
-  if (avaliableLocaleIds.indexOf(locale) < 0) {
-    throw new Error(`Locale ${locale} is not supported`);
-  }
-  const _locale = locale.replace(/-/g, '_');
-  const _def = defs[_locale];
-  if (_def) {
-    return _def[key];
-  }
-  else {
-    return defs['en'][key];
-  }
-}
-
-export function formater(defs, key) {
-  return function (result) {
-    const locale = this.locale();
-    const f = getDef(defs, locale, key);
-    return typeof f === 'function'? f(result) : result;
-  };
-}
-
-/**
- * Create an arbitrary from a definition.
- *
- * @param {Object }definietions
- * @param {string} name
- * @return {Arbitrary}
- */
-export function fromDefinition(definitions, name) {
-  return fromGenMaker(function() {
-    return function(engine, locale) {
-      const pool = getDef(definitions, locale, name);
-      return elements(pool).engine(engine).generate();
-    };
-  });
-}
-
-/**
  * @param {!number} n
  * @return {number}
  */

@@ -1,17 +1,19 @@
 /**
  * @module
  */
-import {fromDefinition} from '../../utils';
+import {Definitions} from '../../definition';
 import {fromGenMaker} from '../../arbitrary';
 import {array, oneOf} from '../../combinators';
 import {nat} from '../number';
+
 import definitions from './definitions';
+const defs = new Definitions(definitions);
 
 /**
  * Arbitrary to represent a word.
  * @type {Arbitrary}
  */
-const word = fromDefinition(definitions, 'words').name('Word');
+const word = defs.arbitrary('words').name('Word');
 
 /**
  * Arbitrary to represent a space seperated list of words.
