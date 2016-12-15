@@ -2,7 +2,7 @@
  * @module
  */
 import {object, oneOf, constant} from '../../combinators';
-import {fromDefinition} from '../../utils';
+import {fromDefinition, formater} from '../../utils';
 import {date} from '../datetime.js';
 
 import definitions from './definitions';
@@ -37,7 +37,8 @@ const lastName = fromDefinition(definitions, 'lastName').name('Last Name');
 const name = object({
   firstName: firstName,
   lastName: lastName
-}).name('Name');
+}).transform(formater(definitions, 'name'))
+.name('Name');
 
 /**
  * Arbitrary to generate the gender of a person.

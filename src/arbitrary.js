@@ -241,7 +241,7 @@ class Arbitrary {
   transform(f) {
     assert(_.isFunction(f), 'f must be a function.');
     const clone = this.clone();
-    clone._transforms.push(f);
+    clone._transforms.push(f.bind(clone));
     return clone;
   }
   /**

@@ -42,6 +42,14 @@ export function getDef(defs, locale, key) {
   }
 }
 
+export function formater(defs, key) {
+  return function (result) {
+    const locale = this.locale();
+    const f = getDef(defs, locale, key);
+    return typeof f === 'function'? f(result) : result;
+  };
+}
+
 /**
  * Create an arbitrary from a definition.
  *
