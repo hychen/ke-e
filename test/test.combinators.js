@@ -217,3 +217,11 @@ describe('frequency', () => {
   });
 
 });
+
+describe('regex', () => {
+  it('works', () => {
+    const pattern = 'o+ (hello|old)';
+    const x = ke.regex(pattern).random;
+    expect(new RegExp(pattern).test(x)).eq(true);
+  })
+})

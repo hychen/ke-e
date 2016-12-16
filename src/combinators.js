@@ -4,6 +4,7 @@
 import _ from 'lodash';
 import assert from 'assert';
 import Random from 'random-js';
+import RandExp from 'randexp';
 import {smallerRange,
         ulog2} from './utils';
 import {fromGenMaker,
@@ -51,6 +52,30 @@ export function elements(pool) {
     }
   });
 }
+
+/**
+ * Generates a value of the given regular expression.
+ *
+ * @param {string} pattern regualr expression string.
+ * @return {Arbitrary}
+ * @example
+ * ke.regex('hello+ (world|to you)').random
+ */
+export function regex(pattern) {
+  return new Arbitrary({
+    gen: function(s) {
+      return function(engine) {
+        const regexp = new RegExp(s);
+        const randexp = new RandExp(regexp);
+        randexp.randInt = (from, to) => {
+          return Random.integer(from, to)(engine);
+        };
+        return randexp.gen();
+      }
+    },
+    genOpts: [pattern]
+  });
+};
 
 /**
  * Choose one of the given arbitraries, with a weighted random distribution.

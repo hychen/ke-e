@@ -143,6 +143,7 @@ some of difinitions of arbitraries took from
 
 - constant — produce a contant value.
 - elements — produce one of the given values. 
+- regex - produce a value from the regualr expression.
 - frequency - Choose one of the given arbitraries, with a weighted random distribution.
 - suchThat — produce a value that satisfies a predicate.
 - oneOf — randomly uses one of the given generators. 
