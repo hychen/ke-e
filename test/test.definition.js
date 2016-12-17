@@ -2,7 +2,7 @@ import {Definitions} from '../src/definition';
 
 describe('Defintions', () => {
   const defs = new Definitions({
-    en: {name: [1,2,3]},
+    en: {name: [1,2,3], nest: {nest1: ['a', 'b']}},
     zh_Hant_TW: {name: [4,5,6]}
   });
 
@@ -18,6 +18,8 @@ describe('Defintions', () => {
     const b = arb.locale('zh-Hant-TW').random;
     expect([1,2,3].indexOf(a) >= 0).eq(true);
     expect([4,5,6].indexOf(b) >= 0).eq(true);
+    const arb2 = defs.arbitrary('nest.nest1');
+    expect(['a', 'b'].indexOf(arb2.random) >= 0).eq(true);
   });
 
 });

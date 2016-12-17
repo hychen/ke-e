@@ -41,13 +41,8 @@ class Definitions{
       throw new Error(`Locale ${locale} is not supported`);
     }
     const _locale = locale.replace(/-/g, '_');
-    const _def = this._data[_locale];
-    if (_def) {
-      return _def[name];
-    }
-    else {
-      return this._data['en'][name];
-    }
+    const _def = this._data[_locale] || this._data['en'];
+    return _.get(_def, name);
   }
   /**
    * Creates a arbitrary from a definition.
