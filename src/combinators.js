@@ -376,8 +376,8 @@ export function objectOf(...args) {
       const clsarbargs = clsarbargs2.length > 0 ? clsarbargs2 : clsarbargs1;
       const impl = Object.create(cls.prototype);
       const clsargs = clsarbargs.map(arb => arb.makeGen()(engine, locale));
-      cls.apply(impl, clsargs);
-      return impl;
+      const v = cls.apply(impl, clsargs);
+      return v ? v : impl;
     };
   });
 }

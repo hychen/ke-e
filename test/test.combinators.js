@@ -170,6 +170,12 @@ describe('Combinators', () => {
       expect(person1.bio).not.eq(undefined);
     });
 
+    it('with function', () => {
+      const add = function(x, y) { return x + y};
+      const v = ke.objectOf(add, ke.int, ke.int).random;
+      expect(_.isInteger(v)).eq(true);
+    })
+
   });
 
   describe('small', () => {
