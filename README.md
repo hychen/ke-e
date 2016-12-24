@@ -156,6 +156,8 @@ some of difinitions of arbitraries took from
 - objectOf - transform a class to an object arbitrary.
 - small - produce smaller version of a arbitrary.
 - recursive - produce a recursive value.
+- variant - produce valid or invalid value of an arbitrary .
+- data - produce a test dataset.
 
 ### Locale
 

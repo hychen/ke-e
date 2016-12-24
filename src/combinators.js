@@ -10,6 +10,7 @@ import {smallerRange,
 import {fromGenMaker,
         isArbitrary,
         Arbitrary} from './arbitrary';
+import {TestData} from './testdata';
 import {any} from './types/any';
 
 /**
@@ -380,4 +381,12 @@ export function objectOf(...args) {
       return v ? v : impl;
     };
   });
+}
+
+export function variant(valid, invalid) {
+  return oneOf([valid, invalid]).name('Variant');
+}
+
+export function data(variants) {
+  return new TestData(variants);
 }
