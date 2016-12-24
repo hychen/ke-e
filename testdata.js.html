@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ké--ê Module: definition</title>
+	<title>ké--ê Source: testdata.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -67,105 +67,104 @@
 <div class="row">
 
 	
-	<div class="col-md-8">
+	<div class="col-md-12">
 	
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: definition</h1>
+		<h1 class="page-title">Source: testdata.js</h1>
+    
 <section>
+    <article>
+        <pre
+            class="sunlight-highlight-javascript linenums">/**
+ * @module
+ */
+import _ from 'lodash';
+import {object,
+        oneOf} from './combinators';
 
-<header>
-    
-</header>
+function valid(arb) {
+  return arb.genOpts()[0][0];
+}
 
+function invalid(arb) {
+  return arb.genOpts()[0][1];
+}
 
-<article>
-    <div class="container-overview">
-    
-        
+class TestData {
+  /**
+   * @param {Object} spec a record to define variants of dataset.
+   * @example
+   * new ke.TestData([ke.variant(ke.int, ke.bool)]);
+   */
+  constructor(spec) {
+    this._spec = spec;
+  }
+  /**
+   * @type {*} random
+   * @example
+   * new ke.TestData([ke.variant(ke.int, ke.bool)]).random;
+   */
+  get random() {
+    return object(this._spec).random;
+  }
+  /**
+   * Make an arbitrary to produce all valid cases.
+   *
+   * @return {Arbitrary}
+   */
+  allValid() {
+    return object(_.mapValues(this._spec, valid)).name('AllValid');
+  }
+  /**
+   * Make an arbitrary to produce all invalid cases.
+   *
+   * @return {Arbitrary}
+   */
+  allInvalid() {
+    return this.invalid();
+  }
+  /**
+   * Make an arbitrary to produce partial invalid cases.
+   *
+   * @param {string} propName a property name is the spec.
+   * @return {Arbitrary}
+   */
+  invalid(propName) {
+    const name = propName === undefined ? 'AllInvalid' : `Invalid_${propName}`;
+    const newSpec = _.transform(this._spec, (acc, v, k) => {
+      const f = (propName === undefined || propName === k)
+              ? invalid
+              : valid;
+      return acc[k] = f(v);
+    }, {});
+    return object(newSpec).name(name);
+  }
+  /**
+   * Produce samples in each cases.
+   *
+   * @param {number} size the size of produced data of each cases.
+   * @return {Object}
+   */
+  sample(size = 200) {
+    const result = {};
+    Object.keys(this._spec).forEach((propName) => {
+      const arb = this.invalid(propName);
+      result[arb.name()] = arb.sample(size);
+    });
+    result['AllValid'] = this.allValid().sample(size);
+    return result;
+  }
+}
 
-        
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="definition.js.html">definition.js</a>,
-				 <a href="definition.js.html#sunlight-1-line-1">line 1</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-        <h3 class="subsection-title">Classes</h3>
-
-        <dl>
-            <dt><a href="module-definition-Definitions.html">Definitions</a></dt>
-            <dd></dd>
-        </dl>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
+export {
+  TestData
+}
+</pre>
+    </article>
 </section>
+
 
 
 
@@ -175,10 +174,6 @@
 
 	<div class="clearfix"></div>
 
-	
-		<div class="col-md-3">
-			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
-		</div>
 	
 
 </div>
