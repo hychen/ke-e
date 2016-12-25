@@ -2,7 +2,6 @@
  * @module
  */
 import {object, oneOf, constant} from '../../combinators';
-import {fromDefinition, formater} from '../../utils';
 import {date} from '../primitive';
 import {Definitions} from '../../definition';
 
