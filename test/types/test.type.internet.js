@@ -5,6 +5,11 @@ describe('Arbitrary Internet', () => {
     expect(a).not.eq(undefined);
   });
 
+  it('password', () => {
+    const a = ke.internet.password.random;
+    expect(a).not.eq(undefined);
+  });
+
   it('email', () => {
     const a = ke.internet.email.generate();
     expect(a).not.eq(undefined);

@@ -3,6 +3,7 @@
  */
 import {fromGenMaker} from '../arbitrary';
 import person from './person';
+import {asciistring} from './string';
 import {nat} from './number';
 import {oneOf,
         pair,
@@ -40,6 +41,18 @@ const userName = object(userNameSpec)
       return `${r.firstName}${r.sep}${r.lastName}${r.suffix}`;
     }
   }).name('Internet User Name');
+
+/**
+ * Arbitrary to produce a 16bit password.
+ *
+ * @type {Arbitrary}
+ * @example
+ * // returns JI|m)5?!e;"_b=$p
+ * ke.internet.password.random
+ */
+const password = asciistring
+        .choose(16, 16)
+        .name('Password');
 
 const freeEmailProvider = elements([
   'gmail.com',
@@ -133,6 +146,7 @@ const ipv6 = nearray(ipv6Block)
 
 export default {
   userName,
+  password,
   email,
   domainName,
   url,

@@ -190,6 +190,7 @@ some of difinitions of arbitraries took from
 
 - internet
  - userName - produce a internet username.
+ - password - produce a password string.
  - email - produce an email.
  - url - produce an url.
 
