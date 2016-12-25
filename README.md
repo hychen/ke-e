@@ -194,6 +194,13 @@ some of difinitions of arbitraries took from
  - password - produce a password string.
  - email - produce an email.
  - url - produce an url.
+ 
+### Geo 
+
+- geo
+ - latitude -  produce an latitude.
+ - longtitude - produce an longtitude.
+ - coordinate -  produce a coordinate.
 
 ## Installation
 
