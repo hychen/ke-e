@@ -3,7 +3,7 @@
  */
 import {object, oneOf, constant} from '../../combinators';
 import {fromDefinition, formater} from '../../utils';
-import {date} from '../datetime.js';
+import {date} from '../primitive';
 import {Definitions} from '../../definition';
 
 import definitions from './definitions';

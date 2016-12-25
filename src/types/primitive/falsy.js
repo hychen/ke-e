@@ -1,7 +1,7 @@
 /**
  * @module
  */
-import {elements} from '../combinators';
+import {elements} from '../../combinators';
 
 /**
  * falsy values.

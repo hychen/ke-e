@@ -11,7 +11,7 @@ import {fromGenMaker,
         isArbitrary,
         Arbitrary} from './arbitrary';
 import {TestData} from './testdata';
-import {any} from './types/any';
+import {any} from './types/primitive';
 
 /**
  * Generates a contant value.

@@ -4,7 +4,7 @@
 import _ from 'lodash';
 import assert from 'assert';
 import {isArbitrary} from './arbitrary';
-import {pint} from './types/number';
+import {pint} from './types/primitive';
 import {elements} from './combinators';
 import {stdOpts} from './constants';
 

@@ -4,8 +4,8 @@
 import _ from 'lodash';
 import Random from 'random-js';
 import {int} from './number';
-import {fromGenMaker} from '../arbitrary';
-import {array, nearray} from '../combinators';
+import {fromGenMaker} from '../../arbitrary';
+import {array, nearray} from '../../combinators';
 
 const _char = int.transform(String.fromCharCode);
 

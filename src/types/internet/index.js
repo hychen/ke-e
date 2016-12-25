@@ -10,8 +10,7 @@ import {oneOf,
         constant} from '../../combinators';
 import {Definitions} from '../../definition';
 import person from '../person';
-import {asciistring} from '../string';
-import {nat} from '../number';
+import {asciistring, nat} from '../primitive';
 
 import definitions from './definitions';
 const defs = new Definitions(definitions);

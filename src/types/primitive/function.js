@@ -1,8 +1,8 @@
 /**
  * @module
  */
-import {Arbitrary} from '../arbitrary';
-import {oneOf, array} from '../combinators';
+import {Arbitrary} from '../../arbitrary';
+import {oneOf, array} from '../../combinators';
 import {any} from './any';
 
 /**

@@ -2,8 +2,8 @@
  * @module
  */
 import Random from 'random-js';
-import {fromGenMaker} from '../arbitrary';
-import {smallerRange} from '../utils';
+import {fromGenMaker} from '../../arbitrary';
+import {smallerRange} from '../../utils';
 
 /**
  * Integer Arbitrary

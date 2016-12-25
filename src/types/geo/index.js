@@ -2,7 +2,7 @@
  * @module
  */
 import {object} from '../../combinators';
-import {number} from '../number';
+import {number} from '../primitive';
 
 /**
  * latitude

@@ -2,7 +2,7 @@
  * @module
  */
 import Random from 'random-js';
-import {fromGenMaker} from '../arbitrary';
+import {fromGenMaker} from '../../arbitrary';
 
 /**
  * Boolean Arbitrary

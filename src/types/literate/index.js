@@ -4,7 +4,7 @@
 import {Definitions} from '../../definition';
 import {fromGenMaker} from '../../arbitrary';
 import {array, oneOf} from '../../combinators';
-import {nat} from '../number';
+import {nat} from '../primitive';
 
 import definitions from './definitions';
 const defs = new Definitions(definitions);
