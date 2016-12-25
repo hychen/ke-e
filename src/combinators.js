@@ -383,10 +383,43 @@ export function objectOf(...args) {
   });
 }
 
-export function variant(valid, invalid) {
+/**
+ * An arbitrary to produce either valid or invalid values.
+ *
+ * @param {!Arbitrary} valid an arbitrary to produce valid value.
+ * @param {?Arbitrary} invalid an arbitrary to produce invalid value,
+ *                             default is constant(undefined).
+ * @return {Arbitrary}
+ * @example
+ * // returns a integer or a boolean.
+ * ke.vairant(ke.int, ke.bool).random
+ */
+export function variant(valid, invalid = constant(undefined)) {
+  assert(isArbitrary(valid), 'valid must be an arbitrary.');
   return oneOf([valid, invalid]).name('Variant');
 }
 
+/**
+ * An arbitrary to produce a data set consists of variants.
+ *
+ * @param {Object} variants
+ * @return {TestData}
+ * @example
+ * const variants = {
+ *   userName: ke.variant(ke.internet.userName, ke.falsy),
+ *   birthday: ke.variant(ke.date, ke.falsy)
+ * };
+ *
+ * // returns valid username and valid birthday.
+ * ke.data(variants).allValid().random;
+ *
+ * // returns invalid username and invalid birthday.
+ * ke.data(variants).allInvalid().random;
+ *
+ * // returns valid username and invalid birthday.
+ * ke.data(variants).invalid('birthday').random;
+ *
+ */
 export function data(variants) {
-  return new TestData(variants);
+  return new TestData({variants: variants});
 }
