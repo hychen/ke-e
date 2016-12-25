@@ -195,6 +195,12 @@ some of difinitions of arbitraries took from
  - email - produce an email.
  - url - produce an url.
  
+### Locale 
+
+- locale
+ - country
+ - timezone
+ 
 ### Geo 
 
 - geo

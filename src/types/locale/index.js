@@ -3,6 +3,8 @@
  */
 import {elements} from '../../combinators';
 import avaliableLocaleIds from './avaliableLocaleids';
+import timeZone from './timeZone';
+import _country from './country';
 
 /**
  * Avaliable Locale Ids in Unicode Common Locale Data Repository.
@@ -15,7 +17,23 @@ import avaliableLocaleIds from './avaliableLocaleids';
  */
 const localeId = elements(avaliableLocaleIds).name('Locale Id');
 
+/**
+ * Time Zone
+ *
+ * @type {Arbitrary}
+ */
+const timezone = elements(timeZone).name('Time Zone');
+
+/**
+ * Country
+ *
+ * @type {Arbitrary}
+ */
+const country = elements(_country).name('Country');
+
 export default {
   avaliableLocaleIds,
-  localeId
+  localeId,
+  country,
+  timezone
 };
