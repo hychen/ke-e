@@ -1,16 +1,22 @@
 /**
  * @module
  */
-import {fromGenMaker} from '../arbitrary';
-import person from './person';
-import {asciistring} from './string';
-import {nat} from './number';
+import {fromGenMaker} from '../../arbitrary';
 import {oneOf,
         pair,
         nearray,
         elements,
         object,
-        constant} from '../combinators';
+        constant} from '../../combinators';
+import {Definitions} from '../../definition';
+import person from '../person';
+import {asciistring} from '../string';
+import {nat} from '../number';
+
+import definitions from './definitions';
+const defs = new Definitions(definitions);
+
+const avatar = defs.arbitrary('avatarURI').name('Avatar URI');
 
 const userNameSep = elements(['.', '_', '']);
 const userNameSuffix = oneOf([nat.choose(1, 99), constant('')]);
@@ -145,6 +151,7 @@ const ipv6 = nearray(ipv6Block)
         .name('IP v6 Address');
 
 export default {
+  avatar,
   userName,
   password,
   email,
