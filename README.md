@@ -206,7 +206,7 @@ some of difinitions of arbitraries took from
 - geo
  - latitude -  produce an latitude.
  - longtitude - produce an longtitude.
- - coordinate -  produce a coordinate.
+ - coordinates -  produce a coordinates.
 
 ## Installation
 

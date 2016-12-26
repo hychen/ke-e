@@ -27,14 +27,14 @@ const longtitude = number.choose(0, 360 * 10000)
   .transform(n => (n / 10000.0 - 180.0).toFixed(4));
 
 /**
- * coordinate
+ * coordinates
  *
  * @type {Arbitrary}
  * @example
  * // returns 19.4984, 132.9634.
- * ke.geo.coordinate.random
+ * ke.geo.coordinates.random
  */
-const coordinate = object({
+const coordinates = object({
   latitude: latitude,
   longtitude: longtitude
 }).transform(c => `${c.latitude}, ${c.longtitude}`)
@@ -43,5 +43,5 @@ const coordinate = object({
 export default {
   latitude,
   longtitude,
-  coordinate
+  coordinates
 }
