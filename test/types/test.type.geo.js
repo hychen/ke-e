@@ -11,7 +11,7 @@ describe('Geo Arbitrary', () => {
   })
 
   it('coordinate', () => {
-    const x = ke.geo.coordinate.random;
+    const x = ke.geo.coordinates.random;
     expect(x).not.eq(undefined);
   })
 
