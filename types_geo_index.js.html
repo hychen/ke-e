@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ké--ê Source: types/person/index.js</title>
+	<title>ké--ê Source: types/geo/index.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,7 +72,7 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: types/person/index.js</h1>
+		<h1 class="page-title">Source: types/geo/index.js</h1>
     
 <section>
     <article>
@@ -80,75 +80,50 @@
             class="sunlight-highlight-javascript linenums">/**
  * @module
  */
-import {object, oneOf, constant} from '../../combinators';
-import {date} from '../primitive';
-import {Definitions} from '../../definition';
-
-import definitions from './definitions';
-const defs = new Definitions(definitions);
+import {object} from '../../combinators';
+import {number} from '../primitive';
 
 /**
- * Arbitrary to generate the first name of a person.
+ * latitude
  *
  * @type {Arbitrary}
  * @example
- * // returns Jack.
- * ke.person.firstName.generate();
+ * // returns 19.4984.
+ * ke.geo.latitude.random
  */
-const firstName = defs.arbitrary('firstName').name('First Name');
+const latitude = number.choose(0, 180 * 10000)
+  .transform(n => (n / 10000.0 - 90.0).toFixed(4));
 
 /**
- * Arbitrary to generate the last name of a person.
+ * longtitude
  *
  * @type {Arbitrary}
  * @example
- * // returns Hand.
- * ke.person.lastName.generate();
+ * // returns 132.9634.
+ * ke.geo.longtitude.random
  */
-const lastName = defs.arbitrary('lastName').name('Last Name');
+const longtitude = number.choose(0, 360 * 10000)
+  .transform(n => (n / 10000.0 - 180.0).toFixed(4));
 
 /**
- * Aribitrary to generate the name of a person.
+ * coordinates
  *
  * @type {Arbitrary}
  * @example
- * ke.person.name.generate();
+ * // returns 19.4984, 132.9634.
+ * ke.geo.coordinates.random
  */
-const name = object({
-  firstName: firstName,
-  lastName: lastName
-}).transform(defs.formater('name'))
-.name('Name');
+const coordinates = object({
+  latitude: latitude,
+  longtitude: longtitude
+}).transform(c => `${c.latitude}, ${c.longtitude}`)
+  .name('Coordinate');
 
-/**
- * Arbitrary to generate the gender of a person.
- *
- * @type {Arbitrary}
- * @example
- * ke.person.gender.generate;
- */
-const gender = defs.arbitrary('gender').name('Gender');
-
-/**
- * Arbitrary to generate a person (alive, dead, undead, or fictional).
- *
- * @type {Arbitrary}
- * @example
- * // generate a object include person name, gender and birthday.
- * ke.person.generate();
- */
-const person = object({
-  name: name,
-  gender: gender,
-  brithDay: date
-}).name('Person');
-
-person.name = name;
-person.firstName = firstName;
-person.lastName = lastName;
-person.gender = gender;
-
-export default person;
+export default {
+  latitude,
+  longtitude,
+  coordinates
+}
 </pre>
     </article>
 </section>

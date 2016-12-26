@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ké--ê Source: types/person/index.js</title>
+	<title>ké--ê Module: types/internet/index</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -67,92 +67,609 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: types/person/index.js</h1>
-    
+	<h1 class="page-title">Module: types/internet/index</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">/**
- * @module
- */
-import {object, oneOf, constant} from '../../combinators';
-import {date} from '../primitive';
-import {Definitions} from '../../definition';
 
-import definitions from './definitions';
-const defs = new Definitions(definitions);
+<header>
+    
+</header>
 
-/**
- * Arbitrary to generate the first name of a person.
- *
- * @type {Arbitrary}
- * @example
- * // returns Jack.
- * ke.person.firstName.generate();
- */
-const firstName = defs.arbitrary('firstName').name('First Name');
 
-/**
- * Arbitrary to generate the last name of a person.
- *
- * @type {Arbitrary}
- * @example
- * // returns Hand.
- * ke.person.lastName.generate();
- */
-const lastName = defs.arbitrary('lastName').name('Last Name');
+<article>
+    <div class="container-overview">
+    
+        
 
-/**
- * Aribitrary to generate the name of a person.
- *
- * @type {Arbitrary}
- * @example
- * ke.person.name.generate();
- */
-const name = object({
-  firstName: firstName,
-  lastName: lastName
-}).transform(defs.formater('name'))
-.name('Name');
+        
+<dl class="details">
+    
 
-/**
- * Arbitrary to generate the gender of a person.
- *
- * @type {Arbitrary}
- * @example
- * ke.person.gender.generate;
- */
-const gender = defs.arbitrary('gender').name('Gender');
+	
 
-/**
- * Arbitrary to generate a person (alive, dead, undead, or fictional).
- *
- * @type {Arbitrary}
- * @example
- * // generate a object include person name, gender and birthday.
- * ke.person.generate();
- */
-const person = object({
-  name: name,
-  gender: gender,
-  brithDay: date
-}).name('Person');
+	
 
-person.name = name;
-person.firstName = firstName;
-person.lastName = lastName;
-person.gender = gender;
+	
 
-export default person;
-</pre>
-    </article>
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_internet_index.js.html">types/internet/index.js</a>,
+				 <a href="types_internet_index.js.html#sunlight-1-line-1">line 1</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id="~email">
+    <h4 id="~email"><span class="type-signature">&lt;inner, constant> </span>email<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to produce an email.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_internet_index.js.html">types/internet/index.js</a>,
+				 <a href="types_internet_index.js.html#sunlight-1-line-81">line 81</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// returns jack.hand@gmail.com
+ke.internet.email.generate();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~ip">
+    <h4 id="~ip"><span class="type-signature">&lt;inner, constant> </span>ip<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to produce an IP v4 address.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_internet_index.js.html">types/internet/index.js</a>,
+				 <a href="types_internet_index.js.html#sunlight-1-line-129">line 129</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~ipv6">
+    <h4 id="~ipv6"><span class="type-signature">&lt;inner, constant> </span>ipv6<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to produce an IP v6 address.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_internet_index.js.html">types/internet/index.js</a>,
+				 <a href="types_internet_index.js.html#sunlight-1-line-147">line 147</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~password">
+    <h4 id="~password"><span class="type-signature">&lt;inner, constant> </span>password<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to produce a 16bit password.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_internet_index.js.html">types/internet/index.js</a>,
+				 <a href="types_internet_index.js.html#sunlight-1-line-58">line 58</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// returns JI|m)5?!e;&quot;_b=$p
+ke.internet.password.random</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~url">
+    <h4 id="~url"><span class="type-signature">&lt;inner, constant> </span>url<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to produce an url.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_internet_index.js.html">types/internet/index.js</a>,
+				 <a href="types_internet_index.js.html#sunlight-1-line-118">line 118</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~userName">
+    <h4 id="~userName"><span class="type-signature">&lt;inner, constant> </span>userName<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Arbitrary to produce internet user name.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_internet_index.js.html">types/internet/index.js</a>,
+				 <a href="types_internet_index.js.html#sunlight-1-line-40">line 40</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// returns jack or jack.hand or jack.hand34.
+ke.internet.userName.generate();</pre>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -162,6 +679,10 @@ export default person;
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>

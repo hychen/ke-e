@@ -33,14 +33,14 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-definition.html">definition</a></li><li><a href="module-monkey.html">monkey</a></li><li><a href="module-repl.html">repl</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-testdata.html">testdata</a></li><li><a href="module-types_any.html">types/any</a></li><li><a href="module-types_boolean.html">types/boolean</a></li><li><a href="module-types_datetime.html">types/datetime</a></li><li><a href="module-types_falsy.html">types/falsy</a></li><li><a href="module-types_function.html">types/function</a></li><li><a href="module-types_internet.html">types/internet</a></li><li><a href="module-types_literate_index.html">types/literate/index</a></li><li><a href="module-types_locale_avaliableLocaleids.html">types/locale/avaliableLocaleids</a></li><li><a href="module-types_locale_index.html">types/locale/index</a></li><li><a href="module-types_number.html">types/number</a></li><li><a href="module-types_person_index.html">types/person/index</a></li><li><a href="module-types_string.html">types/string</a></li><li><a href="module-utils.html">utils</a></li>
+					<li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-definition.html">definition</a></li><li><a href="module-monkey.html">monkey</a></li><li><a href="module-repl.html">repl</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-testdata.html">testdata</a></li><li><a href="module-types_geo_index.html">types/geo/index</a></li><li><a href="module-types_internet_index.html">types/internet/index</a></li><li><a href="module-types_literate_index.html">types/literate/index</a></li><li><a href="module-types_locale_avaliableLocaleids.html">types/locale/avaliableLocaleids</a></li><li><a href="module-types_locale_index.html">types/locale/index</a></li><li><a href="module-types_person_index.html">types/person/index</a></li><li><a href="module-types_primitive_any.html">types/primitive/any</a></li><li><a href="module-types_primitive_boolean.html">types/primitive/boolean</a></li><li><a href="module-types_primitive_datetime.html">types/primitive/datetime</a></li><li><a href="module-types_primitive_falsy.html">types/primitive/falsy</a></li><li><a href="module-types_primitive_function.html">types/primitive/function</a></li><li><a href="module-types_primitive_number.html">types/primitive/number</a></li><li><a href="module-types_primitive_string.html">types/primitive/string</a></li><li><a href="module-utils.html">utils</a></li>
 				</ul>
 			</li>
 			
 			<li class="dropdown">
 				<a href="classes.list.html" class="dropdown-toggle" data-toggle="dropdown">Classes<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-arbitrary-Arbitrary.html">arbitrary~Arbitrary</a></li><li><a href="module-definition-Definitions.html">definition~Definitions</a></li><li><a href="module-monkey-ChaosMonkey.html">monkey~ChaosMonkey</a></li><li><a href="module-testable-ForAll.html">testable~ForAll</a></li><li><a href="module-testable-Property.html">testable~Property</a></li><li><a href="module-testdata-TestData.TestData.html">testdata~TestData.TestData</a></li>
+					<li><a href="module-arbitrary-Arbitrary.html">arbitrary~Arbitrary</a></li><li><a href="module-definition-Definitions.html">definition~Definitions</a></li><li><a href="module-monkey-ChaosMonkey.html">monkey~ChaosMonkey</a></li><li><a href="module-testable-ForAll.html">testable~ForAll</a></li><li><a href="module-testable-Property.html">testable~Property</a></li><li><a href="module-testdata-TestData.html">testdata~TestData</a></li>
 				</ul>
 			</li>
 			
@@ -80,6 +80,7 @@
             class="sunlight-highlight-javascript linenums">/**
  * @module
  */
+import assert from 'assert';
 import _ from 'lodash';
 import {object,
         oneOf} from './combinators';
@@ -92,22 +93,44 @@ function invalid(arb) {
   return arb.genOpts()[0][1];
 }
 
+/**
+ * Test Data Options.
+ * @typedef {Object} TestDataOptions
+ * @property {string} name the name of a test dataset.
+ * @property {Object} variants
+ */
+
+/**
+ * A record to represent a data set.
+ */
 class TestData {
   /**
-   * @param {Object} spec a record to define variants of dataset.
-   * @example
-   * new ke.TestData([ke.variant(ke.int, ke.bool)]);
+   * @param {TestDataOptions} opts the options of a test dataset.
    */
-  constructor(spec) {
-    this._spec = spec;
+  constructor(opts) {
+    assert(_.isObject(opts), 'opts must be an object.');
+    this._name = opts.name;
+    this._variants = opts.variants;
   }
   /**
-   * @type {*} random
-   * @example
-   * new ke.TestData([ke.variant(ke.int, ke.bool)]).random;
+   * Get/Set the name of a test dataset.
+   *
+   * @param {string} name the name of a dataset.
+   * @return {TestData|string}
    */
+  name(name) {
+    if (name !== undefined) {
+      assert(_.isString(name) &amp;&amp; name.length >= 3,
+             'name must be a sring of length >= 3.');
+      this._name = name;
+      return this;
+    }
+    else {
+      return this._name;
+    }
+  }
   get random() {
-    return object(this._spec).random;
+    return object(this._variants).random;
   }
   /**
    * Make an arbitrary to produce all valid cases.
@@ -115,7 +138,7 @@ class TestData {
    * @return {Arbitrary}
    */
   allValid() {
-    return object(_.mapValues(this._spec, valid)).name('AllValid');
+    return object(_.mapValues(this._variants, valid)).name('AllValid');
   }
   /**
    * Make an arbitrary to produce all invalid cases.
@@ -133,7 +156,7 @@ class TestData {
    */
   invalid(propName) {
     const name = propName === undefined ? 'AllInvalid' : `Invalid_${propName}`;
-    const newSpec = _.transform(this._spec, (acc, v, k) => {
+    const newSpec = _.transform(this._variants, (acc, v, k) => {
       const f = (propName === undefined || propName === k)
               ? invalid
               : valid;
@@ -149,7 +172,7 @@ class TestData {
    */
   sample(size = 200) {
     const result = {};
-    Object.keys(this._spec).forEach((propName) => {
+    Object.keys(this._variants).forEach((propName) => {
       const arb = this.invalid(propName);
       result[arb.name()] = arb.sample(size);
     });
@@ -206,7 +229,7 @@ export {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2016-12-24T13:04:06+08:00
+		on 2016-12-26T11:17:53+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

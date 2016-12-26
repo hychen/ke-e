@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ké--ê Source: types/person/index.js</title>
+	<title>ké--ê Module: types/primitive/falsy</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -67,92 +67,272 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: types/person/index.js</h1>
-    
+	<h1 class="page-title">Module: types/primitive/falsy</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">/**
- * @module
- */
-import {object, oneOf, constant} from '../../combinators';
-import {date} from '../primitive';
-import {Definitions} from '../../definition';
 
-import definitions from './definitions';
-const defs = new Definitions(definitions);
+<header>
+    
+</header>
 
-/**
- * Arbitrary to generate the first name of a person.
- *
- * @type {Arbitrary}
- * @example
- * // returns Jack.
- * ke.person.firstName.generate();
- */
-const firstName = defs.arbitrary('firstName').name('First Name');
 
-/**
- * Arbitrary to generate the last name of a person.
- *
- * @type {Arbitrary}
- * @example
- * // returns Hand.
- * ke.person.lastName.generate();
- */
-const lastName = defs.arbitrary('lastName').name('Last Name');
+<article>
+    <div class="container-overview">
+    
+        
 
-/**
- * Aribitrary to generate the name of a person.
- *
- * @type {Arbitrary}
- * @example
- * ke.person.name.generate();
- */
-const name = object({
-  firstName: firstName,
-  lastName: lastName
-}).transform(defs.formater('name'))
-.name('Name');
+        
+<dl class="details">
+    
 
-/**
- * Arbitrary to generate the gender of a person.
- *
- * @type {Arbitrary}
- * @example
- * ke.person.gender.generate;
- */
-const gender = defs.arbitrary('gender').name('Gender');
+	
 
-/**
- * Arbitrary to generate a person (alive, dead, undead, or fictional).
- *
- * @type {Arbitrary}
- * @example
- * // generate a object include person name, gender and birthday.
- * ke.person.generate();
- */
-const person = object({
-  name: name,
-  gender: gender,
-  brithDay: date
-}).name('Person');
+	
 
-person.name = name;
-person.firstName = firstName;
-person.lastName = lastName;
-person.gender = gender;
+	
 
-export default person;
-</pre>
-    </article>
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_primitive_falsy.js.html">types/primitive/falsy.js</a>,
+				 <a href="types_primitive_falsy.js.html#sunlight-1-line-1">line 1</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id=".falsy">
+    <h4 id=".falsy"><span class="type-signature">&lt;static, constant> </span>falsy<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Falsy Arbitrary</p>
+<p>generates falsy values: false, null, undefined, '',
+0, void(0) and NaN.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_primitive_falsy.js.html">types/primitive/falsy.js</a>,
+				 <a href="types_primitive_falsy.js.html#sunlight-1-line-31">line 31</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">ke.falsy.generate();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".FALSY_VALUES">
+    <h4 id=".FALSY_VALUES"><span class="type-signature">&lt;static, constant> </span>FALSY_VALUES<span class="type-signature"> :Array</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>falsy values.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Array</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_primitive_falsy.js.html">types/primitive/falsy.js</a>,
+				 <a href="types_primitive_falsy.js.html#sunlight-1-line-11">line 11</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -162,6 +342,10 @@ export default person;
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>

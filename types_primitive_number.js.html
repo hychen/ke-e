@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ké--ê Source: types/person/index.js</title>
+	<title>ké--ê Source: types/primitive/number.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,7 +72,7 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: types/person/index.js</h1>
+		<h1 class="page-title">Source: types/primitive/number.js</h1>
     
 <section>
     <article>
@@ -80,75 +80,80 @@
             class="sunlight-highlight-javascript linenums">/**
  * @module
  */
-import {object, oneOf, constant} from '../../combinators';
-import {date} from '../primitive';
-import {Definitions} from '../../definition';
-
-import definitions from './definitions';
-const defs = new Definitions(definitions);
+import Random from 'random-js';
+import {fromGenMaker} from '../../arbitrary';
+import {smallerRange} from '../../utils';
 
 /**
- * Arbitrary to generate the first name of a person.
+ * Integer Arbitrary
  *
  * @type {Arbitrary}
+ *
  * @example
- * // returns Jack.
- * ke.person.firstName.generate();
+ * // Produce an integer within inclusive range [-5, 5].
+ * ke.int.choose(-5, 5).generate();
  */
-const firstName = defs.arbitrary('firstName').name('First Name');
+export const int = fromGenMaker(
+  Random.integer,
+  [-Number.MAX_SAFE_INTEGER,
+   Number.MAX_SAFE_INTEGER])
+  .name('Integer')
+  .smaller(smallerRange);
 
 /**
- * Arbitrary to generate the last name of a person.
+ * Positive Integer Arbitrary
  *
  * @type {Arbitrary}
- * @example
- * // returns Hand.
- * ke.person.lastName.generate();
  */
-const lastName = defs.arbitrary('lastName').name('Last Name');
+export const pint = int
+  .choose(0, Number.MAX_SAFE_INTEGER)
+  .name('Positive Integer');
 
 /**
- * Aribitrary to generate the name of a person.
+ * Negative Arbitrary
  *
  * @type {Arbitrary}
- * @example
- * ke.person.name.generate();
  */
-const name = object({
-  firstName: firstName,
-  lastName: lastName
-}).transform(defs.formater('name'))
-.name('Name');
+export const nint = int.
+  choose(-Number.MAX_SAFE_INTEGER, -1)
+  .name('Negative Integer');
 
 /**
- * Arbitrary to generate the gender of a person.
+ * Nature Number Arbitrary
  *
  * @type {Arbitrary}
- * @example
- * ke.person.gender.generate;
  */
-const gender = defs.arbitrary('gender').name('Gender');
+export const nat = int
+  .choose(1, Number.MAX_SAFE_INTEGER)
+  .name('Nat');
 
 /**
- * Arbitrary to generate a person (alive, dead, undead, or fictional).
+ * Nature Number Arbitrary
  *
  * @type {Arbitrary}
- * @example
- * // generate a object include person name, gender and birthday.
- * ke.person.generate();
  */
-const person = object({
-  name: name,
-  gender: gender,
-  brithDay: date
-}).name('Person');
+export const number = fromGenMaker(
+  Random.real ,
+  [-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER])
+  .name('Number');
 
-person.name = name;
-person.firstName = firstName;
-person.lastName = lastName;
-person.gender = gender;
+/**
+ * Positive Number Arbitrary
+ *
+ * @type {Arbitrary}
+ */
+export const pnumber = number
+  .choose(0, Number.MAX_SAFE_INTEGER)
+  .name('Positive Number');
 
-export default person;
+/**
+ * Negative Number Arbitrary
+ *
+ * @type {Arbitrary}
+ */
+export const nnumber = number
+  .choose(-Number.MAX_SAFE_INTEGER, -0.0000000001)
+  .name('Negative Number');
 </pre>
     </article>
 </section>

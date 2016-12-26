@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ké--ê Source: types/person/index.js</title>
+	<title>ké--ê Source: types/primitive/datetime.js</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,7 +72,7 @@
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: types/person/index.js</h1>
+		<h1 class="page-title">Source: types/primitive/datetime.js</h1>
     
 <section>
     <article>
@@ -80,75 +80,27 @@
             class="sunlight-highlight-javascript linenums">/**
  * @module
  */
-import {object, oneOf, constant} from '../../combinators';
-import {date} from '../primitive';
-import {Definitions} from '../../definition';
-
-import definitions from './definitions';
-const defs = new Definitions(definitions);
+import Random from 'random-js';
+import {fromGenMaker} from '../../arbitrary';
 
 /**
- * Arbitrary to generate the first name of a person.
+ * Date Arbitrary
  *
  * @type {Arbitrary}
- * @example
- * // returns Jack.
- * ke.person.firstName.generate();
- */
-const firstName = defs.arbitrary('firstName').name('First Name');
-
-/**
- * Arbitrary to generate the last name of a person.
  *
- * @type {Arbitrary}
  * @example
- * // returns Hand.
- * ke.person.lastName.generate();
- */
-const lastName = defs.arbitrary('lastName').name('Last Name');
-
-/**
- * Aribitrary to generate the name of a person.
+ * // generate a random date.
+ * ke.date.generate();
  *
- * @type {Arbitrary}
  * @example
- * ke.person.name.generate();
+ * // generate a random date between 2000/01/01 and 2016/01/01.
+ * let newDate = ke.date.choose(new Date(2000, 01, 01), new Date(2016, 01,01));
+ * newDate.generate();
  */
-const name = object({
-  firstName: firstName,
-  lastName: lastName
-}).transform(defs.formater('name'))
-.name('Name');
-
-/**
- * Arbitrary to generate the gender of a person.
- *
- * @type {Arbitrary}
- * @example
- * ke.person.gender.generate;
- */
-const gender = defs.arbitrary('gender').name('Gender');
-
-/**
- * Arbitrary to generate a person (alive, dead, undead, or fictional).
- *
- * @type {Arbitrary}
- * @example
- * // generate a object include person name, gender and birthday.
- * ke.person.generate();
- */
-const person = object({
-  name: name,
-  gender: gender,
-  brithDay: date
-}).name('Person');
-
-person.name = name;
-person.firstName = firstName;
-person.lastName = lastName;
-person.gender = gender;
-
-export default person;
+export const date = fromGenMaker(
+  Random.date,
+  [new Date(1984, 3, 25), new Date()])
+  .name('Date');
 </pre>
     </article>
 </section>

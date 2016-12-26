@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ké--ê Module: utils</title>
+	<title>ké--ê Module: types/primitive/string</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,7 +72,7 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Module: utils</h1>
+	<h1 class="page-title">Module: types/primitive/string</h1>
 <section>
 
 <header>
@@ -120,8 +120,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-1">line 1</a>
+				<a href="types_primitive_string.js.html">types/primitive/string.js</a>,
+				 <a href="types_primitive_string.js.html#sunlight-1-line-1">line 1</a>
 			</li>
 		</ul>
 	</dd>
@@ -149,6 +149,615 @@
 
     
 
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id=".asciichar">
+    <h4 id=".asciichar"><span class="type-signature">&lt;static, constant> </span>asciichar<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Ascii Character Arbitrary.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_primitive_string.js.html">types/primitive/string.js</a>,
+				 <a href="types_primitive_string.js.html#sunlight-1-line-67">line 67</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// generate a ascii character.
+ke.asciichar.generate();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".asciistring">
+    <h4 id=".asciistring"><span class="type-signature">&lt;static, constant> </span>asciistring<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Ascii String Arbitrary.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_primitive_string.js.html">types/primitive/string.js</a>,
+				 <a href="types_primitive_string.js.html#sunlight-1-line-84">line 84</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">// generate a unicode string. the length between 0 and 30 by default.
+ke.asciistring.generate();</pre>
+
+    <pre class="sunlight-highlight-javascript">// you can set minimun and maximun length.
+ke.asciistring.choose(1, 5).generate();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".char">
+    <h4 id=".char"><span class="type-signature">&lt;static, constant> </span>char<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Unicode Character Arbitrary.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_primitive_string.js.html">types/primitive/string.js</a>,
+				 <a href="types_primitive_string.js.html#sunlight-1-line-31">line 31</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">// generate a unicode character.
+ke.char.generate();</pre>
+
+    <pre class="sunlight-highlight-javascript">// change character ranges. here we use ASCII range.
+// and yes, this is how ke.asciichar be made.
+ke.char.choose(0x0020, 0x007F).generate();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".neasciistring">
+    <h4 id=".neasciistring"><span class="type-signature">&lt;static, constant> </span>neasciistring<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Ascii String Arbitrary.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_primitive_string.js.html">types/primitive/string.js</a>,
+				 <a href="types_primitive_string.js.html#sunlight-1-line-92">line 92</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".nestring">
+    <h4 id=".nestring"><span class="type-signature">&lt;static, constant> </span>nestring<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Nom-empty Unicode String Arbitrary.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_primitive_string.js.html">types/primitive/string.js</a>,
+				 <a href="types_primitive_string.js.html#sunlight-1-line-56">line 56</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".string">
+    <h4 id=".string"><span class="type-signature">&lt;static, constant> </span>string<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Unicode String Arbitrary.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_primitive_string.js.html">types/primitive/string.js</a>,
+				 <a href="types_primitive_string.js.html#sunlight-1-line-49">line 49</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Examples</h5>
+        
+    <pre class="sunlight-highlight-javascript">// generate a unicode string. the length between 0 and 30 by default.
+ke.string.generate();</pre>
+
+    <pre class="sunlight-highlight-javascript">// you can set minimun and maximun length.
+ke.string.choose(1, 5).generate();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id=".uuid4">
+    <h4 id=".uuid4"><span class="type-signature">&lt;static, constant> </span>uuid4<span class="type-signature"> :Arbitrary</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>UUID version 4 Arbitrary.</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_primitive_string.js.html">types/primitive/string.js</a>,
+				 <a href="types_primitive_string.js.html#sunlight-1-line-100">line 100</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        </dl>
     
 
     
@@ -158,7 +767,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id=".liftExport"><span class="type-signature">&lt;static> </span>liftExport(namespace, name)</h4>
+    <h4 class="name" id=".nestringOf"><span class="type-signature">&lt;static> </span>nestringOf()</h4>
     
     
 </dt>
@@ -166,7 +775,95 @@
 
     
     <div class="description">
-        <p>Merge namespace</p>
+        <p>same to stringOf but produce non-empty string.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_primitive_string.js.html">types/primitive/string.js</a>,
+				 <a href="types_primitive_string.js.html#sunlight-1-line-127">line 127</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".stringOf"><span class="type-signature">&lt;static> </span>stringOf(any)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Create a string arbitrary based on given character arbitrary.</p>
     </div>
     
 
@@ -201,13 +898,13 @@
 
         <tr>
             
-                <td class="name"><code>namespace</code></td>
+                <td class="name"><code>any</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">Object</span>
+<span class="param-type">Arbitrary</span>
 
 
 
@@ -218,31 +915,7 @@
 
             
 
-            <td class="description last"></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>name</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
+            <td class="description last"><p>arbitrary to generate a character.</p></td>
         </tr>
 
     
@@ -286,8 +959,8 @@
 	<dd class="tag-source">
 		<ul class="dummy">
 			<li>
-				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-16">line 16</a>
+				<a href="types_primitive_string.js.html">types/primitive/string.js</a>,
+				 <a href="types_primitive_string.js.html#sunlight-1-line-120">line 120</a>
 			</li>
 		</ul>
 	</dd>
@@ -315,6 +988,10 @@
     <h5>Returns:</h5>
     
             
+<div class="param-desc">
+    <p>a string arbitrary.</p>
+</div>
+
 
 
 <dl>
@@ -323,7 +1000,7 @@
     </dt>
     <dd>
         
-<span class="param-type">Object</span>
+<span class="param-type">Arbitrary</span>
 
 
 
@@ -334,317 +1011,17 @@
         
 
     
-</dd>
-
+        <h5>Examples</h5>
         
-            
-<hr>
-<dt>
-    <h4 class="name" id=".smallerRange"><span class="type-signature">&lt;static> </span>smallerRange(range)</h4>
-    
-    
-</dt>
-<dd>
+    <pre class="sunlight-highlight-javascript">// this is how we make a ke.&#x60;string&#x60;.
+ke.stringOf(ke.char).generate();</pre>
 
-    
-    <div class="description">
-        <p>Take a pair of numbers and returns
-theire smaller size.</p>
-    </div>
-    
+    <pre class="sunlight-highlight-javascript">// generate a string that the character is &#x27;a&#x27;, &#x27;b&#x27; or &#x27;c&#x27;.
+ke.stringOf(ke.elements([&#x27;a&#x27;,&#x27;b&#x27;, &#x27;c&#x27;])).generate();</pre>
 
-    
+    <pre class="sunlight-highlight-javascript">// yes, minimun and maximun length still can be changed.
+ke.stringOf(ke.elements([&#x27;a&#x27;,&#x27;b&#x27;, &#x27;c&#x27;])).choose(0, 3).generate();</pre>
 
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>range</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">Array.&lt;number, number></span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-42">line 42</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">Array.&lt;number, number></span>
-
-
-
-    </dd>
-</dl>
-
-
-        
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id=".ulog2"><span class="type-signature">&lt;static> </span>ulog2(n)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>n</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">number</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
-	<dd class="tag-source">
-		<ul class="dummy">
-			<li>
-				<a href="utils.js.html">utils.js</a>,
-				 <a href="utils.js.html#sunlight-1-line-27">line 27</a>
-			</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <h5>Returns:</h5>
-    
-            
-
-
-<dl>
-    <dt>
-        Type
-    </dt>
-    <dd>
-        
-<span class="param-type">number</span>
-
-
-
-    </dd>
-</dl>
-
-
-        
 
     
 </dd>
