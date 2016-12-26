@@ -75,7 +75,7 @@ class Arbitrary {
   /**
    * Get a smaller version of a arbitrary.
    *
-   * @typedef {Arbitrary} small
+   * @returns {Arbitrary}
    * @example
    * ke.int.small.random
    */
