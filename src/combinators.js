@@ -119,11 +119,7 @@ export function frequency(pool) {
  * @return {Arbitrary}
  */
 export function small(arb) {
-  const clone = arb.clone();
-  const smaller = arb.smaller();
-  assert(_.isFunction(smaller), `${arb.name()} does not have smaller version.`);
-  const smallGenOpts = smaller(arb.genOpts());
-  return clone.genOpts(smallGenOpts).name(`Small ${arb.name()}`);
+  return arb.small;
 }
 
 /**

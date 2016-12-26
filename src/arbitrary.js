@@ -73,6 +73,20 @@ class Arbitrary {
     this.show(opts.show || JSON.stringify);
   }
   /**
+   * Get a smaller version of a arbitrary.
+   *
+   * @typedef {Arbitrary} small
+   * @example
+   * ke.int.small.random
+   */
+  get small() {
+    const clone = this.clone();
+    const smaller = this.smaller();
+    assert(_.isFunction(smaller), `${this.name()} does not have smaller version.`);
+    const smallGenOpts = smaller(this.genOpts());
+    return clone.genOpts(smallGenOpts).name(`Small ${this.name()}`);
+  }
+  /**
    * A random example value of this arbitrary.
    *
    * @return {*}

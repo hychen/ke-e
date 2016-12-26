@@ -56,6 +56,7 @@ export const nat = int
 export const number = fromGenMaker(
   Random.real ,
   [-Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER])
+  .smaller(smallerRange)
   .name('Number');
 
 /**
