@@ -161,7 +161,10 @@ some of difinitions of arbitraries took from
 
 ### Locale
 
-- localeids — produce a locale id.
+- locale
+ - localeids — produce a locale id.
+ - country
+ - timezone
 
 ### Datetime
 
@@ -194,12 +197,6 @@ some of difinitions of arbitraries took from
  - password - produce a password string.
  - email - produce an email.
  - url - produce an url.
- 
-### Locale 
-
-- locale
- - country
- - timezone
  
 ### Geo 
 
