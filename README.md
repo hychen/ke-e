@@ -100,6 +100,9 @@ ke.person.firstName.random.
 
 // Generate Tranditional Chinese first name.
 ke.person.firstName.locale('zh-Hant-TW').random.
+
+// Set global locale.
+// ke.globalLocale = 'zh-Hant-TW';
 ```
 
 ### Node.js REPL
