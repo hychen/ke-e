@@ -201,6 +201,15 @@ some of difinitions of arbitraries took from
 ### Location
 
 - location
+ - address
+ - streetAddress
+ - state
+   - abbr
+ - zipCode
+ - county
+ - city
+ - street 
+ - buildingNumber
  - latitude -  produce an latitude.
  - longtitude - produce an longtitude.
  - coordinates -  produce a coordinates.

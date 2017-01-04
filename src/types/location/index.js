@@ -1,8 +1,106 @@
 /**
  * @module
  */
-import {object} from '../../combinators';
+import {object, constant} from '../../combinators';
 import {number} from '../primitive';
+import person from '../person';
+
+import {Definitions} from '../../definition';
+
+import definitions from './definitions';
+const defs = new Definitions(definitions);
+
+/**
+ * State
+ *
+ * @type {Arbitrary}
+ * @example
+ * // returns Alabama
+ * ke.location.state.random
+ */
+const state = defs.arbitrary('state').name('State');
+
+/**
+ * State Abbr.
+ *
+ * @type {Arbitrary}
+ * @example
+ * // returns AL
+ * ke.location.state.abbr.random
+ */
+state.abbr = defs.arbitrary('stateAbbr').name('State Abbr');
+
+/**
+ * Zip Code
+ *
+ * @type {Arbitrary}
+ */
+const zipCode = defs.arbitrary('postcode').name('Zip Code');
+
+/**
+ * County
+ *
+ * @type {Arbitrary}
+ * @example
+ * // returns Avon
+ * ke.location.county.random
+ */
+const county = defs.arbitrary('county').name('County');
+
+const cityPrefix  = defs.arbitrary('cityPrefix');
+const citySuffix = defs.arbitrary('citySuffix');
+
+/**
+ * City
+ *
+ * @type {Arbitrary}
+ * @example
+ * // returns Port Sammybury
+ * ke.location.city.random
+ */
+const city = object({
+  firstName: person.firstName,
+  lastName: person.lastName,
+  suffix: citySuffix,
+  prefix: cityPrefix
+}).transform(defs.formater('city')).name('City');
+
+/**
+ * Street
+ *
+ * @type {Arbitrary}
+ */
+const street = object({
+  firstName: person.firstName,
+  lastName: person.lastName,
+  suffix: defs.arbitrary('streetSuffix')
+}).transform(defs.formater('street')).name('Street');
+
+/**
+ * Building Number
+ *
+ * @type {Arbitrary}
+ */
+const buildingNumber = defs.arbitrary('buildingNumber');
+
+const streetAddress = object({
+  street: street,
+  buildingNumber: buildingNumber,
+  secondaryAddress: defs.arbitrary('secondaryAddress')
+}).transform(defs.formater('streetAddress')).name('Street Address');
+
+/**
+ * Address
+ *
+ * @type {Arbitrary}
+ */
+const address = object({
+  streetAddress: streetAddress,
+  state: state,
+  county: county,
+  city, city,
+  zipCode: zipCode
+}).transform(defs.formater('address')).name('Address');
 
 /**
  * latitude
@@ -41,6 +139,14 @@ const coordinates = object({
   .name('Coordinate');
 
 export default {
+  address,
+  streetAddress,
+  state,
+  zipCode,
+  county,
+  city,
+  street,
+  buildingNumber,
   latitude,
   longtitude,
   coordinates

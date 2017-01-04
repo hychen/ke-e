@@ -76,7 +76,11 @@ class Definitions{
     const self = this;
     return function (result) {
       const locale = this.locale();
-      const f = self.get(name, this.locale());
+      const engine = this.engine();
+      let f = self.get(name, locale);
+      if (_.isArray(f)) {
+        f = _.template(elements(f).makeGen()(engine));
+      }
       return f(result);
     };
   }
