@@ -1,10 +1,11 @@
 /**
  * @module
  */
+import assert from 'assert';
 import _ from 'lodash';
 import {Arbitrary} from './arbitrary';
 import avaliableLocaleIds from './types/locale/avaliableLocaleids.js';
-import {elements} from './combinators';
+import {elements, regex} from './combinators';
 
 /**
  * Extra definitons manager.
@@ -30,7 +31,7 @@ class Definitions{
   /**
    * Get a definition.
    *
-   * a definition is an array of any values.
+   * a definition is an array of any values or regular expression.
    *
    * @param {string} name a definition name.
    * @param {string} locale a locale tag. default is `en`.
@@ -54,7 +55,11 @@ class Definitions{
     return new Arbitrary({
       gen: (pool) => {
         return (engine, locale) => {
-          const _pool = pool ? pool : this.get(name, locale);
+          let _pool = pool ? pool : this.get(name, locale);
+          assert(_pool !== undefined, `definition ${name} in ${locale} is empty.`);
+          _pool = _pool.map(s => {
+            return _.isRegExp(s) ? regex(s).makeGen()(engine) : s
+          });
           return elements(_pool).makeGen()(engine, locale);
         }
       }
