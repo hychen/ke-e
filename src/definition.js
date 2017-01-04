@@ -74,9 +74,7 @@ class Definitions{
    */
   formater(name) {
     const self = this;
-    return function (result) {
-      const locale = this.locale();
-      const engine = this.engine();
+    return function (result, locale, engine) {
       let f = self.get(name, locale);
       if (_.isArray(f)) {
         f = _.template(elements(f).makeGen()(engine));

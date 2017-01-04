@@ -255,7 +255,7 @@ class Arbitrary {
   transform(f) {
     assert(_.isFunction(f), 'f must be a function.');
     const clone = this.clone();
-    clone._transforms.push(f.bind(clone));
+    clone._transforms.push(f);
     return clone;
   }
   /**
@@ -265,7 +265,8 @@ class Arbitrary {
    */
   makeGen() {
     return (engine, locale) => {
-      return _.flow(this._transforms)(
+      return _.flow(this._transforms.map(maybeWith(locale, engine)
+      ))(
         this._gen.apply(this, this._genOpts)(engine, locale || 'en'));
     };
   }
@@ -325,6 +326,16 @@ class Arbitrary {
  */
 function isArbitrary(arb) {
   return arb instanceof Arbitrary;
+}
+
+function isFormater(f) {
+  return _.isFunction(f) && f.length === 3;
+}
+
+function maybeWith(locale, engine) {
+  return f => {
+    return (result) => isFormater(f) ? f(result, locale, engine) : f(result);
+  };
 }
 
 /**
