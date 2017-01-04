@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-definition.html">definition</a></li><li><a href="module-monkey.html">monkey</a></li><li><a href="module-repl.html">repl</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-testdata.html">testdata</a></li><li><a href="module-types_geo_index.html">types/geo/index</a></li><li><a href="module-types_internet_index.html">types/internet/index</a></li><li><a href="module-types_literate_index.html">types/literate/index</a></li><li><a href="module-types_locale_avaliableLocaleids.html">types/locale/avaliableLocaleids</a></li><li><a href="module-types_locale_index.html">types/locale/index</a></li><li><a href="module-types_person_index.html">types/person/index</a></li><li><a href="module-types_primitive_any.html">types/primitive/any</a></li><li><a href="module-types_primitive_boolean.html">types/primitive/boolean</a></li><li><a href="module-types_primitive_datetime.html">types/primitive/datetime</a></li><li><a href="module-types_primitive_falsy.html">types/primitive/falsy</a></li><li><a href="module-types_primitive_function.html">types/primitive/function</a></li><li><a href="module-types_primitive_number.html">types/primitive/number</a></li><li><a href="module-types_primitive_string.html">types/primitive/string</a></li><li><a href="module-utils.html">utils</a></li>
+					<li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-definition.html">definition</a></li><li><a href="module-monkey.html">monkey</a></li><li><a href="module-namespace.html">namespace</a></li><li><a href="module-repl.html">repl</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-testdata.html">testdata</a></li><li><a href="module-types_internet_index.html">types/internet/index</a></li><li><a href="module-types_literate_index.html">types/literate/index</a></li><li><a href="module-types_locale_avaliableLocaleids.html">types/locale/avaliableLocaleids</a></li><li><a href="module-types_locale_index.html">types/locale/index</a></li><li><a href="module-types_location_index.html">types/location/index</a></li><li><a href="module-types_person_index.html">types/person/index</a></li><li><a href="module-types_primitive_any.html">types/primitive/any</a></li><li><a href="module-types_primitive_boolean.html">types/primitive/boolean</a></li><li><a href="module-types_primitive_datetime.html">types/primitive/datetime</a></li><li><a href="module-types_primitive_falsy.html">types/primitive/falsy</a></li><li><a href="module-types_primitive_function.html">types/primitive/function</a></li><li><a href="module-types_primitive_number.html">types/primitive/number</a></li><li><a href="module-types_primitive_string.html">types/primitive/string</a></li><li><a href="module-utils.html">utils</a></li>
 				</ul>
 			</li>
 			
@@ -80,11 +80,11 @@
             class="sunlight-highlight-javascript linenums">/**
  * @module
  */
+import namespace from './namespace';
 import _ from 'lodash';
 import Random from 'random-js';
 import assert from 'assert';
 import {stdOpts} from './constants';
-
 
 /**
  * A function to generate a random value.
@@ -150,6 +150,20 @@ class Arbitrary {
     this.genOpts(opts.genOpts || []);
     this.smaller(opts.smaller || _.identity);
     this.show(opts.show || JSON.stringify);
+  }
+  /**
+   * Get a smaller version of a arbitrary.
+   *
+   * @returns {Arbitrary}
+   * @example
+   * ke.int.small.random
+   */
+  get small() {
+    const clone = this.clone();
+    const smaller = this.smaller();
+    assert(_.isFunction(smaller), `${this.name()} does not have smaller version.`);
+    const smallGenOpts = smaller(this.genOpts());
+    return clone.genOpts(smallGenOpts).name(`Small ${this.name()}`);
   }
   /**
    * A random example value of this arbitrary.
@@ -320,7 +334,7 @@ class Arbitrary {
   transform(f) {
     assert(_.isFunction(f), 'f must be a function.');
     const clone = this.clone();
-    clone._transforms.push(f.bind(clone));
+    clone._transforms.push(f);
     return clone;
   }
   /**
@@ -330,7 +344,8 @@ class Arbitrary {
    */
   makeGen() {
     return (engine, locale) => {
-      return _.flow(this._transforms)(
+      return _.flow(this._transforms.map(maybeWith(locale, engine)
+      ))(
         this._gen.apply(this, this._genOpts)(engine, locale || 'en'));
     };
   }
@@ -340,7 +355,7 @@ class Arbitrary {
    * @return {*}
    */
   generate() {
-    return this.makeGen()(this._engine, this._locale);
+    return this.makeGen()(this._engine, namespace.globalLocale || this._locale);
   }
   /**
    * Create a promise.
@@ -390,6 +405,16 @@ class Arbitrary {
  */
 function isArbitrary(arb) {
   return arb instanceof Arbitrary;
+}
+
+function isFormater(f) {
+  return _.isFunction(f) &amp;&amp; f.length === 3;
+}
+
+function maybeWith(locale, engine) {
+  return f => {
+    return (result) => isFormater(f) ? f(result, locale, engine) : f(result);
+  };
 }
 
 /**
@@ -455,7 +480,7 @@ export {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2016-12-26T11:17:53+08:00
+		on 2017-01-04T21:40:22+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
