@@ -10,7 +10,7 @@ import {number} from '../primitive';
  * @type {Arbitrary}
  * @example
  * // returns 19.4984.
- * ke.geo.latitude.random
+ * ke.location.latitude.random
  */
 const latitude = number.choose(0, 180 * 10000)
   .transform(n => (n / 10000.0 - 90.0).toFixed(4));
@@ -21,7 +21,7 @@ const latitude = number.choose(0, 180 * 10000)
  * @type {Arbitrary}
  * @example
  * // returns 132.9634.
- * ke.geo.longtitude.random
+ * ke.location.longtitude.random
  */
 const longtitude = number.choose(0, 360 * 10000)
   .transform(n => (n / 10000.0 - 180.0).toFixed(4));
@@ -32,7 +32,7 @@ const longtitude = number.choose(0, 360 * 10000)
  * @type {Arbitrary}
  * @example
  * // returns 19.4984, 132.9634.
- * ke.geo.coordinates.random
+ * ke.location.coordinates.random
  */
 const coordinates = object({
   latitude: latitude,

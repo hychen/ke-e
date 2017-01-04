@@ -198,9 +198,9 @@ some of difinitions of arbitraries took from
  - email - produce an email.
  - url - produce an url.
  
-### Geo 
+### Location
 
-- geo
+- location
  - latitude -  produce an latitude.
  - longtitude - produce an longtitude.
  - coordinates -  produce a coordinates.
