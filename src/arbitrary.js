@@ -1,11 +1,11 @@
 /**
  * @module
  */
+import namespace from './namespace';
 import _ from 'lodash';
 import Random from 'random-js';
 import assert from 'assert';
 import {stdOpts} from './constants';
-
 
 /**
  * A function to generate a random value.
@@ -276,7 +276,7 @@ class Arbitrary {
    * @return {*}
    */
   generate() {
-    return this.makeGen()(this._engine, this._locale);
+    return this.makeGen()(this._engine, namespace.globalLocale || this._locale);
   }
   /**
    * Create a promise.

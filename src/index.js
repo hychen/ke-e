@@ -1,3 +1,4 @@
+import namespace from './namespace';
 import {liftExport} from './utils';
 import * as types from './types';
 import * as combinators from './combinators';
@@ -5,18 +6,16 @@ import * as testable from './testable';
 import * as monkey from './monkey';
 import {Arbitrary, fromGenMaker} from './arbitrary';
 
-const __all__ = {
-  Arbitrary: Arbitrary,
-  fromGenMaker: fromGenMaker,
-  types: types,
-  combinators: combinators,
-  testable: testable,
-  monkey: monkey,
-  hold: testable.hold,
-  forall: testable.forall
-};
+namespace.Arbitrary = Arbitrary,
+namespace.fromGenMaker = fromGenMaker,
+namespace.types = types,
+namespace.combinators = combinators,
+namespace.testable = testable,
+namespace.monkey = monkey,
+namespace.hold = testable.hold,
+namespace.forall = testable.forall
 
-liftExport(__all__, 'types');
-liftExport(__all__, 'combinators');
+liftExport(namespace, 'types');
+liftExport(namespace, 'combinators');
 
-export default __all__;
+export default namespace;
