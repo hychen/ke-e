@@ -216,6 +216,12 @@ some of difinitions of arbitraries took from
  - latitude -  produce an latitude.
  - longtitude - produce an longtitude.
  - coordinates -  produce a coordinates.
+ 
+### Image 
+
+- image
+ - imageURL - an image url.
+ - grayImageURL - a gray image url.
 
 ## Installation
 
