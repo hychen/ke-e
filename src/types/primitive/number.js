@@ -76,3 +76,10 @@ export const pnumber = number
 export const nnumber = number
   .choose(-Number.MAX_SAFE_INTEGER, -0.0000000001)
   .name('Negative Number');
+
+export const hexString = fromGenMaker(
+  function(opts = {upper:false, length: 6}) {
+    return function(engine) {
+      return Random.hex(opts.upper)(engine, opts.length);
+    }
+  }).name('Hex String');
