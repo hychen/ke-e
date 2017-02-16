@@ -217,11 +217,18 @@ some of difinitions of arbitraries took from
  - longtitude - produce an longtitude.
  - coordinates -  produce a coordinates.
  
-### Image 
+### Grahpic
 
-- image
- - imageURL - an image url.
- - grayImageURL - a gray image url.
+- grahpic
+  - color
+    - rgba
+    - hsla
+    - hsva
+    - hex
+    - hexCode
+  - image
+    - imageURL - an image url.
+    - grayImageURL - a gray image url.
 
 ## Installation
 
