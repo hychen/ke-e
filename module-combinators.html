@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-definition.html">definition</a></li><li><a href="module-monkey.html">monkey</a></li><li><a href="module-namespace.html">namespace</a></li><li><a href="module-repl.html">repl</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-testdata.html">testdata</a></li><li><a href="module-types_internet_index.html">types/internet/index</a></li><li><a href="module-types_literate_index.html">types/literate/index</a></li><li><a href="module-types_locale_avaliableLocaleids.html">types/locale/avaliableLocaleids</a></li><li><a href="module-types_locale_index.html">types/locale/index</a></li><li><a href="module-types_location_index.html">types/location/index</a></li><li><a href="module-types_person_index.html">types/person/index</a></li><li><a href="module-types_primitive_any.html">types/primitive/any</a></li><li><a href="module-types_primitive_boolean.html">types/primitive/boolean</a></li><li><a href="module-types_primitive_datetime.html">types/primitive/datetime</a></li><li><a href="module-types_primitive_falsy.html">types/primitive/falsy</a></li><li><a href="module-types_primitive_function.html">types/primitive/function</a></li><li><a href="module-types_primitive_number.html">types/primitive/number</a></li><li><a href="module-types_primitive_string.html">types/primitive/string</a></li><li><a href="module-utils.html">utils</a></li>
+					<li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-definition.html">definition</a></li><li><a href="module-monkey.html">monkey</a></li><li><a href="module-namespace.html">namespace</a></li><li><a href="module-repl.html">repl</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-testdata.html">testdata</a></li><li><a href="module-types_graphic_color.html">types/graphic/color</a></li><li><a href="module-types_graphic_image.html">types/graphic/image</a></li><li><a href="module-types_internet_index.html">types/internet/index</a></li><li><a href="module-types_literate_index.html">types/literate/index</a></li><li><a href="module-types_locale_avaliableLocaleids.html">types/locale/avaliableLocaleids</a></li><li><a href="module-types_locale_index.html">types/locale/index</a></li><li><a href="module-types_location_index.html">types/location/index</a></li><li><a href="module-types_person_index.html">types/person/index</a></li><li><a href="module-types_primitive_any.html">types/primitive/any</a></li><li><a href="module-types_primitive_boolean.html">types/primitive/boolean</a></li><li><a href="module-types_primitive_datetime.html">types/primitive/datetime</a></li><li><a href="module-types_primitive_falsy.html">types/primitive/falsy</a></li><li><a href="module-types_primitive_number.html">types/primitive/number</a></li><li><a href="module-types_primitive_string.html">types/primitive/string</a></li><li><a href="module-utils.html">utils</a></li>
 				</ul>
 			</li>
 			
@@ -599,7 +599,7 @@ ke.constant(1).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-419">line 419</a>
+				 <a href="combinators.js.html#sunlight-1-line-502">line 502</a>
 			</li>
 		</ul>
 	</dd>
@@ -991,6 +991,362 @@ The input list must be non-empty.</p>
         <h5>Example</h5>
         
     <pre class="sunlight-highlight-javascript">ke.frequency([ [4, ke.int], [6, ke.bool] ]).generate();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".func"><span class="type-signature">&lt;static> </span>func(a)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Produce a function.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">outputArb</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>arbitrary to produce the return value of
+                    this function.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="combinators.js.html">combinators.js</a>,
+				 <a href="combinators.js.html#sunlight-1-line-392">line 392</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Arbitary</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// return 1
+ke.func(ke.int).random()</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".genfunc"><span class="type-signature">&lt;static> </span>genfunc(a)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Produce  a generator function.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+        <th>Argument</th>
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>a</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">outputArb</span>
+
+
+
+            
+            </td>
+
+            
+                <td class="attributes">
+                
+
+                
+                    &lt;nullable><br>
+                
+
+                
+                </td>
+            
+
+            
+
+            <td class="description last"><p>arbitrary to produce the return value of
+                    this function.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="combinators.js.html">combinators.js</a>,
+				 <a href="combinators.js.html#sunlight-1-line-416">line 416</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Arbitary</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">// return 1
+ke.genfunc(ke.int).random()</pre>
 
 
     
@@ -1988,6 +2344,248 @@ ke.oneOf(ke.bool, ke.int).generate();</pre>
 
     <pre class="sunlight-highlight-javascript">// choose different arbitraries.
 ke.pair(ke.int, ke.int).choose(ke.bool, ke.bool).generate();</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt>
+    <h4 class="name" id=".promise"><span class="type-signature">&lt;static> </span>promise(opts)</h4>
+    
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Produce a promise.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+    
+        <h5>Parameters:</h5>
+        
+
+<table class="params table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>opts</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    
+
+    
+<dl class="details">
+    
+
+    <h5 class="subsection-title">Properties:</h5>
+
+    <dl>
+
+<table class="props table table-striped">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>failrate</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>0 - 100.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>errorArb</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Arbitrary</span>
+
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+</dl>
+
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="combinators.js.html">combinators.js</a>,
+				 <a href="combinators.js.html#sunlight-1-line-442">line 442</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Arbitary</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">p = ke.promise.random
+p.then(console.log).catch(console.error);</pre>
 
 
     
@@ -3047,7 +3645,7 @@ ke.suchThat(ke.int, (n) =&gt; n / 2 === 0).generate();</pre>
 		<ul class="dummy">
 			<li>
 				<a href="combinators.js.html">combinators.js</a>,
-				 <a href="combinators.js.html#sunlight-1-line-393">line 393</a>
+				 <a href="combinators.js.html#sunlight-1-line-476">line 476</a>
 			</li>
 		</ul>
 	</dd>
@@ -3157,7 +3755,7 @@ ke.vairant(ke.int, ke.bool).random</pre>
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-01-04T21:40:22+08:00
+		on 2017-02-19T18:17:16+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

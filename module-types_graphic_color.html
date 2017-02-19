@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>ké--ê Source: testdata.js</title>
+	<title>ké--ê Module: types/graphic/color</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -67,127 +67,524 @@
 <div class="row">
 
 	
-	<div class="col-md-12">
+	<div class="col-md-8">
 	
 		<div id="main">
 			
 
-		<h1 class="page-title">Source: testdata.js</h1>
-    
+	<h1 class="page-title">Module: types/graphic/color</h1>
 <section>
-    <article>
-        <pre
-            class="sunlight-highlight-javascript linenums">/**
- * @module
- */
-import assert from 'assert';
-import _ from 'lodash';
-import {object,
-        oneOf} from './combinators';
 
-function valid(arb) {
-  return arb.genOpts()[0][0];
-}
+<header>
+    
+</header>
 
-function invalid(arb) {
-  return arb.genOpts()[0][1];
-}
 
-/**
- * Test Data Options.
- * @typedef {Object} TestDataOptions
- * @property {string} name the name of a test dataset.
- * @property {Object} variants
- */
+<article>
+    <div class="container-overview">
+    
+        
 
-/**
- * A record to represent a data set.
- */
-class TestData {
-  /**
-   * @param {TestDataOptions} opts the options of a test dataset.
-   */
-  constructor(opts) {
-    assert(_.isObject(opts), 'opts must be an object.');
-    this._name = opts.name;
-    this._variants = opts.variants;
-  }
-  /**
-   * Get/Set the name of a test dataset.
-   *
-   * @param {string} name the name of a dataset.
-   * @return {TestData|string}
-   */
-  name(name) {
-    if (name !== undefined) {
-      assert(_.isString(name) &amp;&amp; name.length >= 3,
-             'name must be a sring of length >= 3.');
-      this._name = name;
-      return this;
-    }
-    else {
-      return this._name;
-    }
-  }
-  get random() {
-    return object(this._variants).random;
-  }
-  /**
-   * Make an arbitrary to produce all valid cases.
-   *
-   * @return {Arbitrary}
-   */
-  allValid() {
-    return object(_.mapValues(this._variants, valid)).name('AllValid');
-  }
-  /**
-   * Make an arbitrary to produce all invalid cases.
-   *
-   * @return {Arbitrary}
-   */
-  allInvalid() {
-    return this.invalid();
-  }
-  /**
-   * Make an arbitrary to produce partial invalid cases.
-   *
-   * @param {string} propName a property name is the spec.
-   * @return {Arbitrary}
-   */
-  invalid(propName) {
-    const name = propName === undefined ? 'AllInvalid' : `Invalid_${propName}`;
-    const newSpec = _.transform(this._variants, (acc, v, k) => {
-      const f = (propName === undefined || propName === k)
-              ? invalid
-              : valid;
-      return acc[k] = f(v);
-    }, {});
-    return object(newSpec).name(name);
-  }
-  /**
-   * Produce samples in each cases.
-   *
-   * @param {number} size the size of produced data of each cases.
-   * @return {Object}
-   */
-  sample(size = 200) {
-    const result = {};
-    Object.keys(this._variants).forEach((propName) => {
-      const arb = this.invalid(propName);
-      result[arb.name()] = arb.sample(size);
-    });
-    result['AllValid'] = this.allValid().sample(size);
-    return result;
-  }
-}
+        
+<dl class="details">
+    
 
-export {
-  TestData
-}
-</pre>
-    </article>
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_graphic_color.js.html">types/graphic/color.js</a>,
+				 <a href="types_graphic_color.js.html#sunlight-1-line-1">line 1</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+<hr>
+<dt class="name" id="~hex">
+    <h4 id="~hex"><span class="type-signature">&lt;inner, constant> </span>hex<span class="type-signature"> :Arbitray</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Color Hex</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitray</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_graphic_color.js.html">types/graphic/color.js</a>,
+				 <a href="types_graphic_color.js.html#sunlight-1-line-60">line 60</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~hexCode">
+    <h4 id="~hexCode"><span class="type-signature">&lt;inner, constant> </span>hexCode<span class="type-signature"> :Arbitray</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Color HexCode</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitray</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_graphic_color.js.html">types/graphic/color.js</a>,
+				 <a href="types_graphic_color.js.html#sunlight-1-line-71">line 71</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">&gt; ke.graphic.color.hexCode.random
+&#x27;#d7938d&#x27;</pre>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~hsla">
+    <h4 id="~hsla"><span class="type-signature">&lt;inner, constant> </span>hsla<span class="type-signature"> :Arbitray</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Color HSLA</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitray</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_graphic_color.js.html">types/graphic/color.js</a>,
+				 <a href="types_graphic_color.js.html#sunlight-1-line-48">line 48</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~hsva">
+    <h4 id="~hsva"><span class="type-signature">&lt;inner, constant> </span>hsva<span class="type-signature"> :Arbitray</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Color HSVA</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitray</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_graphic_color.js.html">types/graphic/color.js</a>,
+				 <a href="types_graphic_color.js.html#sunlight-1-line-36">line 36</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+</dd>
+
+        
+            
+<hr>
+<dt class="name" id="~rgba">
+    <h4 id="~rgba"><span class="type-signature">&lt;inner, constant> </span>rgba<span class="type-signature"> :Arbitray</span></h4>
+
+    
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Color RGBA</p>
+    </div>
+    
+
+    
+        <h5>Type:</h5>
+        <ul>
+            <li>
+                
+<span class="param-type">Arbitray</span>
+
+
+
+            </li>
+        </ul>
+    
+
+    
+<dl class="details">
+    
+
+	
+
+	
+
+	
+
+    
+
+    
+
+    
+
+    
+
+	
+
+	
+
+	
+
+	
+
+	
+
+
+
+	
+	<dt class="tag-source method-doc-label method-doc-details-label">Source:</dt>
+	<dd class="tag-source">
+		<ul class="dummy">
+			<li>
+				<a href="types_graphic_color.js.html">types/graphic/color.js</a>,
+				 <a href="types_graphic_color.js.html#sunlight-1-line-24">line 24</a>
+			</li>
+		</ul>
+	</dd>
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">&gt; ke.graphic.color.rgba.random
+{ red: 233.28651197533094,
+  green: 102.16220695801994,
+  blue: 14.784638255757336,
+  alpha: 0.3622623854661302 }</pre>
+
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+
+    
+</article>
+
 </section>
-
 
 
 
@@ -197,6 +594,10 @@ export {
 
 	<div class="clearfix"></div>
 
+	
+		<div class="col-md-3">
+			<div id="toc" class="col-md-3 hidden-xs hidden-sm hidden-md"></div>
+		</div>
 	
 
 </div>

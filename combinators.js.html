@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-definition.html">definition</a></li><li><a href="module-monkey.html">monkey</a></li><li><a href="module-namespace.html">namespace</a></li><li><a href="module-repl.html">repl</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-testdata.html">testdata</a></li><li><a href="module-types_internet_index.html">types/internet/index</a></li><li><a href="module-types_literate_index.html">types/literate/index</a></li><li><a href="module-types_locale_avaliableLocaleids.html">types/locale/avaliableLocaleids</a></li><li><a href="module-types_locale_index.html">types/locale/index</a></li><li><a href="module-types_location_index.html">types/location/index</a></li><li><a href="module-types_person_index.html">types/person/index</a></li><li><a href="module-types_primitive_any.html">types/primitive/any</a></li><li><a href="module-types_primitive_boolean.html">types/primitive/boolean</a></li><li><a href="module-types_primitive_datetime.html">types/primitive/datetime</a></li><li><a href="module-types_primitive_falsy.html">types/primitive/falsy</a></li><li><a href="module-types_primitive_function.html">types/primitive/function</a></li><li><a href="module-types_primitive_number.html">types/primitive/number</a></li><li><a href="module-types_primitive_string.html">types/primitive/string</a></li><li><a href="module-utils.html">utils</a></li>
+					<li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-definition.html">definition</a></li><li><a href="module-monkey.html">monkey</a></li><li><a href="module-namespace.html">namespace</a></li><li><a href="module-repl.html">repl</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-testdata.html">testdata</a></li><li><a href="module-types_graphic_color.html">types/graphic/color</a></li><li><a href="module-types_graphic_image.html">types/graphic/image</a></li><li><a href="module-types_internet_index.html">types/internet/index</a></li><li><a href="module-types_literate_index.html">types/literate/index</a></li><li><a href="module-types_locale_avaliableLocaleids.html">types/locale/avaliableLocaleids</a></li><li><a href="module-types_locale_index.html">types/locale/index</a></li><li><a href="module-types_location_index.html">types/location/index</a></li><li><a href="module-types_person_index.html">types/person/index</a></li><li><a href="module-types_primitive_any.html">types/primitive/any</a></li><li><a href="module-types_primitive_boolean.html">types/primitive/boolean</a></li><li><a href="module-types_primitive_datetime.html">types/primitive/datetime</a></li><li><a href="module-types_primitive_falsy.html">types/primitive/falsy</a></li><li><a href="module-types_primitive_number.html">types/primitive/number</a></li><li><a href="module-types_primitive_string.html">types/primitive/string</a></li><li><a href="module-utils.html">utils</a></li>
 				</ul>
 			</li>
 			
@@ -90,7 +90,7 @@ import {fromGenMaker,
         isArbitrary,
         Arbitrary} from './arbitrary';
 import {TestData} from './testdata';
-import {any} from './types/primitive';
+import {any, bool} from './types/primitive';
 
 /**
  * Generates a contant value.
@@ -459,6 +459,89 @@ export function objectOf(...args) {
 }
 
 /**
+ * Produce a function.
+ *
+ * @param {?outputArb} a arbitrary to produce the return value of
+ *                     this function.
+ * @return {Arbitary}
+ * @example
+ * // return 1
+ * ke.func(ke.int).random()
+ */
+export function func(outputArb) {
+  return new Arbitrary({
+    name: 'Function',
+    gen: function(outputArb = oneOf([any, array()])) {
+      return function(engine, locale) {
+        return function() {
+          return outputArb.makeGen()(engine, locale);
+        };
+      };
+    },
+    genOpts: [outputArb]
+  });
+}
+
+/**
+ * Produce  a generator function.
+ *
+ * @param {?outputArb} a arbitrary to produce the return value of
+ *                     this function.
+ * @return {Arbitary}
+ * @example
+ * // return 1
+ * ke.genfunc(ke.int).random()
+ */
+export function genfunc(genOpts) {
+  return new Arbitrary({
+    name: 'Generator Function',
+    gen: function(outputArb = oneOf([any, array()])) {
+      return function (engine, locale) {
+        return function * () {
+          yield outputArb.makeGen()(engine, locale);
+        };
+      };
+    },
+    genOpts: [genOpts]
+  });
+}
+
+/**
+ * Produce a promise.
+ *
+ * @param {Object} opts
+ * @property {Number} failrate 0 - 100.
+ * @prpperty {Arbitary} dataArb
+ * @property {Arbitrary} errorArb
+ * @return {Arbitary}
+ * @example
+ * p = ke.promise.random
+ * p.then(console.log).catch(console.error);
+ */
+export function promise(opts) {
+  const _defaults = {
+    dataArb: any,
+    errorArb: constant('promiseFail'),
+    failrate: 50
+  };
+  function promiseGenMaker({dataArb, errorArb, failrate}) {
+    return function(engine, locale) {
+      return new Promise(function(resolve, reject){
+        const fail = bool.choose(failrate).makeGen()(engine, locale);
+        const data = dataArb.makeGen()(engine, locale);
+        const error = errorArb.makeGen()(engine, locale);
+        return fail ? reject(error) : resolve(data);
+      });
+    }
+  }
+  return new Arbitrary({
+    name: 'Promise',
+    gen: promiseGenMaker,
+    genOpts: [_.defaults(opts, _defaults)]
+  });
+}
+
+/**
  * An arbitrary to produce either valid or invalid values.
  *
  * @param {!Arbitrary} valid an arbitrary to produce valid value.
@@ -543,7 +626,7 @@ export function data(variants) {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-01-04T21:40:22+08:00
+		on 2017-02-19T18:17:16+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

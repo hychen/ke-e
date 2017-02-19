@@ -33,7 +33,7 @@
 			<li class="dropdown">
 				<a href="modules.list.html" class="dropdown-toggle" data-toggle="dropdown">Modules<b class="caret"></b></a>
 				<ul class="dropdown-menu ">
-					<li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-definition.html">definition</a></li><li><a href="module-monkey.html">monkey</a></li><li><a href="module-namespace.html">namespace</a></li><li><a href="module-repl.html">repl</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-testdata.html">testdata</a></li><li><a href="module-types_internet_index.html">types/internet/index</a></li><li><a href="module-types_literate_index.html">types/literate/index</a></li><li><a href="module-types_locale_avaliableLocaleids.html">types/locale/avaliableLocaleids</a></li><li><a href="module-types_locale_index.html">types/locale/index</a></li><li><a href="module-types_location_index.html">types/location/index</a></li><li><a href="module-types_person_index.html">types/person/index</a></li><li><a href="module-types_primitive_any.html">types/primitive/any</a></li><li><a href="module-types_primitive_boolean.html">types/primitive/boolean</a></li><li><a href="module-types_primitive_datetime.html">types/primitive/datetime</a></li><li><a href="module-types_primitive_falsy.html">types/primitive/falsy</a></li><li><a href="module-types_primitive_function.html">types/primitive/function</a></li><li><a href="module-types_primitive_number.html">types/primitive/number</a></li><li><a href="module-types_primitive_string.html">types/primitive/string</a></li><li><a href="module-utils.html">utils</a></li>
+					<li><a href="module-arbitrary.html">arbitrary</a></li><li><a href="module-combinators.html">combinators</a></li><li><a href="module-constants.html">constants</a></li><li><a href="module-definition.html">definition</a></li><li><a href="module-monkey.html">monkey</a></li><li><a href="module-namespace.html">namespace</a></li><li><a href="module-repl.html">repl</a></li><li><a href="module-testable.html">testable</a></li><li><a href="module-testdata.html">testdata</a></li><li><a href="module-types_graphic_color.html">types/graphic/color</a></li><li><a href="module-types_graphic_image.html">types/graphic/image</a></li><li><a href="module-types_internet_index.html">types/internet/index</a></li><li><a href="module-types_literate_index.html">types/literate/index</a></li><li><a href="module-types_locale_avaliableLocaleids.html">types/locale/avaliableLocaleids</a></li><li><a href="module-types_locale_index.html">types/locale/index</a></li><li><a href="module-types_location_index.html">types/location/index</a></li><li><a href="module-types_person_index.html">types/person/index</a></li><li><a href="module-types_primitive_any.html">types/primitive/any</a></li><li><a href="module-types_primitive_boolean.html">types/primitive/boolean</a></li><li><a href="module-types_primitive_datetime.html">types/primitive/datetime</a></li><li><a href="module-types_primitive_falsy.html">types/primitive/falsy</a></li><li><a href="module-types_primitive_number.html">types/primitive/number</a></li><li><a href="module-types_primitive_string.html">types/primitive/string</a></li><li><a href="module-utils.html">utils</a></li>
 				</ul>
 			</li>
 			
@@ -147,7 +147,10 @@ AssertionError: >0 doesn't hold, seed: -1764850555, counter example: -5265798245
 ke.person.firstName.random.
 
 // Generate Tranditional Chinese first name.
-ke.person.firstName.locale('zh-Hant-TW').random.</code></pre><h3>Node.js REPL</h3><pre class="prettyprint source"><code>$ ke
+ke.person.firstName.locale('zh-Hant-TW').random.
+
+// Set global locale.
+// ke.globalLocale = 'zh-Hant-TW';</code></pre><h3>Node.js REPL</h3><pre class="prettyprint source"><code>$ ke
 > ke.int.random.
 123124343</code></pre><h2>Arbitraries</h2><p>The pupose of a arbitraries is random generation and shrinking of values 
 in property-based testing, but you could use them to generate fake data 
@@ -171,7 +174,6 @@ individually.</p>
 <li>nestring - produce a non-empty unicode string.</li>
 <li>asciistring — produce an ascii string.</li>
 <li>neasciistring — produce an non-empty ascii string.</li>
-<li>function — produce a function.</li>
 </ul>
 <h3>Combinator</h3><ul>
 <li>constant — produce a contant value.</li>
@@ -187,6 +189,9 @@ individually.</p>
 <li>sequence — produce an array of given arbitraries in order.</li>
 <li>object — produce an object.</li>
 <li>objectOf - transform a class to an object arbitrary.</li>
+<li>func — produce a function.</li>
+<li>genfunc - produce a generator.</li>
+<li>promise - produce a promise.</li>
 <li>small - produce smaller version of a arbitrary.</li>
 <li>recursive - produce a recursive value.</li>
 <li>variant - produce valid or invalid value of an arbitrary .</li>
@@ -251,6 +256,24 @@ individually.</p>
 <li>latitude -  produce an latitude.</li>
 <li>longtitude - produce an longtitude.</li>
 <li>coordinates -  produce a coordinates.</li>
+</ul>
+</li>
+</ul>
+<h3>Grahpic</h3><ul>
+<li>grahpic<ul>
+<li>color<ul>
+<li>rgba</li>
+<li>hsla</li>
+<li>hsva</li>
+<li>hex</li>
+<li>hexCode</li>
+</ul>
+</li>
+<li>image<ul>
+<li>imageURL - an image url.</li>
+<li>grayImageURL - a gray image url.</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -324,7 +347,7 @@ describe('Integer', () => {
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on 2017-01-04T21:40:22+08:00
+		on 2017-02-19T18:17:16+08:00
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>
