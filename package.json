@@ -17,7 +17,7 @@
   "scripts": {
     "prepublish": "npm run clean && npm run build",
     "test": "mocha",
-    "cov": "./node_modules/.bin/nyc npm test",
+    "cov": "./node_modules/.bin/nyc -x '**/definitions/**.js' npm test",
     "build": "npm run build:nodejs && npm run build:browser",
     "build:nodejs": "./node_modules/.bin/babel src -d lib",
     "build:browser": "./node_modules/.bin/webpack",
