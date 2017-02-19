@@ -380,6 +380,54 @@ export function objectOf(...args) {
 }
 
 /**
+ * Produce a function.
+ *
+ * @param {?outputArb} a arbitrary to produce the return value of
+ *                     this function.
+ * @return {Arbitary}
+ * @example
+ * // return 1
+ * ke.func(ke.int).random()
+ */
+export function func(outputArb) {
+  return new Arbitrary({
+    name: 'Function',
+    gen: function(outputArb = oneOf([any, array()])) {
+      return function(engine, locale) {
+        return function() {
+          return outputArb.makeGen()(engine, locale);
+        };
+      };
+    },
+    genOpts: [outputArb]
+  });
+}
+
+/**
+ * Produce  a generator function.
+ *
+ * @param {?outputArb} a arbitrary to produce the return value of
+ *                     this function.
+ * @return {Arbitary}
+ * @example
+ * // return 1
+ * ke.genfunc(ke.int).random()
+ */
+export function genfunc(genOpts) {
+  return new Arbitrary({
+    name: 'Generator Function',
+    gen: function(outputArb = oneOf([any, array()])) {
+      return function (engine, locale) {
+        return function * () {
+          yield outputArb.makeGen()(engine, locale);
+        };
+      };
+    },
+    genOpts: [genOpts]
+  });
+}
+
+/**
  * An arbitrary to produce either valid or invalid values.
  *
  * @param {!Arbitrary} valid an arbitrary to produce valid value.

@@ -140,8 +140,6 @@ some of difinitions of arbitraries took from
 - nestring - produce a non-empty unicode string.
 - asciistring — produce an ascii string.
 - neasciistring — produce an non-empty ascii string.
-- func — produce a function.
-- genfunc - produce a generator.
 
 ### Combinator
 
@@ -158,6 +156,8 @@ some of difinitions of arbitraries took from
 - sequence — produce an array of given arbitraries in order.
 - object — produce an object.
 - objectOf - transform a class to an object arbitrary.
+- func — produce a function.
+- genfunc - produce a generator.
 - small - produce smaller version of a arbitrary.
 - recursive - produce a recursive value.
 - variant - produce valid or invalid value of an arbitrary .
