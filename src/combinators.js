@@ -11,7 +11,7 @@ import {fromGenMaker,
         isArbitrary,
         Arbitrary} from './arbitrary';
 import {TestData} from './testdata';
-import {any} from './types/primitive';
+import {any, bool} from './types/primitive';
 
 /**
  * Generates a contant value.
@@ -424,6 +424,41 @@ export function genfunc(genOpts) {
       };
     },
     genOpts: [genOpts]
+  });
+}
+
+/**
+ * Produce a promise.
+ *
+ * @param {Object} opts
+ * @property {Number} failrate 0 - 100.
+ * @prpperty {Arbitary} dataArb
+ * @property {Arbitrary} errorArb
+ * @return {Arbitary}
+ * @example
+ * p = ke.promise.random
+ * p.then(console.log).catch(console.error);
+ */
+export function promise(opts) {
+  const _defaults = {
+    dataArb: any,
+    errorArb: constant('promiseFail'),
+    failrate: 50
+  };
+  function promiseGenMaker({dataArb, errorArb, failrate}) {
+    return function(engine, locale) {
+      return new Promise(function(resolve, reject){
+        const fail = bool.choose(failrate).makeGen()(engine, locale);
+        const data = dataArb.makeGen()(engine, locale);
+        const error = errorArb.makeGen()(engine, locale);
+        return fail ? reject(error) : resolve(data);
+      });
+    }
+  }
+  return new Arbitrary({
+    name: 'Promise',
+    gen: promiseGenMaker,
+    genOpts: [_.defaults(opts, _defaults)]
   });
 }
 

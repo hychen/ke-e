@@ -220,6 +220,18 @@ describe('Combinators', () => {
 
   });
 
+  describe('promise', () => {
+
+    it('generate a promise that sometimes fail.', (done) => {
+      const p = ke.promise().random
+      p.then(done).catch((err) => {
+        expect(err).eq('promiseFail');
+        done();
+      });
+    });
+
+  });
+
   describe('small', () => {
 
     it('small(int)', () => {
