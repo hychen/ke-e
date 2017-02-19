@@ -25,3 +25,23 @@ export const func = new Arbitrary({
     };
   }
 });
+
+/**
+ * Generator Function Arbitrary
+ *
+ * @type {Arbitrary}
+ * @example
+ * const generator = ke.genfunc.random;
+ * // returns 143223423;
+ * const f = generator.next().value;
+ */
+export const genfunc= new Arbitrary({
+  name: 'Generator Function',
+  gen: function(outputArb = oneOf([any, array()])) {
+    return function (engine, locale) {
+      return function * () {
+        yield outputArb.makeGen()(engine, locale);
+      };
+    };
+  }
+});

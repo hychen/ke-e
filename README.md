@@ -140,7 +140,8 @@ some of difinitions of arbitraries took from
 - nestring - produce a non-empty unicode string.
 - asciistring — produce an ascii string.
 - neasciistring — produce an non-empty ascii string.
-- function — produce a function.
+- func — produce a function.
+- genfunc - produce a generator.
 
 ### Combinator
 

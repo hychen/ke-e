@@ -55,6 +55,7 @@
     "webpack": "^1.13.3"
   },
   "dependencies": {
+    "babel-polyfill": "^6.23.0",
     "lodash": "^4.6.1",
     "randexp": "^0.4.4",
     "random-js": "^1.0.8"

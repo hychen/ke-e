@@ -3,3 +3,4 @@
 --colors
 --reporter spec
 --timeout 5000
+--require babel-polyfill 
