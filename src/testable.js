@@ -73,24 +73,23 @@ class ForAll {
    */
   makeFormula(predicate) {
     return (engine) => {
-      const [samples, showExamples] = this.arbs.map(arb => {
+      const samples = this.arbs.map(arb => {
         if (engine) {
           arb.engine(engine);
         }
-        const v = arb.generate();
-        return [v, arb.show()(v)];
+        return arb.random;
       });
       try {
         const success = !!predicate.apply(null, samples);
         return {
           success: success,
-          counterExample: showExamples
+          counterExample: samples
         };
       }
       catch (e) {
         return {
           success: false,
-          counterExample: showExamples,
+          counterExample: samples,
           exception: e
         };
       }
