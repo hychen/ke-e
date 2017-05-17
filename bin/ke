@@ -1,4 +1,7 @@
 #!/usr/bin/env node
-require('babel-register');
-require("babel-polyfill");
-require('../src/repl');
+require('ts-babel-node/register')
+require('babel-polyfill')
+var ke = require('../src/index');
+var repl = require('repl');
+var r = repl.start('> ');
+r.context.ke = ke.default;

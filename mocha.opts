@@ -1,0 +1,6 @@
+--compilers js:ts-babel-node/register
+--reporter list
+--require babel-polyfill
+--recursive
+--colors
+--timeout 5000

@@ -1,11 +1,4 @@
 language: node_js
 
-before_script:
-  - npm run lint
-
 node_js:
-  - "6"
-
-after_success:
-  - ./node_modules/.bin/nyc npm test && ./node_modules/.bin/nyc report --reporter=text-lcov | ./node_modules/.bin/coveralls
-  - npm run ci-deploy
+  - "7"

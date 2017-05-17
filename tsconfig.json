@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "outDir": "./lib",
+        "target": "es2017",
+        "module": "commonjs",
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "sourceMap": true,
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "declaration": true,
+        "strict": true
+    },
+    "lib": [
+        "ES2017",
+        "dom"
+    ],
+    "include": [
+        "./src/**/*.ts"
+    ],
+    "exclude": [
+        "./src/**/*.test.ts"
+    ]
+}

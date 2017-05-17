@@ -6,6 +6,7 @@
     "type": "git",
     "url": "git://github.com/hychen/ke-e.git"
   },
+  "types": "src/index.d.ts",
   "directories": {
     "lib": "./lib"
   },
@@ -14,18 +15,8 @@
   "bugs": {
     "url": "https://github.com/hychen/ke-e/issues"
   },
-  "scripts": {
-    "prepublish": "npm run clean && npm run build",
-    "test": "mocha",
-    "cov": "./node_modules/.bin/nyc -x '**/definitions/**.js' npm test",
-    "build": "npm run build:nodejs && npm run build:browser",
-    "build:nodejs": "./node_modules/.bin/babel src -d lib",
-    "build:browser": "./node_modules/.bin/webpack",
-    "clean": "rm -rf ./lib",
-    "lint": "./node_modules/.bin/eslint src/**/**/*.js test",
-    "lintgit": "./tools/eslint",
-    "doc": "./node_modules/.bin/jsdoc -c ./.jsdoc.json",
-    "ci-deploy": "npm run doc && npm run build:browser && gh-pages -d dist"
+  "engines": {
+    "node": ">=7"
   },
   "keywords": [
     "test",
@@ -33,34 +24,30 @@
   ],
   "author": "Chen Hsin-Yi",
   "license": "MIT",
-  "devDependencies": {
-    "babel-cli": "^6.6.5",
-    "babel-core": "^6.20.0",
-    "babel-eslint": "^7.1.1",
-    "babel-loader": "^6.2.7",
-    "babel-preset-es2015": "^6.6.0",
-    "babel-register": "^6.18.0",
-    "chai": "^3.5.0",
-    "coveralls": "^2.11.8",
-    "eslint": "~2.2.0",
-    "gh-pages": "^0.12.0",
-    "ink-docstrap": "^1.3.0",
-    "jsdoc": "^3.4.0",
-    "jsverify": "^0.7.3",
-    "mocha": "^3.2.0",
-    "mocha-lcov-reporter": "^1.2.0",
-    "nyc": "^10.0.0",
-    "pre-commit": "^1.1.3",
-    "shelljs": "^0.7.4",
-    "webpack": "^1.13.3"
+  "scripts": {
+    "build": "yarn run build:nodejs",
+    "build:nodejs": "./node_modules/.bin/tsc",
+    "test": "yarn unit",
+    "unit": "./node_modules/.bin/mocha --opts mocha.opts $(find src -name *.test.ts)",
+    "docs": "yarn docs:html && open docs/index.html",
+    "docs:html": "./node_modules/.bin/typedoc  --tsconfig tsconfig.json -out docs",
+    "changelog": "./node_modules/bin/standard-version"
   },
   "dependencies": {
-    "babel-polyfill": "^6.23.0",
-    "lodash": "^4.6.1",
-    "randexp": "^0.4.4",
+    "@types/chai": "^3.5.2",
+    "@types/mocha": "^2.2.41",
+    "@types/random-js": "^1.0.28",
+    "chai": "^3.5.0",
     "random-js": "^1.0.8"
   },
-  "pre-commit": [
-    "lintgit"
-  ]
+  "devDependencies": {
+    "babel-polyfill": "^6.23.0",
+    "mocha": "^3.4.1",
+    "randexp": "^0.4.5",
+    "repl": "^0.1.3",
+    "ts-babel-node": "^1.1.1",
+    "ts-node": "^3.0.4",
+    "typedoc": "^0.7.0",
+    "typescript": "^2.3.2"
+  }
 }
