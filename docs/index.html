@@ -1,0 +1,628 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>ke-e</title>
+	<meta name="description" content="">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.js" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">ke-e</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1> ke-e</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<p><a href="https://travis-ci.org/hychen/ke-e"><img src="https://travis-ci.org/hychen/ke-e.svg?branch=master" alt="Build Status"></a>
+				<a href="http://badges.mit-license.org/"><img src="http://img.shields.io/:license-mit-blue.svg" alt="License"></a></p>
+				<h1 id="k-">ké--ê</h1>
+				<p><code>ké--ê</code> is a property-based testing library, inspired by <a href="https://hackage.haskell.org/package/QuickCheck">QuickCheck</a>,
+					<a href="https://github.com/HypothesisWorks/hypothesis-python">Hypothesis</a>, <a href="https://github.com/jsverify/jsverify">JSVerify</a> and
+				<a href="https://github.com/marak/Faker.js/">faker.js</a>.</p>
+				<p>It is also available to generate fake data for many purpose like faker.js.</p>
+				<h2 id="what-is-k-">What is ké--ê?</h2>
+				<p>假的 (ké--ê) is a Taiwanese word. the meaning is fake things in English.</p>
+				<h2 id="features">Features</h2>
+				<ul>
+					<li>Property-based test utilities library.</li>
+					<li>Repeatable random fake data generators.</li>
+					<li>Mocha test framwork integration.</li>
+					<li>Support for multiple localities.</li>
+					<li>Support for browser and Node.js.</li>
+				</ul>
+				<p>check <a href="http://hychen.me/ke-e/index.html">documents</a> for more details.</p>
+				<h3 id="property-based-testing">Property-Based Testing</h3>
+				<p>Property-based tests make statements about the output of your code based on the input, and these statements
+				are verified for many different possible inputs.</p>
+				<p>By default, <code>ke.hold</code> runs 50 tests. it reports a counter example does not satisfy the property
+				if any test fail.</p>
+				<p>for example, the following test.</p>
+				<pre><code><span class="hljs-selector-tag">describe</span>(<span class="hljs-string">'Int'</span>, () =&gt; {
+  <span class="hljs-selector-tag">ke</span><span class="hljs-selector-class">.hold</span>(
+    <span class="hljs-string">'&gt; 0'</span>,       <span class="hljs-comment">// property name.</span>
+    x =&gt; x &gt; <span class="hljs-number">0</span>   <span class="hljs-comment">// predicate.</span>
+  )
+  <span class="hljs-selector-class">.over</span>(<span class="hljs-number">0</span>)       <span class="hljs-comment">// first especially case.</span>
+  <span class="hljs-selector-class">.over</span>(<span class="hljs-number">2</span>)       <span class="hljs-comment">// second especially case.</span>
+  <span class="hljs-selector-class">.over</span>(ke.int)  <span class="hljs-comment">// universal case.</span>
+})
+</code></pre><p>will report:</p>
+				<pre><code><span class="hljs-number">1</span>) <span class="hljs-built_in">Int</span> &gt; <span class="hljs-number">0</span>:
+
+      <span class="hljs-built_in">AssertionError</span>: &gt; <span class="hljs-number">0</span> doesn't hold, counter example: -<span class="hljs-number">5</span>, tried: <span class="hljs-number">1</span>/<span class="hljs-number">100</span>
+      + expected - actual
+
+      -<span class="hljs-literal">false</span>
+      +<span class="hljs-literal">true</span>
+</code></pre><h3 id="exception-based-testing">Exception-Based Testing</h3>
+				<p>You can still use <code>chai</code> to do the testing with random test values
+				generated by <code>ke-e</code>.</p>
+				<pre><code>describe('Nat', () =&gt; {
+  it('&gt;= <span class="hljs-number">0</span>',  () =&gt; {
+    ke.forall(<span class="hljs-name">ke</span>.nat).eval((<span class="hljs-name">n</span>) =&gt; {
+      expect(<span class="hljs-name">n</span> &gt;= <span class="hljs-number">0</span>).eq(<span class="hljs-name">true</span>)<span class="hljs-comment">;</span>
+    })<span class="hljs-comment">;</span>
+  }
+})
+</code></pre><h3 id="repeatable">Repeatable</h3>
+				<p>test results are repeatable.</p>
+				<pre><code><span class="hljs-string">$</span> <span class="hljs-string">mocha</span>
+<span class="hljs-number">1</span><span class="hljs-string">)</span> <span class="hljs-string">Int</span> <span class="hljs-string">&gt;0:</span>
+<span class="hljs-attr">AssertionError:</span> <span class="hljs-string">&gt;0</span> <span class="hljs-string">doesn't</span> <span class="hljs-string">hold,</span> <span class="hljs-attr">seed:</span> <span class="hljs-bullet">-1764850555</span><span class="hljs-string">,</span> <span class="hljs-string">counter</span> <span class="hljs-attr">example:</span> <span class="hljs-bullet">-5265798245849472</span><span class="hljs-string">,</span> <span class="hljs-attr">tried:</span> <span class="hljs-number">3</span><span class="hljs-string">/3`</span>
+</code></pre><pre><code><span class="hljs-string">Seed=-1764850555</span> <span class="hljs-string">mocha</span>
+<span class="hljs-number">1</span><span class="hljs-string">)</span> <span class="hljs-string">Int</span> <span class="hljs-string">&gt;0:</span>
+<span class="hljs-attr">AssertionError:</span> <span class="hljs-string">&gt;0</span> <span class="hljs-string">doesn't</span> <span class="hljs-string">hold,</span> <span class="hljs-attr">seed:</span> <span class="hljs-bullet">-1764850555</span><span class="hljs-string">,</span> <span class="hljs-string">counter</span> <span class="hljs-attr">example:</span> <span class="hljs-bullet">-5265798245849472</span><span class="hljs-string">,</span> <span class="hljs-attr">tried:</span> <span class="hljs-number">3</span><span class="hljs-string">/3`</span>
+</code></pre><h3 id="localization">Localization</h3>
+				<p>This project follows unicode CLDR specification. <code>en</code> is default locale id.</p>
+				<pre><code><span class="hljs-comment">// Generate English first name.</span>
+ke<span class="hljs-selector-class">.person</span><span class="hljs-selector-class">.firstName</span><span class="hljs-selector-class">.random</span>.
+
+<span class="hljs-comment">// Generate Transitional Chinese first name.</span>
+ke<span class="hljs-selector-class">.person</span><span class="hljs-selector-class">.firstName</span><span class="hljs-selector-class">.locale</span>(<span class="hljs-string">'zh-Hant-TW'</span>)<span class="hljs-selector-class">.random</span>.
+</code></pre><h3 id="node-js-repl">Node.js REPL</h3>
+				<pre><code><span class="hljs-meta">$</span><span class="bash"> ke</span>
+<span class="hljs-meta">&gt;</span><span class="bash"> ke.int.random</span>
+123124343
+</code></pre><h2 id="arbitraries">Arbitraries</h2>
+				<p>The purpose of a arbitraries is random generation and shrinking of values
+					in property-based testing, but you could use them to generate fake data
+				individually.</p>
+				<p>some of definitions of arbitraries took from
+				<a href="https://github.com/marak/Faker.js/">faker.js</a> project.</p>
+				<h3 id="primitive">Primitive</h3>
+				<ul>
+					<li>any - produce any primitive types.</li>
+					<li>boolean — produce true and false with equal probability.</li>
+					<li>falsy — produce falsy values: false, null, undefined, &#39;&#39;, 0, and NaN.</li>
+					<li>nat — produce a natural number.</li>
+					<li>int — produce a integer.</li>
+					<li>pint — produce a positive integer.</li>
+					<li>nint — produce a negative integer.</li>
+					<li>num — produce a float numbers.</li>
+					<li>pnum — produce a positive float numbers.</li>
+					<li>nnum — produce negative float numbers.</li>
+					<li>char — produce a unicode character.</li>
+					<li>asciichar — produce an ascii character.</li>
+					<li>string — produce a unicode string.</li>
+					<li>nestring - produce a non-empty unicode string.</li>
+					<li>asciistring — produce an ascii string.</li>
+					<li>neasciistring — produce an non-empty ascii string.</li>
+				</ul>
+				<h3 id="combinator">Combinator</h3>
+				<ul>
+					<li>constant — produce a constant value.</li>
+					<li>elements — produce one of the given values.</li>
+					<li>regex - produce a value from the regular expression.</li>
+					<li>frequency - Choose one of the given arbitraries, with a weighted random distribution.</li>
+					<li>oneOf — randomly uses one of the given generators.</li>
+					<li>maybe - produce a value or null.</li>
+					<li>array — produce an array.</li>
+					<li>nearray — produce a non-empty array.</li>
+					<li>sequence — produce an array of given arbitraries in order.</li>
+					<li>object — produce an object.</li>
+					<li>impl - produce a instance of class C.</li>
+					<li>call - produces a value of function with given arbitrary arguments.</li>
+					<li>func — produce a function.</li>
+					<li>genfunc - produce a generator.</li>
+					<li>promise - produce a promise.</li>
+					<li>recursive - produce a recursive value.</li>
+				</ul>
+				<h3 id="locale">Locale</h3>
+				<ul>
+					<li>locale<ul>
+							<li>localeids — produce a locale id.</li>
+							<li>country</li>
+							<li>timezone</li>
+						</ul>
+					</li>
+				</ul>
+				<h3 id="datetime">Datetime</h3>
+				<ul>
+					<li>date — produce a Date.</li>
+				</ul>
+				<h3 id="literate">Literate</h3>
+				<ul>
+					<li>literate<ul>
+							<li>word</li>
+							<li>words</li>
+							<li>sentence</li>
+							<li>sentences</li>
+							<li>paragraph</li>
+							<li>paragraphs</li>
+							<li>lines</li>
+							<li>text</li>
+						</ul>
+					</li>
+				</ul>
+				<h3 id="person">Person</h3>
+				<ul>
+					<li>person - produce an object to reprsent a person.<ul>
+							<li>name - produce the name of a person.</li>
+							<li>firstName - produce the first name of a person.</li>
+							<li>lastName - produce the last name of a person.</li>
+							<li>gender - produce the gender of a person.</li>
+						</ul>
+					</li>
+				</ul>
+				<h3 id="internet">Internet</h3>
+				<ul>
+					<li>internet<ul>
+							<li>avatar - produce an avatar uri.</li>
+							<li>userName - produce a internet username.</li>
+							<li>password - produce a password string.</li>
+							<li>email - produce an email.</li>
+							<li>url - produce an url.</li>
+						</ul>
+					</li>
+				</ul>
+				<h3 id="location">Location</h3>
+				<ul>
+					<li>location<ul>
+							<li>address</li>
+							<li>streetAddress</li>
+							<li>state<ul>
+									<li>abbr</li>
+								</ul>
+							</li>
+							<li>zipCode</li>
+							<li>county</li>
+							<li>city</li>
+							<li>street</li>
+							<li>buildingNumber</li>
+							<li>latitude -  produce an latitude.</li>
+							<li>longitude - produce an longitude.</li>
+							<li>coordinates -  produce a coordinates.</li>
+						</ul>
+					</li>
+				</ul>
+				<h3 id="grahpic">Grahpic</h3>
+				<ul>
+					<li>graphic<ul>
+							<li>color<ul>
+									<li>rgba</li>
+									<li>hsla</li>
+									<li>hsva</li>
+									<li>hex</li>
+									<li>hexCode</li>
+								</ul>
+							</li>
+							<li>image<ul>
+									<li>imageURL - an image url.</li>
+									<li>grayImageURL - a gray image url.</li>
+								</ul>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<h2 id="installation">Installation</h2>
+				<h3 id="node-js">Node.js</h3>
+				<p>install the module with: npm install ke-e</p>
+				<pre><code class="lang-javascript"><span class="hljs-keyword">import</span> ke <span class="hljs-keyword">from</span> <span class="hljs-string">`ke-e`</span>
+
+describe(<span class="hljs-string">'Integer'</span>, () =&gt; {
+  ke.hold(
+    <span class="hljs-string">'x + y = y + x'</span>
+    (x, y) =&gt; x + y === y + x
+    ).over(ke.int, ke.int);
+});
+</code></pre>
+				<h3 id="browser-using-script-tag">Browser using script tag</h3>
+				<p>Download ke-e.js and place it in your project, then add it as the follwoing.</p>
+				<p><error> dones not work now.</p>
+				<pre><code class="lang-html">&lt;script src="http://hychen.me/ke-e/ke-e.js"&lt;/script&gt;
+&lt;script&gt;
+describe('Integer', () =&gt; {
+  ke.hold(
+    'x + y = y + x'
+    (x, y) =&gt; x + y === y + x
+    ).over(ke.int, ke.int);
+});
+&lt;/script&gt;
+</code></pre>
+				<h2 id="get-involved">Get Involved</h2>
+				<ul>
+					<li>source code : <a href="https://github.com/hychen/ke-e">github.com/hychen/ke-e</a>.</li>
+				</ul>
+				<h2 id="license">License</h2>
+				<p>The MIT License (MIT)</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_arbitrary_.html">"arbitrary"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_combinators_collections_.html">"combinators/collections"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_combinators_eval_.html">"combinators/eval"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_combinators_func_.html">"combinators/func"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_combinators_index_.html">"combinators/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_combinators_pickers_.html">"combinators/pickers"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_combinators_value_.html">"combinators/value"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_constants_.html">"constants"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_definition_.html">"definition"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_gen_.html">"gen"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_index_.html">"index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_integrations_index_.html">"integrations/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_integrations_mocha_.html">"integrations/mocha"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_property_.html">"property"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_seq_.html">"seq"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_shrink_.html">"shrink"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_traits_.html">"traits"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_graphic_color_.html">"types/graphic/color"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_graphic_image_.html">"types/graphic/image"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_graphic_index_.html">"types/graphic/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_index_.html">"types/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_internet_definitions_en_avataruri_.html">"types/internet/definitions/en/avatarURI"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_internet_definitions_en_index_.html">"types/internet/definitions/en/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_internet_definitions_index_.html">"types/internet/definitions/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_internet_index_.html">"types/internet/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_literate_definitions_en_index_.html">"types/literate/definitions/en/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_literate_definitions_index_.html">"types/literate/definitions/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_literate_index_.html">"types/literate/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_locale_avaliablelocaleids_.html">"types/locale/avaliable<wbr>Localeids"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_locale_country_.html">"types/locale/country"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_locale_index_.html">"types/locale/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_locale_timezone_.html">"types/locale/time<wbr>Zone"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_address_.html">"types/location/definitions/en/address"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_buildingnumber_.html">"types/location/definitions/en/building<wbr>Number"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_city_.html">"types/location/definitions/en/city"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_cityprefix_.html">"types/location/definitions/en/city<wbr>Prefix"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_citysuffix_.html">"types/location/definitions/en/city<wbr>Suffix"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_county_.html">"types/location/definitions/en/county"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_index_.html">"types/location/definitions/en/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_postcode_.html">"types/location/definitions/en/postcode"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_secondaryaddress_.html">"types/location/definitions/en/secondary<wbr>Address"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_state_.html">"types/location/definitions/en/state"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_stateabbr_.html">"types/location/definitions/en/state<wbr>Abbr"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_street_.html">"types/location/definitions/en/street"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_streetaddress_.html">"types/location/definitions/en/street<wbr>Address"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_en_streetsuffix_.html">"types/location/definitions/en/street<wbr>Suffix"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_index_.html">"types/location/definitions/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_address_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/address"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_buildingnumber_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/building<wbr>Number"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_city_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/city"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_cityprefix_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/city<wbr>Prefix"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_citysuffix_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/city<wbr>Suffix"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_county_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/county"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_index_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_postcode_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/postcode"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_secondaryaddress_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/secondary<wbr>Address"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_state_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/state"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_stateabbr_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/state<wbr>Abbr"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_street_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/street"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_streetaddress_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/street<wbr>Address"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_definitions_zh_hant_tw_streetsuffix_.html">"types/location/definitions/zh-<wbr><wbr>Hant-<wbr>TW/street<wbr>Suffix"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_location_index_.html">"types/location/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_definitions_en_firstname_.html">"types/person/definitions/en/first<wbr>Name"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_definitions_en_gender_.html">"types/person/definitions/en/gender"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_definitions_en_index_.html">"types/person/definitions/en/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_definitions_en_lastname_.html">"types/person/definitions/en/last<wbr>Name"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_definitions_en_name_.html">"types/person/definitions/en/name"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_definitions_index_.html">"types/person/definitions/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_definitions_zh_hant_tw_firstname_.html">"types/person/definitions/zh-<wbr><wbr>Hant-<wbr>TW/first<wbr>Name"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_definitions_zh_hant_tw_gender_.html">"types/person/definitions/zh-<wbr><wbr>Hant-<wbr>TW/gender"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_definitions_zh_hant_tw_index_.html">"types/person/definitions/zh-<wbr><wbr>Hant-<wbr>TW/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_definitions_zh_hant_tw_lastname_.html">"types/person/definitions/zh-<wbr><wbr>Hant-<wbr>TW/last<wbr>Name"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_definitions_zh_hant_tw_name_.html">"types/person/definitions/zh-<wbr><wbr>Hant-<wbr>TW/name"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_person_index_.html">"types/person/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_primitive_any_.html">"types/primitive/any"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_primitive_boolean_.html">"types/primitive/boolean"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_primitive_datetime_.html">"types/primitive/datetime"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_primitive_falsy_.html">"types/primitive/falsy"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_primitive_index_.html">"types/primitive/index"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_primitive_number_.html">"types/primitive/number"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_types_primitive_string_.html">"types/primitive/string"</a>
+					</li>
+					<li class=" tsd-kind-external-module">
+						<a href="modules/_utils_.html">"utils"</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-module"><span class="tsd-kind-icon">Module</span></li>
+				<li class="tsd-kind-object-literal"><span class="tsd-kind-icon">Object literal</span></li>
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+				<li class="tsd-kind-enum-member"><span class="tsd-kind-icon">Enumeration member</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-enum"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-enum"><span class="tsd-kind-icon">Method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-interface"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-interface"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-interface"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-interface"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class"><span class="tsd-kind-icon">Property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class"><span class="tsd-kind-icon">Method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class"><span class="tsd-kind-icon">Accessor</span></li>
+				<li class="tsd-kind-index-signature tsd-parent-kind-class"><span class="tsd-kind-icon">Index signature</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited constructor</span></li>
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-inherited"><span class="tsd-kind-icon">Inherited accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-protected"><span class="tsd-kind-icon">Protected accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+				<li class="tsd-kind-accessor tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private accessor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static property</span></li>
+				<li class="tsd-kind-call-signature tsd-parent-kind-class tsd-is-static"><span class="tsd-kind-icon">Static method</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+<script>if (location.protocol == 'file:') document.write('<script src="assets/js/search.js"><' + '/script>');</script>
+</body>
+</html>
