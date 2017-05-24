@@ -47,3 +47,17 @@ export function * fromArray(arr: any[]) {
 export function toArray(seq: Seq<any>) {
     return take(seq, Infinity);
 };
+
+export function * join(seqs: Seq<any>[]): Seq<any[]> {
+    while (true) {
+        let values = Array(seqs.length);
+        for (let i = 0; i < seqs.length; ++i) {
+            let v = take(seqs[i], 1);
+            if (v.length === 0) {
+                return;
+            }
+            values[i] = v[0];
+        }
+        yield values;
+    }
+}
