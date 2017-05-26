@@ -44,14 +44,13 @@ describe('property', () => {
             expect(r.indexOf('Fail')).gte(0);
             expect(r.indexOf('Error')).gte(0);
         });
-
-        it('returns check results', async () => {
-            const p = P.property((x: number) => x < 0, nat);
+        it('returns check result', async () => {
+            const p = P.property((x: number) => x*x < 0, int);
             const r = <P.CheckResult>await P.check(p, Object.assign(stdOpts, { format: false }));
             expect(r.ok).eq(false);
             expect(r.tests).eq(1);
+            expect(!!r.samples).eq(true);
         });
-    });
     });
     describe('ForAll', () => {
         describe('#eval()', () => {

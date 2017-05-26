@@ -71,6 +71,7 @@ export interface CheckResult {
     ok: boolean,
     tests: number,
     pass: number,
+    samples: any[] | null,
     theException: Error | null,
     seed: number
 }
@@ -92,6 +93,7 @@ export async function safeCheck(property: Property, opts: CheckOptions) {
         ok: false,
         tests: 1,
         pass: 0,
+        samples: safe.samples,
         theException: safe.theException,
         seed: opts.seed
     };
@@ -110,10 +112,18 @@ export async function checkWith(property: Property,  opts: CheckOptions) {
             pass += 1
         }
     }
+    let samples = null;
+    if (total !== pass) {
+        const r = results.find(r => !r.ok);
+        if (!!r) {
+            samples = r.samples;
+        }
+    }
     return {
         ok: total === pass,
         tests: total,
         pass: pass,
+        samples: samples,
         theException: null,
         seed: opts.seed
     };
@@ -129,6 +139,8 @@ export function formatCheckResult(result: CheckResult): string {
     msg.push(`pass ${result.pass} tests`);
     msg.push(', ');
     msg.push(`seed: ${result.seed}`);
+    msg.push(`, `);
+    msg.push(`samples: ${result.samples}`);
     msg.push('\n');
     if (result.theException) {
         msg.push(result.theException.stack);
