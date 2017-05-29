@@ -9,7 +9,14 @@ const namespace = Object.assign({}, C, T, {
     seq: S,
     forAll: forAll,
     property: property,
-    hold: hold
+    hold: hold,
+    register: function register(name: string, module: Object) {
+        if (namespace.hasOwnProperty(name)) {
+            throw new Error(`${name} is registered.`);
+        }
+        namespace[name] = module;
+        return true;
+    }
 });
 
 export default namespace;
