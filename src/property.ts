@@ -2,7 +2,8 @@ import { every } from 'lodash';
 import { Engine } from 'random-js';
 import { stdOpts, CheckOptions } from './constants';
 import { Arbitrary } from './arbitrary';
-import { Shrinker } from './shrink';
+import { shrinkNoop } from './shrink';
+import { take, join, Seq } from './seq';
 
 /**
  *  A result of property test.
@@ -64,6 +65,16 @@ export async function apply(predicate: Function, samples: any[]): Promise<TestRe
     });
 }
 
+export async function shrink(predicate: Function, failure: TestResult, shrunkens: Seq<any[]>): Promise<TestResult> {
+    return new Promise<TestResult>(async (resolve, reject) => {
+        let samples = take(shrunkens, 1);
+        if (samples.length === 0) return resolve(failure);
+        let r = await apply(predicate, samples[0]);
+        if (r.ok) return resolve(failure);
+        return resolve(await shrink(predicate, r, shrunkens));
+    });
+}
+
 /**
  * Check Result.
  */
@@ -71,6 +82,7 @@ export interface CheckResult {
     ok: boolean,
     tests: number,
     pass: number,
+    samples: any[] | null,
     theException: Error | null,
     seed: number
 }
@@ -92,6 +104,7 @@ export async function safeCheck(property: Property, opts: CheckOptions) {
         ok: false,
         tests: 1,
         pass: 0,
+        samples: safe.samples,
         theException: safe.theException,
         seed: opts.seed
     };
@@ -110,10 +123,18 @@ export async function checkWith(property: Property,  opts: CheckOptions) {
             pass += 1
         }
     }
+    let samples = null;
+    if (total !== pass) {
+        const r = results.find(r => !r.ok);
+        if (!!r) {
+            samples = r.samples;
+        }
+    }
     return {
         ok: total === pass,
         tests: total,
         pass: pass,
+        samples: samples,
         theException: null,
         seed: opts.seed
     };
@@ -129,6 +150,8 @@ export function formatCheckResult(result: CheckResult): string {
     msg.push(`pass ${result.pass} tests`);
     msg.push(', ');
     msg.push(`seed: ${result.seed}`);
+    msg.push(`, `);
+    msg.push(`samples: ${result.samples}`);
     msg.push('\n');
     if (result.theException) {
         msg.push(result.theException.stack);
@@ -183,12 +206,24 @@ export class ForAll {
         );
         return samples;
     }
+    makeShrunkens(seeds: any[], locale: string): Seq<any[]> {
+        const shrinkers = this.quantifiers.map(
+            q => q.shrinker || shrinkNoop
+        );
+        const seqs = seeds.map((v, i) => shrinkers[i](v));
+        return join(seqs);
+    }
     /**
      * Convert the thing to a property.
      */
     makeProperty(): Property {
         return async (engine, locale) => {
-            return await apply(this._predicate, this.makeSamples(engine, locale));
+            const r = <TestResult>await apply(this._predicate, this.makeSamples(engine, locale));
+            if (r.ok) {
+                return r;
+            } else {
+                return await shrink(this._predicate, r, this.makeShrunkens(r.samples, locale));
+            }
         };
     }
     /**

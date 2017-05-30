@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import { stdOpts } from './constants';
 import * as P from './property';
-import { int } from './types/primitive/number';
+import { int, nat } from './types/primitive/number';
 
 describe('property', () => {
     describe('property()', () => {
@@ -43,7 +43,14 @@ describe('property', () => {
             const r = <string>await P.check(p, stdOpts);
             expect(r.indexOf('Fail')).gte(0);
             expect(r.indexOf('Error')).gte(0);
-        })
+        });
+        it('returns check result', async () => {
+            const p = P.property((x: number) => x*x < 0, int);
+            const r = <P.CheckResult>await P.check(p, Object.assign(stdOpts, { format: false }));
+            expect(r.ok).eq(false);
+            expect(r.tests).eq(1);
+            expect(!!r.samples).eq(true);
+        });
     });
     describe('ForAll', () => {
         describe('#eval()', () => {

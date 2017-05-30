@@ -266,3 +266,4 @@ describe('Integer', () => {
 ## License
 
 The MIT License (MIT)
+
